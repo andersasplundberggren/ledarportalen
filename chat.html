@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -34,15 +34,25 @@
         }
 
         .chat-header {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+            background: linear-gradient(135deg, #362E7D, #5863C7);
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
+        }
+
+        .kommune-logo {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 40px;
         }
 
         .chat-header h1 {
             font-size: 24px;
             margin-bottom: 5px;
+            margin-left: 60px;
         }
 
         .chat-header p {
@@ -54,7 +64,7 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #f8f9fa;
+            background-color: #EFF2FF;
         }
 
         .message {
@@ -76,16 +86,16 @@
         }
 
         .message.user .message-content {
-            background: #007bff;
+            background: #5863C7;
             color: white;
             border-bottom-right-radius: 5px;
         }
 
         .message.ai .message-content {
             background: white;
-            border: 1px solid #e1e5e9;
+            border: 1px solid #DBDEF4;
             border-bottom-left-radius: 5px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
         }
 
         .message-avatar {
@@ -101,13 +111,13 @@
         }
 
         .message.user .message-avatar {
-            background: #007bff;
+            background: #5863C7;
             color: white;
             order: 1;
         }
 
         .message.ai .message-avatar {
-            background: #28a745;
+            background: #00A78B;
             color: white;
         }
 
@@ -128,7 +138,7 @@
             min-height: 44px;
             max-height: 120px;
             padding: 12px 16px;
-            border: 2px solid #e1e5e9;
+            border: 2px solid #DBDEF4;
             border-radius: 22px;
             font-size: 14px;
             resize: none;
@@ -138,14 +148,14 @@
         }
 
         .input-field:focus {
-            border-color: #007bff;
+            border-color: #5863C7;
         }
 
         .send-button {
             width: 44px;
             height: 44px;
             border: none;
-            background: #007bff;
+            background: #5863C7;
             color: white;
             border-radius: 50%;
             cursor: pointer;
@@ -157,12 +167,12 @@
         }
 
         .send-button:hover:not(:disabled) {
-            background: #0056b3;
+            background: #362E7D;
             transform: scale(1.05);
         }
 
         .send-button:disabled {
-            background: #ccc;
+            background: #DBDEF4;
             cursor: not-allowed;
             transform: none;
         }
@@ -179,13 +189,13 @@
         }
 
         .law-sources {
-            background: #e8f4fd;
-            border-left: 4px solid #007bff;
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
             font-size: 12px;
-            color: #0056b3;
+            color: #0F6F60;
         }
 
         @media (max-width: 600px) {
@@ -197,12 +207,25 @@
             .message-content {
                 max-width: 85%;
             }
+            
+            .kommune-logo {
+                height: 30px;
+                left: 15px;
+            }
+            
+            .chat-header h1 {
+                font-size: 20px;
+                margin-left: 50px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-header">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="kommune-logo">
             <h1>💬 Chatta med Lagtexten</h1>
             <p>Ställ frågor om arbetsmiljölag, medbestämmandelag och anställningsskydd</p>
         </div>
