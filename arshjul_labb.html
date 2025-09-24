@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Årshjul för Chefer - Karlskoga kommun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .kommune-logo {
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #362E7D;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #5863C7;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #362E7D;
+            transform: translateY(-2px);
+        }
+
+        .year-wheel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .month-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .month-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .month-header {
+            background: linear-gradient(135deg, #00A78B, #0F6F60);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .month-header h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .month-header .season {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .month-content {
+            padding: 25px;
+        }
+
+        .activity-category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #362E7D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .activity-list li {
+            background: #EFF2FF;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            border-left: 4px solid #DBDEF4;
+            transition: all 0.3s ease;
+        }
+
+        .activity-list li:hover {
+            background: #DBDEF4;
+            border-left-color: #5863C7;
+        }
+
+        .priority-high {
+            border-left-color: #5863C7 !important;
+            background: #DBDEF4 !important;
+        }
+
+        .priority-medium {
+            border-left-color: #00A78B !important;
+        }
+
+        .legend {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .legend h3 {
+            color: #362E7D;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-color.high {
+            background: #5863C7;
+        }
+
+        .legend-color.medium {
+            background: #00A78B;
+        }
+
+        .legend-color.normal {
+            background: #DBDEF4;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .year-wheel {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            .legend-items {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="kommune-logo">
+            <h1>📅 Årshjul för Chefer</h1>
+            <p>Planera och följ upp årets viktigaste HR-aktiviteter</p>
+            <a href="./index.html" class="back-button">
+                ← Tillbaka till startsidan
+            </a>
+        </div>
+
+        <div class="legend">
+            <h3>Prioritering</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color high"></div>
+                    <span>Hög prioritet - Deadline</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color medium"></div>
+                    <span>Medel prioritet - Viktigt</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color normal"></div>
+                    <span>Löpande aktiviteter</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-wheel">
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Januari</h2>
+                    <div class="season">Vinter • Nystart</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📊 Planering & Uppföljning</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Årsbudget och personalkostnader klara</li>
+                            <li class="priority-high">Verksamhetsplan för året</li>
+                            <li class="priority-medium">Uppföljning av föregående års resultat</li>
+                            <li>Planera kompetensutveckling för året</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">👥 Personal</div>
+                        <ul class="activity-list">
+                            <li>Nyårsträff och målsättning</li>
+                            <li>Kontrollera att alla har fått lönerevisioner</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Februari</h2>
+                    <div class="season">Vinter • Planering</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📋 Medarbetarsamtal</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Starta medarbetarsamtal (om ej gjort i dec/jan)</li>
+                            <li class="priority-medium">Boka in alla medarbetare</li>
+                            <li>Förbereda individuella utvecklingsplaner</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">📚 Kompetensutveckling</div>
+                        <ul class="activity-list">
+                            <li>Inventera utbildningsbehov</li>
+                            <li>Ansök om utbildningsbudget</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Mars</h2>
+                    <div class="season">Vinter/Vår • Utveckling</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📋 Medarbetarsamtal</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Fortsätt medarbetarsamtal</li>
+                            <li class="priority-medium">Sammanställ utvecklingsbehov</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">🏥 Arbetsmiljö</div>
+                        <ul class="activity-list">
+                            <li class="priority-medium">Arbetsmiljöronder (kvartal 1)</li>
+                            <li>Skyddsronde tillsammans med skyddsombud</li>
+                            <li>Uppföljning av sjukfrånvaro Q1</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>April</h2>
+                    <div class="season">Vår • Tillväxt</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📊 Uppföljning</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Kvartal 1 - resultatuppföljning</li>
+                            <li class="priority-medium">Ekonomisk uppföljning personalbudget</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">👥 Rekrytering</div>
+                        <ul class="activity-list">
+                            <li>Planera sommarvikarier</li>
+                            <li>Rekryteringsprocesser för hösten</li>
+                            <li>Praktikanter och examensarbeten</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Maj</h2>
+                    <div class="season">Vår • Aktivitet</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">🎉 Engagement</div>
+                        <ul class="activity-list">
+                            <li class="priority-medium">Personalaktiviteter och teambuilding</li>
+                            <li>Förbered Valborg/1 maj-firande</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">👥 Rekrytering</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Sommarvikarier - anställningsavtal</li>
+                            <li>Introduktionsprogram för nya medarbetare</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Juni</h2>
+                    <div class="season">Vår/Sommar • Semester</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">🏖️ Semester</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Slutgiltig semesterplanering</li>
+                            <li class="priority-high">Kontrollera bemanningsnivåer</li>
+                            <li>Informera om sommaröppettider</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">🏥 Arbetsmiljö</div>
+                        <ul class="activity-list">
+                            <li class="priority-medium">Arbetsmiljöronder (kvartal 2)</li>
+                            <li>Uppföljning av sjukfrånvaro Q2</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Juli</h2>
+                    <div class="season">Sommar • Vila</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">🏖️ Sommardrift</div>
+                        <ul class="activity-list">
+                            <li>Övervaka sommarbemanningen</li>
+                            <li>Stöd till vikarier och sommarjobbare</li>
+                            <li>Minimal administrativ belastning</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">📊 Planering</div>
+                        <ul class="activity-list">
+                            <li>Förbered höstens aktiviteter</li>
+                            <li>Reflektion över första halvåret</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Augusti</h2>
+                    <div class="season">Sommar/Höst • Återstart</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">🔄 Återstart</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Välkomna tillbaka från semester</li>
+                            <li class="priority-medium">Kickoff för hösten</li>
+                            <li>Uppdatera mål för andra halvåret</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">👥 Personal</div>
+                        <ul class="activity-list">
+                            <li>Introducera nya medarbetare</li>
+                            <li>Avsluta sommarjobbare</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>September</h2>
+                    <div class="season">Höst • Fokus</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📊 Uppföljning</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Kvartal 3 - resultatuppföljning</li>
+                            <li class="priority-medium">Halvårsrapport personalfrågor</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">🏥 Arbetsmiljö</div>
+                        <ul class="activity-list">
+                            <li class="priority-medium">Arbetsmiljöronder (kvartal 3)</li>
+                            <li>Uppföljning av sjukfrånvaro Q3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>Oktober</h2>
+                    <div class="season">Höst • Planering</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📋 Medarbetarenkät</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Genomför medarbetarenkät (om årlig)</li>
+                            <li class="priority-medium">Förbered resultatpresentation</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">💰 Budget</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Budgetarbete för nästa år påbörjas</li>
+                            <li>Personalplanering inför nästa år</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>November</h2>
+                    <div class="season">Höst • Reflektion</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">💰 Budget & Löner</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Slutföra budgetarbete</li>
+                            <li class="priority-high">Lönerevisionsprocess påbörjas</li>
+                            <li class="priority-medium">Löneanalyser och jämställdhetsrapport</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">📊 Resultat</div>
+                        <ul class="activity-list">
+                            <li>Analysera medarbetarenkätresultat</li>
+                            <li>Planera åtgärder för förbättringar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="month-card">
+                <div class="month-header">
+                    <h2>December</h2>
+                    <div class="season">Vinter • Avslutning</div>
+                </div>
+                <div class="month-content">
+                    <div class="activity-category">
+                        <div class="category-title">📋 Årsavslutning</div>
+                        <ul class="activity-list">
+                            <li class="priority-high">Medarbetarsamtal (alternativ till jan/feb)</li>
+                            <li class="priority-high">Årsutvärdering med teamet</li>
+                            <li class="priority-medium">Lönerevisioner genomförs</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">🎉 Tacksamhet</div>
+                        <ul class="activity-list">
+                            <li>Personalfest/julfirande</li>
+                            <li>Tacka för året och blicka framåt</li>
+                            <li>Planera semesterperioden</li>
+                        </ul>
+                    </div>
+                    <div class="activity-category">
+                        <div class="category-title">🏥 Arbetsmiljö</div>
+                        <ul class="activity-list">
+                            <li>Arbetsmiljöronder (kvartal 4)</li>
+                            <li>Helårsuppföljning sjukfrånvaro</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>💡 Tips för framgångsrikt ledarskap</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+                <div>
+                    <strong>📅 Planering:</strong> Använd årshjulet för att förebygga stress och säkerställa att viktiga aktiviteter inte glöms bort.
+                </div>
+                <div>
+                    <strong>💬 Kommunikation:</strong> Informera teamet om kommande aktiviteter så alla är förberedda.
+                </div>
+                <div>
+                    <strong>📊 Uppföljning:</strong> Dokumentera resultat från varje aktivitet för kontinuerlig förbättring.
+                </div>
+                <div>
+                    <strong>⚖️ Balans:</strong> Anpassa intensiteten efter säsong - hårdare fokus på hösten, vila på sommaren.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
