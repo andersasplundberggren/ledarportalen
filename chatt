@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatta med Lagtexten</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.user .message-content {
+            background: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai .message-content {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .message.user .message-avatar {
+            background: #007bff;
+            color: white;
+            order: 1;
+        }
+
+        .message.ai .message-avatar {
+            background: #28a745;
+            color: white;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid #e1e5e9;
+            background: white;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 22px;
+            font-size: 14px;
+            resize: none;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #007bff;
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .law-sources {
+            background: #e8f4fd;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>💬 Chatta med Lagtexten</h1>
+            <p>Ställ frågor om arbetsmiljölag, medbestämmandelag och anställningsskydd</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                <div class="message-avatar">AI</div>
+                <div class="message-content">
+                    Hej! Jag är din AI-assistent för arbetsrättsliga frågor. Jag kan hjälpa dig med frågor om:
+                    <br><br>
+                    📋 <strong>Arbetsmiljölagen</strong> - Arbetsmiljö och säkerhet
+                    <br>
+                    🤝 <strong>Medbestämmandelagen</strong> - Förhandling och medbestämmande
+                    <br>
+                    🛡️ <strong>Lagen om anställningsskydd</strong> - Uppsägning och anställning
+                    <br><br>
+                    Vad vill du veta?
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div>🤔 Söker i lagtext...</div>
+        </div>
+
+        <div class="chat-input">
+            <div class="input-container">
+                <textarea 
+                    class="input-field" 
+                    id="messageInput" 
+                    placeholder="Skriv din fråga här..."
+                    rows="1"
+                ></textarea>
+                <button class="send-button" id="sendButton" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Använder säker backend istället för att exponera API-nyckel
+        const API_URL = '/api/chat'; // Vercel API endpoint
+
+        // Globala variabler
+        let lawTexts = {};
+        let isLoading = false;
+
+        // Ladda lagtexter när sidan laddas
+        async function loadLawTexts() {
+            try {
+                const laws = ['arbetsmiljolag', 'medbestammandelag', 'anstallningsskydd'];
+                
+                for (const law of laws) {
+                    try {
+                        const response = await fetch(`./data/${law}.md`);
+                        if (response.ok) {
+                            lawTexts[law] = await response.text();
+                        }
+                    } catch (error) {
+                        console.warn(`Kunde inte ladda ${law}:`, error);
+                    }
+                }
+                
+                console.log('Lagtexter laddade:', Object.keys(lawTexts));
+            } catch (error) {
+                console.error('Fel vid laddning av lagtexter:', error);
+            }
+        }
+
+        // Auto-resize textarea
+        document.getElementById('messageInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Skicka meddelande vid Enter (men inte Shift+Enter)
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Lägg till meddelande i chatten
+        function addMessage(content, isUser = false, sources = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            let sourcesHtml = '';
+            if (sources && sources.length > 0) {
+                sourcesHtml = `<div class="law-sources"><strong>Baserat på:</strong> ${sources.join(', ')}</div>`;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? 'Du' : 'AI'}</div>
+                <div class="message-content">
+                    ${content}
+                    ${sourcesHtml}
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Visa/dölj loading
+        function setLoading(loading) {
+            isLoading = loading;
+            document.getElementById('loading').classList.toggle('show', loading);
+            document.getElementById('sendButton').disabled = loading;
+        }
+
+        // Skicka meddelande till OpenAI
+        async function sendMessage() {
+            if (isLoading) return;
+            
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Kontrollera om backend är tillgänglig
+            if (!API_URL) {
+                addMessage('⚠️ Backend är inte konfigurerad.');
+                return;
+            }
+            
+            // Lägg till användarens meddelande
+            addMessage(message, true);
+            input.value = '';
+            input.style.height = 'auto';
+            
+            setLoading(true);
+            
+            try {
+                // Skapa kontext från lagtexter
+                let context = "Du är en AI-assistent som hjälper personalledare med arbetsrättsliga frågor baserat på svensk lagstiftning.\n\n";
+                
+                // Lägg till relevanta lagtexter som kontext
+                const availableLaws = Object.keys(lawTexts);
+                if (availableLaws.length > 0) {
+                    context += "Tillgängliga lagtexter:\n";
+                    for (const [law, text] of Object.entries(lawTexts)) {
+                        // Begränsa text för att inte överstiga token-gränser
+                        const truncatedText = text.substring(0, 3000);
+                        context += `\n=== ${law.toUpperCase()} ===\n${truncatedText}\n`;
+                    }
+                    context += "\nSvara baserat på ovanstående lagtexter och var specifik om vilken lag du hänvisar till.";
+                } else {
+                    context += "OBS: Lagtexter kunde inte laddas. Svara baserat på din allmänna kunskap om svensk arbetsrätt.";
+                }
+                
+                // Anropa säker backend istället för OpenAI direkt
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        lawTexts: lawTexts
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Backend-fel: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                const aiResponse = data.response;
+                
+                // Bestäm vilka lagar som användes (förenklad logik)
+                const usedSources = availableLaws.filter(law => 
+                    message.toLowerCase().includes(law) || 
+                    aiResponse.toLowerCase().includes(law)
+                );
+                
+                addMessage(aiResponse, false, usedSources);
+                
+            } catch (error) {
+                console.error('Fel:', error);
+                addMessage('😔 Något gick fel. Kontrollera din internetanslutning.');
+            }
+            
+            setLoading(false);
+        }
+
+        // Ladda lagtexter när sidan laddas
+        window.addEventListener('load', loadLawTexts);
+    </script>
+</body>
+</html>
