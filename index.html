@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
             min-height: 100vh;
             color: #333;
         }
@@ -28,6 +28,12 @@
             text-align: center;
             margin-bottom: 60px;
             color: white;
+            position: relative;
+        }
+
+        .kommune-logo {
+            height: 60px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
@@ -66,7 +72,7 @@
         .tool-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 30px 80px rgba(0,0,0,0.15);
-            border-color: #667eea;
+            border-color: #5863C7;
         }
 
         .tool-card.available {
@@ -94,7 +100,7 @@
             font-size: 24px;
             font-weight: 600;
             margin-bottom: 15px;
-            color: #2c3e50;
+            color: #362E7D;
         }
 
         .tool-description {
@@ -115,13 +121,13 @@
         }
 
         .status-available {
-            background: #e8f5e8;
-            color: #2d7d2d;
+            background: #D2EFE7;
+            color: #0F6F60;
         }
 
         .status-coming-soon {
-            background: #fff3cd;
-            color: #856404;
+            background: #DBDEF4;
+            color: #362E7D;
         }
 
         .footer {
@@ -162,11 +168,24 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="kommune-logo">
             <h1>🏢 Ledarportalen</h1>
-            <p>Professionella verktyg och AI-assistans för moderna personalledare</p>
+            <p>Verktyg och AI-assistans för personalledare</p>
         </div>
 
         <div class="tools-grid">
+            <a href="./arshjul.html" class="tool-card available">
+                <span class="tool-icon">📅</span>
+                <h2 class="tool-title">Årshjul för Chefer</h2>
+                <p class="tool-description">
+                    Översikt över årets viktigaste HR-aktiviteter, deadlines och återkommande processer. 
+                    Planera och följ upp personalarbetet systematiskt genom hela året.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
             <a href="./chat.html" class="tool-card available">
                 <span class="tool-icon">💬</span>
                 <h2 class="tool-title">Chatta med Lagtexten</h2>
