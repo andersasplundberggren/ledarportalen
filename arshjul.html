@@ -12,47 +12,102 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f9fafb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
             color: #111827;
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
-            min-height: 100vh;
+            padding: 0 24px 24px 24px;
+            width: 100%;
         }
 
         .header {
             margin-bottom: 32px;
             text-align: center;
             position: relative;
-        }
-
-        .header .logo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 40px;
             background: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header .logo img {
-            height: 100%;
-            width: auto;
-            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 32px;
         }
 
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 8px;
-            color: #1f2937;
+            color: #362E7D;
         }
 
         .header p {
@@ -70,6 +125,54 @@
             .main-content {
                 grid-template-columns: 1fr;
                 gap: 24px;
+            }
+
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .global-header {
+                position: relative;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 0 15px 15px 15px;
             }
         }
 
@@ -90,7 +193,7 @@
         .card-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1f2937;
+            color: #362E7D;
         }
 
         .calendar-container {
@@ -135,8 +238,8 @@
         }
 
         .selected-month-info {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #DBDEF4;
+            color: #362E7D;
             padding: 16px;
             border-radius: 8px;
             margin-top: 16px;
@@ -153,14 +256,14 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px;
-            background: #f9fafb;
+            background: #EFF2FF;
             border-radius: 8px;
             margin-bottom: 8px;
             transition: all 0.2s;
         }
 
         .activity-item:hover {
-            background: #f3f4f6;
+            background: #DBDEF4;
         }
 
         .activity-info {
@@ -178,7 +281,7 @@
 
         .activity-details h3 {
             font-weight: 500;
-            color: #1f2937;
+            color: #362E7D;
         }
 
         .activity-details p {
@@ -205,7 +308,7 @@
             gap: 16px;
             margin-top: 16px;
             padding: 16px;
-            background: #f3f4f6;
+            background: #EFF2FF;
             border-radius: 8px;
         }
 
@@ -224,12 +327,27 @@
     </style>
 </head>
 <body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <a href="./index.html" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="./index.html">🏠 Hem</a></li>
+            <li class="nav-item"><a href="./chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item active"><a href="./arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📊 Analytics</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
     <div class="container">
         <div class="header">
-            <div class="logo">
-                <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" />
-            </div>
-            <h1>Årshjul för chefer</h1>
+            <h1>📅 Årshjul för chefer</h1>
             <p>Årshjul över återkommande obligatoriska aktiviteter inom områdena arbetsmiljö, kompetensförsörjning och löneöversyn.</p>
         </div>
 
@@ -297,7 +415,7 @@
             </div>
             
             <div style="margin-bottom: 24px;">
-                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #1f2937;">Förkortningar:</h3>
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #362E7D;">Förkortningar:</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 0.875rem;">
                     <div><strong>FC</strong> - Förvaltningschef</div>
                     <div><strong>OC</strong> - Områdeschef</div>
@@ -307,7 +425,7 @@
             </div>
 
             <div style="border-top: 1px solid #e5e7eb; padding-top: 24px;">
-                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #1f2937;">
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #362E7D;">
                     Dessa aktiviteter planeras in årligen på resp. chefsområde när det passar för er verksamhet!
                 </h3>
                 
@@ -320,7 +438,7 @@
                     <li style="margin-bottom: 8px;"><strong>Arbetsmiljö och Kompetensförsörjning:</strong> aktiviteter utifrån förvaltningens arbetsmiljö och kompetensförsörjningsstrategier</li>
                 </ul>
                 
-                <div style="margin-top: 16px; padding: 16px; background-color: #f3f4f6; border-radius: 8px; font-style: italic; color: #6b7280;">
+                <div style="margin-top: 16px; padding: 16px; background-color: #EFF2FF; border-radius: 8px; font-style: italic; color: #6b7280;">
                     Utöver dessa obligatoriska aktiviteter ska det löpande systematiska arbetsmiljöarbetet ske så som t ex att arbeta förebyggande med tillbud, arbetsskador och rehabilitering mm
                 </div>
             </div>
@@ -328,6 +446,22 @@
     </div>
 
 <script>
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const navMenu = document.getElementById('navMenu');
+    navMenu.classList.toggle('show');
+}
+
+// Stäng mobilmeny vid klick utanför
+document.addEventListener('click', function(event) {
+    const navMenu = document.getElementById('navMenu');
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    
+    if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+        navMenu.classList.remove('show');
+    }
+});
+
 // Global variabler
 let categories = {
     'lon': { name: 'Lön', color: '#2563eb' },
