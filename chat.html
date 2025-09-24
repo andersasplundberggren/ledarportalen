@@ -16,9 +16,80 @@
             background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
         }
 
         .chat-container {
@@ -129,21 +200,6 @@
             background: white;
         }
 
-        .chat-footer {
-            text-align: center;
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #DBDEF4;
-        }
-
-        .kommune-logo {
-            height: 40px;
-            background: white;
-            padding: 6px 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(88, 99, 199, 0.1);
-        }
-
         .input-container {
             display: flex;
             gap: 10px;
@@ -225,11 +281,6 @@
                 max-width: 85%;
             }
             
-            .kommune-logo {
-                height: 30px;
-                padding: 4px 10px;
-            }
-            
             .chat-header h1 {
                 font-size: 20px;
             }
@@ -241,6 +292,27 @@
     </style>
 </head>
 <body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="./index.html" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="./index.html">🏠 Hem</a></li>
+            <li class="nav-item active"><a href="./chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="./arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📊 Analytics</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
     <div class="chat-container">
         <div class="chat-header">
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
@@ -283,12 +355,6 @@
                     ➤
                 </button>
             </div>
-        </div>
-
-        <div class="chat-footer">
-            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
-                 alt="Karlskoga kommun" 
-                 class="kommune-logo">
         </div>
     </div>
 
@@ -449,6 +515,22 @@
 
         // Ladda lagtexter när sidan laddas
         window.addEventListener('load', loadLawTexts);
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
