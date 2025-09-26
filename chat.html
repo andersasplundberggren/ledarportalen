@@ -32,6 +32,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
 
         .logo-section {
@@ -53,6 +54,11 @@
             font-weight: 700;
             color: #362E7D;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
         }
 
         .nav-menu {
@@ -83,6 +89,15 @@
             color: white;
         }
 
+        .nav-item a[style*="opacity: 0.5"] {
+            cursor: not-allowed;
+        }
+
+        .nav-item a[style*="opacity: 0.5"]:hover {
+            background: transparent;
+            color: #666;
+        }
+
         .mobile-menu-toggle {
             display: none;
             background: none;
@@ -90,6 +105,56 @@
             font-size: 24px;
             color: #362E7D;
             cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
+        }
+
+        @media (max-width: 768px) {
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
         }
 
         .chat-container {
@@ -297,13 +362,14 @@
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
                  alt="Karlskoga kommun" 
                  class="logo">
-            <a href="./index.html" class="logo-text">Ledarportalen</a>
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
         
         <ul class="nav-menu" id="navMenu">
-            <li class="nav-item"><a href="./index.html">🏠 Hem</a></li>
-            <li class="nav-item active"><a href="./chat.html">💬 AI Chatt</a></li>
-            <li class="nav-item"><a href="./arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
             <li class="nav-item"><a href="#" style="opacity: 0.5;">📊 Analytics</a></li>
             <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
         </ul>
@@ -525,9 +591,19 @@
             const navMenu = document.getElementById('navMenu');
             const mobileToggle = document.getElementById('mobileMenuToggle');
             
-            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
                 navMenu.classList.remove('show');
             }
+        });
+
+        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
+        document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                if (navMenu) {
+                    navMenu.classList.remove('show');
+                }
+            });
         });
     </script>
 </body>
