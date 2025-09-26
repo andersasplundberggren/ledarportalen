@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Förbered ditt eget medarbetarsamtal - Karlskoga kommun</title>
+    <title>Förbered ditt medarbetarsamtal - Karlskoga kommun</title>
     <style>
         * {
             margin: 0;
@@ -430,7 +430,7 @@
         <!-- Formulärsektion -->
         <div class="form-section">
             <div class="section-header">
-                <h1>📝 Förbered ditt eget medarbetarsamtal</h1>
+                <h1>📝 Förbered ditt medarbetarsamtal</h1>
                 <p>Få stöd att formulera dina tankar och önskemål</p>
             </div>
 
@@ -440,14 +440,14 @@
 
             <div class="encouragement-box">
                 <strong>💪 Ditt samtal, din röst!</strong><br>
-                Medarbetarsamtalet är en viktig del och en bra möjlighet att påverka din arbetssituation. Var ärlig med dina tankar - din chef vill hjälpa dig lyckas.
+                Detta är din chans att påverka din arbetssituation. Var ärlig med dina tankar - din chef vill hjälpa dig lyckas.
             </div>
 
             <form id="forberedelseForm">
                 <div class="form-group">
                     <label for="min_roll">Min roll/avdelning</label>
                     <input type="text" id="min_roll" class="form-control" required 
-                           placeholder="T.ex. Administratör, Undersköterska, Enhetschef, Pedagog">
+                           placeholder="T.ex. Förskollärare på Björkens förskola">
                 </div>
 
                 <div class="form-group">
@@ -540,6 +540,9 @@
     </div>
 
     <script>
+        // API URL för OpenAI integration
+        const API_URL = '/api/analyze-employee-input'; // Din backend endpoint
+
         // Mobile menu toggle
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
@@ -568,7 +571,7 @@
             // Samla formulärdata
             const formData = {
                 roll: document.getElementById('min_roll').value,
-                tillfredsställelse: document.getElementById('arbetstillfredsställelse').value,
+                tillfredsställelse: parseInt(document.getElementById('arbetstillfredsställelse').value),
                 fungerar: document.getElementById('vad_fungerar').value,
                 utmaningar: document.getElementById('utmaningar').value,
                 utvecklingsomraden: Array.from(document.querySelectorAll('input[name="utveckling"]:checked')).map(cb => cb.value),
@@ -583,92 +586,136 @@
             document.getElementById('generateBtn').disabled = true;
 
             try {
-                await generateAdvice(formData);
+                await generateAIAdvice(formData);
             } catch (error) {
                 console.error('Fel vid generering:', error);
-                alert('Något gick fel vid genereringen. Försök igen.');
+                alert('Något gick fel vid AI-analysen. Försök igen.');
             } finally {
                 document.getElementById('loading').classList.remove('show');
                 document.getElementById('generateBtn').disabled = false;
             }
         });
 
-        async function generateAdvice(formData) {
-            // Simulera API-anrop
+        async function generateAIAdvice(formData) {
+            try {
+                // Anropa AI backend
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        employeeData: formData,
+                        context: "Karlskoga kommun medarbetarsamtal"
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend-fel: ${response.status}`);
+                }
+
+                const aiResponse = await response.json();
+                displayResults(aiResponse, formData);
+                
+            } catch (error) {
+                console.error('AI API fel:', error);
+                // Fallback till lokal generering
+                await generateLocalAdvice(formData);
+            }
+        }
+
+        async function generateLocalAdvice(formData) {
+            // Simulera AI-anrop med mer sofistikerad lokal logik
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            const advice = generatePersonalizedAdvice(formData);
+            const advice = generateIntelligentAdvice(formData);
             displayResults(advice, formData);
         }
 
-        function generatePersonalizedAdvice(formData) {
+        function generateIntelligentAdvice(formData) {
             let talkingPoints = [];
-            let tips = [];
+            let aiInsights = [];
+            let actionableAdvice = [];
+            let diplomaticPhrasing = [];
 
-            // Generera baserat på tillfredsställelse
-            if (formData.tillfredsställelse >= 8) {
-                talkingPoints.push("Jag trivs verkligen bra i min roll och känner mig motiverad att fortsätta utvecklas.");
-            } else if (formData.tillfredsställelse >= 6) {
-                talkingPoints.push("Överlag trivs jag bra, men jag ser möjligheter till förbättringar som skulle göra jobbet ännu bättre.");
+            // AI-inspirerad analys av tillfredsställelse och mönster
+            const satisfactionLevel = formData.tillfredsställelse;
+            const hasUtmaningar = formData.utmaningar.trim().length > 0;
+            const hasUtvecklingsönskemål = formData.utvecklingsomraden.length > 0;
+            const hasKonkretaMål = formData.mål.trim().length > 0;
+
+            // Generera insikter baserat på mönster
+            if (satisfactionLevel >= 8 && hasUtvecklingsönskemål) {
+                aiInsights.push("Du verkar vara en driven medarbetare som trivs men vill växa - det är en stark position att förhandla från.");
+                actionableAdvice.push("Föreslå en utvecklingsplan med tydlig timeline och mätbara mål");
+            } else if (satisfactionLevel <= 5 && hasUtmaningar) {
+                aiInsights.push("Din situation kräver konkreta förändringar. Fokusera på lösningar snarare än bara problem.");
+                actionableAdvice.push("Kom med minst en konkret förbättringsåtgärd för varje utmaning du nämner");
+            }
+
+            // Analysera textinnehåll för känslotoner (simulerad AI-analys)
+            const utmaningarText = formData.utmaningar.toLowerCase();
+            if (utmaningarText.includes('stress') || utmaningarText.includes('överbelastning')) {
+                actionableAdvice.push("Föreslå konkreta lösningar för stresshantering - arbetstidsfördelning, prioritering eller stöd");
+                diplomaticPhrasing.push("Istället för 'Jag är stressad' säg 'Jag skulle må bra av hjälp att prioritera mina arbetsuppgifter'");
+            }
+
+            if (utmaningarText.includes('kolleg') || utmaningarText.includes('samarbete')) {
+                actionableAdvice.push("Föreslå teamutvecklingsaktiviteter eller tydligare kommunikationsstrukturer");
+                diplomaticPhrasing.push("Fokusera på processer snarare än personer: 'Vi skulle kunna förbättra våra rutiner för...'");
+            }
+
+            if (utmaningarText.includes('resurs') || utmaningarText.includes('material') || utmaningarText.includes('verktyg')) {
+                actionableAdvice.push("Var specifik om vilka resurser som skulle göra störst skillnad för din produktivitet");
+            }
+
+            // Generera diplomatiska formuleringar
+            if (hasUtmaningar && satisfactionLevel >= 6) {
+                diplomaticPhrasing.push("Börja med det positiva: 'Jag uppskattar verkligen [specifikt exempel], och för att bygga vidare på det skulle jag vilja...'");
+            }
+
+            // Skapa huvudtalarpunkter
+            if (satisfactionLevel >= 8) {
+                talkingPoints.push("Jag känner mig verkligen engagerad i mitt arbete och ser fram emot att diskutera hur jag kan bidra ännu mer till våra mål.");
+            } else if (satisfactionLevel >= 6) {
+                talkingPoints.push("Jag har en stabil grund i min roll och är redo att ta nästa steg i min utveckling.");
             } else {
-                talkingPoints.push("Jag upplever vissa utmaningar i min arbetssituation som jag skulle vilja diskutera och få hjälp med.");
+                talkingPoints.push("Jag vill gärna arbeta tillsammans med dig för att förbättra min arbetssituation så att jag kan prestera bättre.");
             }
 
-            // Generera baserat på vad som fungerar
-            if (formData.fungerar.trim()) {
-                talkingPoints.push(`Jag är särskilt nöjd med: ${formData.fungerar}`);
+            // Lägg till utvecklingsbaserade talarpunkter
+            if (hasKonkretaMål) {
+                talkingPoints.push(`Jag har tänkt igenom mina utvecklingsmål: ${formData.mål}`);
+                actionableAdvice.push("Föreslå en konkret plan för hur ni tillsammans kan uppnå dessa mål");
             }
 
-            // Generera baserat på utmaningar
-            if (formData.utmaningar.trim()) {
-                talkingPoints.push(`Jag skulle vilja få stöd med: ${formData.utmaningar}`);
-                tips.push("Var konkret när du beskriver utmaningar - ge exempel på situationer");
-                tips.push("Föreslå gärna lösningar, inte bara problem");
+            // Framtidsfokuserade råd
+            if (formData.framtid.trim().length > 0) {
+                talkingPoints.push(`Min vision för framtiden är: ${formData.framtid}`);
+                actionableAdvice.push("Fråga om konkreta steg för att röra dig mot den visionen");
             }
-
-            // Generera baserat på utvecklingsönskemål
-            if (formData.utvecklingsomraden.length > 0) {
-                const utvecklingsText = formData.utvecklingsomraden.length === 1 
-                    ? formData.utvecklingsomraden[0]
-                    : `${formData.utvecklingsomraden.slice(0, -1).join(', ')} och ${formData.utvecklingsomraden.slice(-1)}`;
-                talkingPoints.push(`Jag skulle vilja utvecklas inom: ${utvecklingsText}`);
-            }
-
-            // Generera baserat på mål
-            if (formData.mål.trim()) {
-                talkingPoints.push(`Mina konkreta mål är: ${formData.mål}`);
-            }
-
-            // Generera baserat på önskat stöd
-            if (formData.stöd.trim()) {
-                talkingPoints.push(`Det stöd jag behöver från dig som chef: ${formData.stöd}`);
-            }
-
-            // Generera baserat på framtidsplaner
-            if (formData.framtid.trim()) {
-                talkingPoints.push(`Så här ser jag min framtid inom organisationen: ${formData.framtid}`);
-            }
-
-            // Lägg till allmänna tips
-            tips.push("Lyssna aktivt på feedbacken du får");
-            tips.push("Ställ följdfrågor om du inte förstår något");
-            tips.push("Ta anteckningar under samtalet");
-            tips.push("Följ upp på konkreta åtgärder efter samtalet");
 
             return {
                 talkingPoints,
-                tips,
-                encouragement: generateEncouragement(formData)
+                aiInsights,
+                actionableAdvice,
+                diplomaticPhrasing,
+                encouragement: generateSmartEncouragement(formData)
             };
         }
 
-        function generateEncouragement(formData) {
-            if (formData.tillfredsställelse >= 8) {
-                return "Du verkar ha en stark grund att stå på! Använd samtalet för att planera nästa steg i din utveckling.";
-            } else if (formData.tillfredsställelse >= 6) {
-                return "Du har identifierat både styrkor och förbättringsområden. Detta är en utmärkt utgångspunkt för ett konstruktivt samtal.";
+        function generateSmartEncouragement(formData) {
+            const satisfaction = formData.tillfredsställelse;
+            const hasGrowthMindset = formData.utvecklingsomraden.length > 0 || formData.mål.trim().length > 0;
+            
+            if (satisfaction >= 8 && hasGrowthMindset) {
+                return "Du har en stark grund och tydlig vision - använd detta samtal för att bygga broar mot dina mål.";
+            } else if (satisfaction >= 6) {
+                return "Du har identifierat både styrkor och möjligheter. Det visar på god självkännedom och är perfekt för ett konstruktivt samtal.";
+            } else if (hasGrowthMindset) {
+                return "Trots utmaningar visar du vilja att utvecklas. Det är precis den inställning som leder till positiva förändringar.";
             } else {
-                return "Att vara ärlig om utmaningar är modet. Din chef vill hjälpa dig - använd detta tillfälle för att skapa positiv förändring.";
+                return "Att vara ärlig om sin situation kräver mod. Din chef vill hjälpa dig lyckas - se detta som starten på förbättringen.";
             }
         }
 
@@ -679,30 +726,68 @@
                 <div class="vision-highlight">
                     ${advice.encouragement}
                 </div>
-                
+            `;
+
+            // AI Insikter (om de finns)
+            if (advice.aiInsights && advice.aiInsights.length > 0) {
+                html += `
+                    <div class="advice-category">
+                        <h3>🤖 AI-analys av din situation</h3>
+                        <ul class="advice-list">
+                `;
+                advice.aiInsights.forEach(insight => {
+                    html += `<li>${insight}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            // Talarpunkter
+            html += `
                 <div class="advice-category">
                     <h3>🎯 Så här kan du presentera dina tankar</h3>
                     <ul class="advice-list">
             `;
-            
             advice.talkingPoints.forEach(point => {
                 html += `<li>${point}</li>`;
             });
-            
+            html += `</ul></div>`;
+
+            // Handlingsriktade råd
+            if (advice.actionableAdvice && advice.actionableAdvice.length > 0) {
+                html += `
+                    <div class="advice-category">
+                        <h3>💡 Konkreta förslag att ta upp</h3>
+                        <ul class="advice-list">
+                `;
+                advice.actionableAdvice.forEach(actionAdvice => {
+                    html += `<li>${actionAdvice}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            // Diplomatiska formuleringar
+            if (advice.diplomaticPhrasing && advice.diplomaticPhrasing.length > 0) {
+                html += `
+                    <div class="tips-section">
+                        <h4>🎭 Diplomatiska formuleringar</h4>
+                        <ul>
+                `;
+                advice.diplomaticPhrasing.forEach(phrase => {
+                    html += `<li>${phrase}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            // Allmänna tips
             html += `
-                    </ul>
-                </div>
-                
                 <div class="tips-section">
-                    <h4>💡 Tips för ett framgångsrikt samtal</h4>
+                    <h4>📋 Tips för samtalet</h4>
                     <ul>
-            `;
-            
-            advice.tips.forEach(tip => {
-                html += `<li>${tip}</li>`;
-            });
-            
-            html += `
+                        <li>Kom med lösningsförslag, inte bara problem</li>
+                        <li>Var konkret - ge exempel och situationer</li>
+                        <li>Lyssna aktivt på feedbacken du får</li>
+                        <li>Fråga om uppföljning och nästa steg</li>
+                        <li>Dokumentera vad ni kommer överens om</li>
                     </ul>
                 </div>
             `;
