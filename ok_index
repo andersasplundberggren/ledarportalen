@@ -16,12 +16,106 @@
             background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
             min-height: 100vh;
             color: #333;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .nav-item a[style*="opacity: 0.5"] {
+            cursor: not-allowed;
+        }
+
+        .nav-item a[style*="opacity: 0.5"]:hover {
+            background: transparent;
+            color: #666;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 20px 40px 20px;
         }
 
         .header {
@@ -146,8 +240,49 @@
         }
 
         @media (max-width: 768px) {
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+
             .container {
-                padding: 20px 15px;
+                padding: 0 15px 20px 15px;
             }
 
             .header h1 {
@@ -170,6 +305,27 @@
     </style>
 </head>
 <body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html">📝 Förberedelse</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
     <div class="container">
         <div class="header">
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
@@ -180,7 +336,7 @@
         </div>
 
         <div class="tools-grid">
-            <a href="./arshjul.html" class="tool-card available">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html" class="tool-card available">
                 <span class="tool-icon">📅</span>
                 <h2 class="tool-title">Årshjul för Chefer</h2>
                 <p class="tool-description">
@@ -190,12 +346,32 @@
                 <span class="tool-status status-available">Tillgänglig Nu</span>
             </a>
 
-            <a href="./chat.html" class="tool-card available">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/chat.html" class="tool-card available">
                 <span class="tool-icon">💬</span>
                 <h2 class="tool-title">Chatta med Lagtexten</h2>
                 <p class="tool-description">
                     Ställ frågor om arbetsmiljölagen, medbestämmandelagen och lagen om anställningsskydd. 
                     Få snabba, korrekta svar baserat på aktuell lagstiftning.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html" class="tool-card available">
+                <span class="tool-icon">👥</span>
+                <h2 class="tool-title">Medarbetarsamtal Generator</h2>
+                <p class="tool-description">
+                    AI-assisterad förberedelse av utvecklingssamtal med personaliserade frågor och uppföljning. 
+                    Anpassas efter yrkesroll och önskad samtalstyp.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html" class="tool-card available">
+                <span class="tool-icon">📝</span>
+                <h2 class="tool-title">Förbered ditt Medarbetarsamtal</h2>
+                <p class="tool-description">
+                    AI-assisterad förberedelse för medarbetare. Få stöd att formulera dina tankar, 
+                    utvecklingsönskemål och hur du vill presentera dem under samtalet.
                 </p>
                 <span class="tool-status status-available">Tillgänglig Nu</span>
             </a>
@@ -211,15 +387,6 @@
 
             <div class="tool-card coming-soon">
                 <span class="tool-icon">📋</span>
-                <h2 class="tool-title">Medarbetarsamtal Generator</h2>
-                <p class="tool-description">
-                    AI-assisterad förberedelse av utvecklingssamtal med personaliserade frågor och uppföljning.
-                </p>
-                <span class="tool-status status-coming-soon">Kommer Snart</span>
-            </div>
-
-            <div class="tool-card coming-soon">
-                <span class="tool-icon">📝</span>
                 <h2 class="tool-title">Policybyggare</h2>
                 <p class="tool-description">
                     Skapa professionella HR-policyer anpassade för ditt företag baserat på bästa praxis.
@@ -250,5 +417,33 @@
             <p>&copy; 2025 Ledarportalen. Ett modernt verktyg för personalledare.</p>
         </div>
     </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
+        document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                if (navMenu) {
+                    navMenu.classList.remove('show');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
