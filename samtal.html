@@ -1,4 +1,18 @@
-<!DOCTYPE html>
+// Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });<!DOCTYPE html>
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
@@ -78,6 +92,15 @@
         .nav-item.active a {
             background: #5863C7;
             color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
         }
 
         .container {
@@ -288,6 +311,39 @@
         }
 
         @media (max-width: 768px) {
+            .global-header {
+                position: relative;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+
             .container {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -318,16 +374,20 @@
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
                  alt="Karlskoga kommun" 
                  class="logo">
-            <a href="#" class="logo-text">Ledarportalen</a>
+            <a href="./index.html" class="logo-text">Ledarportalen</a>
         </div>
         
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="#">🏠 Hem</a></li>
-            <li class="nav-item"><a href="#">💬 AI Chatt</a></li>
-            <li class="nav-item"><a href="#">📅 Årshjul</a></li>
-            <li class="nav-item active"><a href="#">👥 Medarbetarsamtal</a></li>
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="./index.html">🏠 Hem</a></li>
+            <li class="nav-item"><a href="./chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="./arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item active"><a href="./samtal.html">👥 Medarbetarsamtal</a></li>
             <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
         </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
     </nav>
 
     <div class="container">
