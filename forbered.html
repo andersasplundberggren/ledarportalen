@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Förbered ditt medarbetarsamtal - Karlskoga kommun</title>
+    <title>Förbered ditt eget medarbetarsamtal - Karlskoga kommun</title>
     <style>
         * {
             margin: 0;
@@ -17,7 +17,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-
         .global-header {
             background: white;
             width: 100%;
@@ -31,13 +30,11 @@
             justify-content: space-between;
             position: relative;
         }
-
         .logo-section {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-
         .logo {
             height: 45px;
             background: white;
@@ -75,7 +72,6 @@
             transition: all 0.3s ease;
             font-size: 14px;
         }
-
         .nav-item a:hover {
             background: #EFF2FF;
             color: #362E7D;
@@ -227,7 +223,6 @@
             text-align: center;
             font-style: italic;
         }
-
         .encouragement-box {
             background: #D2EFE7;
             border-left: 4px solid #00A78B;
@@ -430,7 +425,7 @@
         <!-- Formulärsektion -->
         <div class="form-section">
             <div class="section-header">
-                <h1>📝 Förbered ditt medarbetarsamtal</h1>
+                <h1>📝 Förbered ditt eget medarbetarsamtal</h1>
                 <p>Få stöd att formulera dina tankar och önskemål</p>
             </div>
 
@@ -440,14 +435,20 @@
 
             <div class="encouragement-box">
                 <strong>💪 Ditt samtal, din röst!</strong><br>
-                Detta är din chans att påverka din arbetssituation. Var ärlig med dina tankar - din chef vill hjälpa dig lyckas.
+                Medarbetarsamtalet är ett bra tillfälle att påverka din arbetssituation. På den här sidan kan du få lite hjälp att sortera tankar och få förslag på saker att lyfta.
             </div>
 
             <form id="forberedelseForm">
                 <div class="form-group">
                     <label for="min_roll">Min roll/avdelning</label>
                     <input type="text" id="min_roll" class="form-control" required 
-                           placeholder="T.ex. Förskollärare på Björkens förskola">
+                           placeholder="T.ex. Undersökterska, Enhetschef, Pedagog, Administratör">
+                </div>
+
+                <div class="form-group">
+                    <label for="arbetsuppgifter">Mina primära arbetsuppgifter</label>
+                    <textarea id="arbetsuppgifter" class="form-control" 
+                              placeholder="Beskriv dina huvudsakliga arbetsuppgifter, skriv ned med egna ord. Det kan vara stödord eller hela meningar. '"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -571,6 +572,7 @@
             // Samla formulärdata
             const formData = {
                 roll: document.getElementById('min_roll').value,
+                arbetsuppgifter: document.getElementById('arbetsuppgifter').value,
                 tillfredsställelse: parseInt(document.getElementById('arbetstillfredsställelse').value),
                 fungerar: document.getElementById('vad_fungerar').value,
                 utmaningar: document.getElementById('utmaningar').value,
@@ -741,16 +743,18 @@
                 html += `</ul></div>`;
             }
 
-            // Talarpunkter
-            html += `
-                <div class="advice-category">
-                    <h3>🎯 Så här kan du presentera dina tankar</h3>
-                    <ul class="advice-list">
-            `;
-            advice.talkingPoints.forEach(point => {
-                html += `<li>${point}</li>`;
-            });
-            html += `</ul></div>`;
+            // Talarpunkter - nu från AI:s talkingPoints
+            if (advice.talkingPoints && advice.talkingPoints.length > 0) {
+                html += `
+                    <div class="advice-category">
+                        <h3>🎯 Så här kan du presentera dina tankar</h3>
+                        <ul class="advice-list">
+                `;
+                advice.talkingPoints.forEach(point => {
+                    html += `<li>${point}</li>`;
+                });
+                html += `</ul></div>`;
+            }
 
             // Handlingsriktade råd
             if (advice.actionableAdvice && advice.actionableAdvice.length > 0) {
@@ -777,14 +781,13 @@
                 });
                 html += `</ul></div>`;
             }
-
-            // Allmänna tips
+              // Allmänna tips
             html += `
                 <div class="tips-section">
                     <h4>📋 Tips för samtalet</h4>
                     <ul>
                         <li>Kom med lösningsförslag, inte bara problem</li>
-                        <li>Var konkret - ge exempel och situationer</li>
+                        <li>Var konkret - ge exempel från dina arbetsuppgifter</li>
                         <li>Lyssna aktivt på feedbacken du får</li>
                         <li>Fråga om uppföljning och nästa steg</li>
                         <li>Dokumentera vad ni kommer överens om</li>
