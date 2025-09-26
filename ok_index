@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledarportalen - Verktyg för Personalledare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+            position: relative;
+        }
+
+        .kommune-logo {
+            height: 60px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 22px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 3px solid transparent;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+            border-color: #5863C7;
+        }
+
+        .tool-card.available {
+            cursor: pointer;
+        }
+
+        .tool-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .tool-card.coming-soon:hover {
+            transform: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border-color: transparent;
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tool-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #362E7D;
+        }
+
+        .tool-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .tool-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-available {
+            background: #D2EFE7;
+            color: #0F6F60;
+        }
+
+        .status-coming-soon {
+            background: #DBDEF4;
+            color: #362E7D;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 36px;
+            }
+
+            .header p {
+                font-size: 18px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .tool-card {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="kommune-logo">
+            <h1>🏢 Ledarportalen</h1>
+            <p>Verktyg och AI-assistans för personalledare</p>
+        </div>
+
+        <div class="tools-grid">
+            <a href="./arshjul.html" class="tool-card available">
+                <span class="tool-icon">📅</span>
+                <h2 class="tool-title">Årshjul för Chefer</h2>
+                <p class="tool-description">
+                    Översikt över årets viktigaste HR-aktiviteter, deadlines och återkommande processer. 
+                    Planera och följ upp personalarbetet systematiskt genom hela året.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <a href="./chat.html" class="tool-card available">
+                <span class="tool-icon">💬</span>
+                <h2 class="tool-title">Chatta med Lagtexten</h2>
+                <p class="tool-description">
+                    Ställ frågor om arbetsmiljölagen, medbestämmandelagen och lagen om anställningsskydd. 
+                    Få snabba, korrekta svar baserat på aktuell lagstiftning.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <div class="tool-card coming-soon">
+                <span class="tool-icon">📊</span>
+                <h2 class="tool-title">HR Analytics Dashboard</h2>
+                <p class="tool-description">
+                    Visualisera nyckeltal, analysera personaldata och få insikter om din organisations utveckling.
+                </p>
+                <span class="tool-status status-coming-soon">Kommer Snart</span>
+            </div>
+
+            <div class="tool-card coming-soon">
+                <span class="tool-icon">📋</span>
+                <h2 class="tool-title">Medarbetarsamtal Generator</h2>
+                <p class="tool-description">
+                    AI-assisterad förberedelse av utvecklingssamtal med personaliserade frågor och uppföljning.
+                </p>
+                <span class="tool-status status-coming-soon">Kommer Snart</span>
+            </div>
+
+            <div class="tool-card coming-soon">
+                <span class="tool-icon">📝</span>
+                <h2 class="tool-title">Policybyggare</h2>
+                <p class="tool-description">
+                    Skapa professionella HR-policyer anpassade för ditt företag baserat på bästa praxis.
+                </p>
+                <span class="tool-status status-coming-soon">Kommer Snart</span>
+            </div>
+
+            <div class="tool-card coming-soon">
+                <span class="tool-icon">🎯</span>
+                <h2 class="tool-title">Kompetensutvecklingsplanerare</h2>
+                <p class="tool-description">
+                    Identifiera kompetensgap och skapa individuella utvecklingsplaner för dina medarbetare.
+                </p>
+                <span class="tool-status status-coming-soon">Kommer Snart</span>
+            </div>
+
+            <div class="tool-card coming-soon">
+                <span class="tool-icon">⚖️</span>
+                <h2 class="tool-title">Konfliktlösnings-AI</h2>
+                <p class="tool-description">
+                    Få vägledning i hantering av arbetskonflikter med strukturerade lösningsförslag.
+                </p>
+                <span class="tool-status status-coming-soon">Kommer Snart</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Ledarportalen. Ett modernt verktyg för personalledare.</p>
+        </div>
+    </div>
+</body>
+</html>
