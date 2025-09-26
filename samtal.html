@@ -29,6 +29,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
 
         .logo-section {
@@ -50,6 +51,11 @@
             font-weight: 700;
             color: #362E7D;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
         }
 
         .nav-menu {
@@ -80,6 +86,15 @@
             color: white;
         }
 
+        .nav-item a[style*="opacity: 0.5"] {
+            cursor: not-allowed;
+        }
+
+        .nav-item a[style*="opacity: 0.5"]:hover {
+            background: transparent;
+            color: #666;
+        }
+
         .mobile-menu-toggle {
             display: none;
             background: none;
@@ -87,6 +102,13 @@
             font-size: 24px;
             color: #362E7D;
             cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
         }
 
         .container {
@@ -298,7 +320,15 @@
 
         @media (max-width: 768px) {
             .global-header {
-                position: relative;
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
             }
             
             .nav-menu {
@@ -360,14 +390,15 @@
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
                  alt="Karlskoga kommun" 
                  class="logo">
-            <a href="./index.html" class="logo-text">Ledarportalen</a>
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
         
         <ul class="nav-menu" id="navMenu">
-            <li class="nav-item"><a href="./index.html">🏠 Hem</a></li>
-            <li class="nav-item"><a href="./chat.html">💬 AI Chatt</a></li>
-            <li class="nav-item"><a href="./arshjul.html">📅 Årshjul</a></li>
-            <li class="nav-item active"><a href="./samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📊 Analytics</a></li>
             <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
         </ul>
         
@@ -517,6 +548,32 @@
     <script>
         // API URL - ändra denna till din backend
         const API_URL = '/api/generate-questions'; // Eller din faktiska API endpoint
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
+        document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
+            link.addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                if (navMenu) {
+                    navMenu.classList.remove('show');
+                }
+            });
+        });
 
         // Hantera formulärinlämning
         document.getElementById('medarbetarsamtalForm').addEventListener('submit', async function(e) {
