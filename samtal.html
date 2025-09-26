@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medarbetarsamtal Generator - Karlskoga kommun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section, .results-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            margin: -30px -30px 25px -30px;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .section-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #362E7D;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #DBDEF4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5863C7;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #EFF2FF;
+            border-color: #5863C7;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #5863C7;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #5863C7, #362E7D);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vision-highlight {
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #5863C7;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-content {
+            display: none;
+        }
+
+        .results-content.show {
+            display: block;
+        }
+
+        .question-category {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #EFF2FF;
+            border-radius: 10px;
+            border-left: 4px solid #5863C7;
+        }
+
+        .question-category h3 {
+            color: #362E7D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-list {
+            list-style: none;
+        }
+
+        .question-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #DBDEF4;
+            color: #333;
+        }
+
+        .question-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-section {
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tips-section h4 {
+            color: #0F6F60;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .form-section, .results-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                margin: -20px -20px 20px -20px;
+                padding: 15px 20px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="#" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#">🏠 Hem</a></li>
+            <li class="nav-item"><a href="#">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="#">📅 Årshjul</a></li>
+            <li class="nav-item active"><a href="#">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="#" style="opacity: 0.5;">📋 Verktyg</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Formulärsektion -->
+        <div class="form-section">
+            <div class="section-header">
+                <h1>👥 Medarbetarsamtal Generator</h1>
+                <p>Skapa anpassade frågor för ditt medarbetarsamtal</p>
+            </div>
+
+            <div class="vision-highlight">
+                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
+            </div>
+
+            <form id="medarbetarsamtalForm">
+                <div class="form-group">
+                    <label for="yrkeskategori">Yrkeskategori/Avdelning</label>
+                    <input type="text" id="yrkeskategori" class="form-control" required 
+                           placeholder="T.ex. Förskollärare, Hemtjänstpersonal, IT-tekniker, Socialsekreterare...">
+                </div>
+
+                <div class="form-group">
+                    <label for="samtalets_ton">Hur vill du att samtalet ska uppfattas?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="oppet_stod" name="samtalets_ton" value="öppet-stödjande">
+                            <label for="oppet_stod">Öppet och stödjande</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="utvecklings_fokus" name="samtalets_ton" value="utvecklingsfokuserat">
+                            <label for="utvecklings_fokus">Utvecklingsfokuserat</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="resultat_orient" name="samtalets_ton" value="resultatorienterat">
+                            <label for="resultat_orient">Resultatorienterat</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="reflekt_coach" name="samtalets_ton" value="reflekterande">
+                            <label for="reflekt_coach">Reflekterande och coachande</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="framtids_inr" name="samtalets_ton" value="framtidsinriktat">
+                            <label for="framtids_inr">Framtidsinriktat</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="problem_los" name="samtalets_ton" value="problemlösande">
+                            <label for="problem_los">Problemlösande</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fragetyp">Vilken typ av frågor önskar du?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="oppna_fragor" name="fragetyp" value="öppna">
+                            <label for="oppna_fragor">Öppna frågor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="konkreta_fragor" name="fragetyp" value="konkreta">
+                            <label for="konkreta_fragor">Konkreta frågor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="reflekterande_fragor" name="fragetyp" value="reflekterande">
+                            <label for="reflekterande_fragor">Reflekterande frågor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="utvecklings_fragor" name="fragetyp" value="utveckling">
+                            <label for="utvecklings_fragor">Utvecklingsfrågor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="framtids_fragor" name="fragetyp" value="framtid">
+                            <label for="framtids_fragor">Framtidsfrågor</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="feedback_fragor" name="fragetyp" value="feedback">
+                            <label for="feedback_fragor">Feedbackfrågor</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fokusomraden">Specifika fokusområden (valfritt)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="arbetsmiljo" name="fokus" value="arbetsmiljö">
+                            <label for="arbetsmiljo">Arbetsmiljö</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kompetensutveckling" name="fokus" value="kompetensutveckling">
+                            <label for="kompetensutveckling">Kompetensutveckling</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="samarbete" name="fokus" value="samarbete">
+                            <label for="samarbete">Samarbete</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="innovation" name="fokus" value="innovation">
+                            <label for="innovation">Innovation</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="balans" name="fokus" value="work-life-balance">
+                            <label for="balans">Work-life balance</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="medborgarperspektiv" name="fokus" value="medborgarperspektiv">
+                            <label for="medborgarperspektiv">Medborgarperspektiv</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="anpassningar">Övriga anpassningar eller önskemål</label>
+                    <textarea id="anpassningar" class="form-control" placeholder="T.ex. särskilda utmaningar, mål för samtalet, hänsyn att ta..."></textarea>
+                </div>
+
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    🚀 Generera samtalsunderlag
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultatsektion -->
+        <div class="results-section">
+            <div class="section-header">
+                <h1>💡 Ditt samtalsunderlag</h1>
+                <p>Anpassade frågor och tips för ett framgångsrikt medarbetarsamtal</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Genererar anpassade frågor...</p>
+            </div>
+
+            <div class="results-content" id="resultsContent">
+                <!-- Resultaten kommer att fyllas i här av JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API URL - ändra denna till din backend
+        const API_URL = '/api/generate-questions'; // Eller din faktiska API endpoint
+
+        // Hantera formulärinlämning
+        document.getElementById('medarbetarsamtalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Samla formulärdata
+            const formData = {
+                yrkeskategori: document.getElementById('yrkeskategori').value,
+                samtalets_ton: Array.from(document.querySelectorAll('input[name="samtalets_ton"]:checked')).map(cb => cb.value),
+                fragetyper: Array.from(document.querySelectorAll('input[name="fragetyp"]:checked')).map(cb => cb.value),
+                fokusomraden: Array.from(document.querySelectorAll('input[name="fokus"]:checked')).map(cb => cb.value),
+                anpassningar: document.getElementById('anpassningar').value
+            };
+
+            // Validera att minst en ton är vald
+            if (formData.samtalets_ton.length === 0) {
+                alert('Vänligen välj minst en typ av ton för samtalet.');
+                return;
+            }
+
+            // Validera att minst en fragetyp är vald
+            if (formData.fragetyper.length === 0) {
+                alert('Vänligen välj minst en typ av frågor.');
+                return;
+            }
+
+            // Visa loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultsContent').classList.remove('show');
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                // Generera frågor (mockad data för demonstration)
+                await generateQuestions(formData);
+            } catch (error) {
+                console.error('Fel vid generering:', error);
+                alert('Något gick fel vid genereringen. Försök igen.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('generateBtn').disabled = false;
+            }
+        });
+
+        async function generateQuestions(formData) {
+            // Simulera API-anrop (ersätt med riktig API-anrop)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Mock-data baserat på formulärval
+            const questions = generateMockQuestions(formData);
+            
+            displayResults(questions, formData);
+        }
+
+        function generateMockQuestions(formData) {
+            const questionBank = {
+                öppna: [
+                    "Vad tycker du fungerar bäst i ditt dagliga arbete just nu?",
+                    "Hur upplever du att du bidrar till vår gemensamma vision om ett välkomnande Karlskoga?",
+                    "Vad ger dig mest energi i ditt arbete?",
+                    "Hur skulle du beskriva din arbetssituation för någon utomstående?",
+                    "Vad skulle få dig att känna dig ännu mer engagerad i ditt arbete?"
+                ],
+                konkreta: [
+                    "Vilka specifika mål vill du sätta för de kommande 6 månaderna?",
+                    "Finns det konkreta verktyg eller resurser du saknar för att göra ditt arbete?",
+                    "Hur många timmar per vecka känner du att du arbetar mest effektivt?",
+                    "Vilken kompetensutveckling skulle du vilja prioritera det närmaste året?",
+                    "Hur ofta önskar du feedback från mig som chef?"
+                ],
+                reflekterande: [
+                    "När du tänker tillbaka på senaste året, vad är du mest stolt över?",
+                    "Vilka situationer har lärt dig mest om dig själv som medarbetare?",
+                    "Hur har din yrkesroll utvecklats sedan vårt senaste samtal?",
+                    "Vad skulle du göra annorlunda om du kunde börja om?",
+                    "Hur reflekterar ditt arbete våra gemensamma värderingar?"
+                ],
+                utveckling: [
+                    "Vilka nya utmaningar skulle du vilja ta dig an?",
+                    "Finns det arbetsområden du skulle vilja utforska mer?",
+                    "Vad behöver du från mig för att utvecklas i din roll?",
+                    "Hur ser du din utveckling inom organisationen de kommande åren?",
+                    "Vilka styrkor vill du utveckla ytterligare?"
+                ],
+                framtid: [
+                    "Hur ser du din roll inom kommunen om två år?",
+                    "Vilka trender inom ditt område följer du med intresse?",
+                    "Hur kan vi tillsammans bidra till en mer innovativ verksamhet?",
+                    "Vad vill du att våra medborgare ska säga om vårt arbete om ett år?",
+                    "Vilken förändring skulle göra störst positiv skillnad för dig?"
+                ],
+                feedback: [
+                    "Vad kan jag som chef göra bättre för att stödja dig?",
+                    "Finns det något i min kommunikation som du önskar att jag förändrar?",
+                    "Hur uppfattar du den feedback jag ger dig?",
+                    "Vad skulle få dig att känna dig mer sedd och uppskattad?",
+                    "Hur kan vi förbättra vårt samarbete?"
+                ]
+            };
+
+            const focusQuestions = {
+                arbetsmiljö: [
+                    "Hur upplever du din fysiska arbetsmiljö?",
+                    "Finns det något som påverkar din stress nivå på jobbet?",
+                    "Vad får dig att känna dig trygg på arbetsplatsen?"
+                ],
+                kompetensutveckling: [
+                    "Vilka färdigheter vill du utveckla mest?",
+                    "Finns det utbildningar som skulle hjälpa dig i ditt arbete?",
+                    "Hur kan vi bäst investera i din utveckling?"
+                ],
+                samarbete: [
+                    "Hur fungerar samarbetet med dina kollegor?",
+                    "Finns det team du skulle vilja arbeta närmare med?",
+                    "Vad skulle förbättra kommunikationen i vår verksamhet?"
+                ],
+                innovation: [
+                    "Har du idéer för hur vi kan arbeta smartare?",
+                    "Vad hindrar dig från att prova nya arbetssätt?",
+                    "Hur kan vi bli bättre på att ta tillvara på bra idéer?"
+                ],
+                'work-life-balance': [
+                    "Hur funkar balansen mellan arbete och fritid för dig?",
+                    "Finns det förändringar i arbetstider som skulle hjälpa dig?",
+                    "Vad behöver du för att må bra både på och utanför jobbet?"
+                ],
+                medborgarperspektiv: [
+                    "Hur tänker du på medborgarnas behov i ditt dagliga arbete?",
+                    "Vad skulle göra våra tjänster mer välkomnande?",
+                    "Hur kan vi bli bättre på att lyssna på våra medborgare?"
+                ]
+            };
+
+            // Välj frågor baserat på formulärval
+            let selectedQuestions = [];
+            
+            formData.fragetyper.forEach(type => {
+                if (questionBank[type]) {
+                    selectedQuestions.push(...questionBank[type].slice(0, 3));
+                }
+            });
+
+            formData.fokusomraden.forEach(focus => {
+                if (focusQuestions[focus]) {
+                    selectedQuestions.push(...focusQuestions[focus]);
+                }
+            });
+
+            return {
+                questions: selectedQuestions,
+                tips: generateTips(formData),
+                summary: generateSummary(formData)
+            };
+        }
+
+        function generateTips(formData) {
+            return [
+                "Skapa en avslappnad atmosfär - erbjud kaffe eller te",
+                "Börja med något positivt för att sätta en välkomnande ton",
+                "Lyssna aktivt och ställ följdfrågor",
+                "Dokumentera viktiga punkter under samtalet",
+                "Avsluta med konkreta nästa steg och uppföljning"
+            ];
+        }
+
+        function generateSummary(formData) {
+            const tonText = formData.samtalets_ton.length > 1 
+                ? `${formData.samtalets_ton.slice(0, -1).join(', ')} och ${formData.samtalets_ton.slice(-1)}`
+                : formData.samtalets_ton[0];
+                
+            return `Detta samtalsunderlag är skapat för en ${formData.yrkeskategori}-medarbetare med fokus på en ${tonText} atmosfär. Frågorna är anpassade för att skapa ett öppet samtal som speglar Karlskogas vision om att vara välkomnande, kloka och innovativa.`;
+        }
+
+        function displayResults(data, formData) {
+            const resultsContent = document.getElementById('resultsContent');
+            
+            let html = `
+                <div class="vision-highlight">
+                    ${data.summary}
+                </div>
+                
+                <div class="question-category">
+                    <h3>🎯 Föreslagna samtalsämnen och frågor</h3>
+                    <ul class="question-list">
+            `;
+            
+            data.questions.forEach(question => {
+                html += `<li>${question}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                </div>
+                
+                <div class="tips-section">
+                    <h4>💡 Tips för ett framgångsrikt samtal</h4>
+                    <ul>
+            `;
+            
+            data.tips.forEach(tip => {
+                html += `<li>${tip}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                </div>
+            `;
+            
+            resultsContent.innerHTML = html;
+            resultsContent.classList.add('show');
+        }
+    </script>
+</body>
+</html>
