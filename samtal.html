@@ -1,18 +1,4 @@
-// Mobile menu toggle
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('show');
-        }
-
-        // Stäng mobilmeny vid klick utanför
-        document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            
-            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
-                navMenu.classList.remove('show');
-            }
-        });<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
