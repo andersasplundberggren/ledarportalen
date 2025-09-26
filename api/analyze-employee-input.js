@@ -47,6 +47,16 @@ Ge ALDRIG råd om att:
 - Ge upp eller lämna jobbet
 - Klaga utan att föreslå lösningar
 
+Du får en beskrivning av en persons arbetsuppgifter. 
+1. Identifiera centrala kompetenser och typiska utmaningar kopplade till arbetsuppgifterna.
+2. Generera 3–5 relevanta utvecklingsområden som är direkt kopplade till arbetsuppgifterna. 
+Var kreativ och ge både "traditionella" och "oväntade" förslag. 
+Ange för varje utvecklingsområde VAD det innebär, och HUR det kan utvecklas i praktiken.
+Exempel:
+- Arbetsuppgift: "budgetarbete och rapportering"
+- Utvecklingsområden: "Avancerad Excel/kalkylprogram"; "Kreativa metoder för datavisualisering"; "Förhandlings- och presentationsförmåga".
+
+
 Svara i JSON-format:
 {
   "talkingPoints": ["Array av konkreta samtalsämnen baserat på deras input OCH kreativa förslag för vaga svar"],
