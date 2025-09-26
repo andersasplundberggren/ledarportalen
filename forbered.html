@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Förbered ditt eget medarbetarsamtal - Karlskoga kommun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section, .results-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            margin: -30px -30px 25px -30px;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .section-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #362E7D;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #DBDEF4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #00A78B;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #D2EFE7;
+            border-color: #00A78B;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #00A78B;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 167, 139, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vision-highlight {
+            background: linear-gradient(135deg, #5863C7, #362E7D);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .encouragement-box {
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #0F6F60;
+        }
+
+        .scale-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .scale-label {
+            font-size: 12px;
+            color: #666;
+            min-width: 80px;
+        }
+
+        .scale-input {
+            flex: 1;
+            accent-color: #00A78B;
+        }
+
+        .scale-value {
+            font-weight: 600;
+            color: #00A78B;
+            min-width: 30px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #00A78B;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-content {
+            display: none;
+        }
+
+        .results-content.show {
+            display: block;
+        }
+
+        .advice-category {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #EFF2FF;
+            border-radius: 10px;
+            border-left: 4px solid #00A78B;
+        }
+
+        .advice-category h3 {
+            color: #362E7D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .advice-list {
+            list-style: none;
+        }
+
+        .advice-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #DBDEF4;
+            color: #333;
+        }
+
+        .advice-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-section {
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tips-section h4 {
+            color: #0F6F60;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .form-section, .results-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                margin: -20px -20px 20px -20px;
+                padding: 15px 20px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/forberedelse.html">📝 Förberedelse</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
+    <div class="container">
+        <!-- Formulärsektion -->
+        <div class="form-section">
+            <div class="section-header">
+                <h1>📝 Förbered ditt eget medarbetarsamtal</h1>
+                <p>Få stöd att formulera dina tankar och önskemål</p>
+            </div>
+
+            <div class="vision-highlight">
+                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
+            </div>
+
+            <div class="encouragement-box">
+                <strong>💪 Ditt samtal, din röst!</strong><br>
+                Medarbetarsamtalet är en viktig del och en bra möjlighet att påverka din arbetssituation. Var ärlig med dina tankar - din chef vill hjälpa dig lyckas.
+            </div>
+
+            <form id="forberedelseForm">
+                <div class="form-group">
+                    <label for="min_roll">Min roll/avdelning</label>
+                    <input type="text" id="min_roll" class="form-control" required 
+                           placeholder="T.ex. Administratör, Undersköterska, Enhetschef, Pedagog">
+                </div>
+
+                <div class="form-group">
+                    <label for="arbetstillfredsställelse">Hur trivs du i ditt arbete just nu? (1-10)</label>
+                    <div class="scale-group">
+                        <span class="scale-label">Inte alls bra</span>
+                        <input type="range" id="arbetstillfredsställelse" class="scale-input" min="1" max="10" value="7" oninput="updateScaleValue('arbetstillfredsställelse', this.value)">
+                        <span class="scale-value" id="arbetstillfredsställelse-value">7</span>
+                        <span class="scale-label">Mycket bra</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vad_fungerar">Vad fungerar bra i ditt arbete idag?</label>
+                    <textarea id="vad_fungerar" class="form-control" placeholder="Beskriv konkret vad du är nöjd med - kollegor, arbetsuppgifter, arbetsmiljö, utvecklingsmöjligheter..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="utmaningar">Vilka utmaningar eller svårigheter upplever du?</label>
+                    <textarea id="utmaningar" class="form-control" placeholder="Var ärlig om vad som inte fungerar så bra - stress, resursbrist, kommunikation, arbetsmiljö..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="utvecklingsomraden">Vad skulle du vilja utveckla eller förbättra?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kompetensutveckling_check" name="utveckling" value="kompetensutveckling">
+                            <label for="kompetensutveckling_check">Kompetensutveckling/kurser</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="nya_arbetsuppgifter" name="utveckling" value="nya-uppgifter">
+                            <label for="nya_arbetsuppgifter">Nya arbetsuppgifter</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ledarskap" name="utveckling" value="ledarskap">
+                            <label for="ledarskap">Ledarskapsroller</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="samarbete_utveckling" name="utveckling" value="samarbete">
+                            <label for="samarbete_utveckling">Samarbete med andra</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="innovation_utveckling" name="utveckling" value="innovation">
+                            <label for="innovation_utveckling">Nya arbetsmetoder</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="balans_utveckling" name="utveckling" value="balans">
+                            <label for="balans_utveckling">Work-life balance</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="konkreta_mal">Har du några konkreta mål eller önskemål?</label>
+                    <textarea id="konkreta_mal" class="form-control" placeholder="T.ex. 'Jag skulle vilja gå en kurs i...', 'Jag vill ta mer ansvar för...', 'Jag skulle vilja arbeta med...'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="stod_fran_chef">Vad behöver du för stöd från din chef?</label>
+                    <textarea id="stod_fran_chef" class="form-control" placeholder="Beskriv konkret vad som skulle hjälpa dig - mer feedback, tydligare instruktioner, resurser, stöd i svåra situationer..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="framtidsplaner">Hur ser du din framtid inom organisationen?</label>
+                    <textarea id="framtidsplaner" class="form-control" placeholder="Var vill du vara om 1-2 år? Vilka drömmar har du för din karriär?"></textarea>
+                </div>
+
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    🚀 Skapa mitt samtalsunderlag
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultatsektion -->
+        <div class="results-section">
+            <div class="section-header">
+                <h1>💡 Ditt personliga samtalsunderlag</h1>
+                <p>Så här kan du presentera dina tankar under samtalet</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Skapar ditt personliga underlag...</p>
+            </div>
+
+            <div class="results-content" id="resultsContent">
+                <!-- Resultaten kommer att fyllas i här av JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // Uppdatera skala-värden
+        function updateScaleValue(id, value) {
+            document.getElementById(id + '-value').textContent = value;
+        }
+
+        // Hantera formulärinlämning
+        document.getElementById('forberedelseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Samla formulärdata
+            const formData = {
+                roll: document.getElementById('min_roll').value,
+                tillfredsställelse: document.getElementById('arbetstillfredsställelse').value,
+                fungerar: document.getElementById('vad_fungerar').value,
+                utmaningar: document.getElementById('utmaningar').value,
+                utvecklingsomraden: Array.from(document.querySelectorAll('input[name="utveckling"]:checked')).map(cb => cb.value),
+                mål: document.getElementById('konkreta_mal').value,
+                stöd: document.getElementById('stod_fran_chef').value,
+                framtid: document.getElementById('framtidsplaner').value
+            };
+
+            // Visa loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultsContent').classList.remove('show');
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                await generateAdvice(formData);
+            } catch (error) {
+                console.error('Fel vid generering:', error);
+                alert('Något gick fel vid genereringen. Försök igen.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('generateBtn').disabled = false;
+            }
+        });
+
+        async function generateAdvice(formData) {
+            // Simulera API-anrop
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const advice = generatePersonalizedAdvice(formData);
+            displayResults(advice, formData);
+        }
+
+        function generatePersonalizedAdvice(formData) {
+            let talkingPoints = [];
+            let tips = [];
+
+            // Generera baserat på tillfredsställelse
+            if (formData.tillfredsställelse >= 8) {
+                talkingPoints.push("Jag trivs verkligen bra i min roll och känner mig motiverad att fortsätta utvecklas.");
+            } else if (formData.tillfredsställelse >= 6) {
+                talkingPoints.push("Överlag trivs jag bra, men jag ser möjligheter till förbättringar som skulle göra jobbet ännu bättre.");
+            } else {
+                talkingPoints.push("Jag upplever vissa utmaningar i min arbetssituation som jag skulle vilja diskutera och få hjälp med.");
+            }
+
+            // Generera baserat på vad som fungerar
+            if (formData.fungerar.trim()) {
+                talkingPoints.push(`Jag är särskilt nöjd med: ${formData.fungerar}`);
+            }
+
+            // Generera baserat på utmaningar
+            if (formData.utmaningar.trim()) {
+                talkingPoints.push(`Jag skulle vilja få stöd med: ${formData.utmaningar}`);
+                tips.push("Var konkret när du beskriver utmaningar - ge exempel på situationer");
+                tips.push("Föreslå gärna lösningar, inte bara problem");
+            }
+
+            // Generera baserat på utvecklingsönskemål
+            if (formData.utvecklingsomraden.length > 0) {
+                const utvecklingsText = formData.utvecklingsomraden.length === 1 
+                    ? formData.utvecklingsomraden[0]
+                    : `${formData.utvecklingsomraden.slice(0, -1).join(', ')} och ${formData.utvecklingsomraden.slice(-1)}`;
+                talkingPoints.push(`Jag skulle vilja utvecklas inom: ${utvecklingsText}`);
+            }
+
+            // Generera baserat på mål
+            if (formData.mål.trim()) {
+                talkingPoints.push(`Mina konkreta mål är: ${formData.mål}`);
+            }
+
+            // Generera baserat på önskat stöd
+            if (formData.stöd.trim()) {
+                talkingPoints.push(`Det stöd jag behöver från dig som chef: ${formData.stöd}`);
+            }
+
+            // Generera baserat på framtidsplaner
+            if (formData.framtid.trim()) {
+                talkingPoints.push(`Så här ser jag min framtid inom organisationen: ${formData.framtid}`);
+            }
+
+            // Lägg till allmänna tips
+            tips.push("Lyssna aktivt på feedbacken du får");
+            tips.push("Ställ följdfrågor om du inte förstår något");
+            tips.push("Ta anteckningar under samtalet");
+            tips.push("Följ upp på konkreta åtgärder efter samtalet");
+
+            return {
+                talkingPoints,
+                tips,
+                encouragement: generateEncouragement(formData)
+            };
+        }
+
+        function generateEncouragement(formData) {
+            if (formData.tillfredsställelse >= 8) {
+                return "Du verkar ha en stark grund att stå på! Använd samtalet för att planera nästa steg i din utveckling.";
+            } else if (formData.tillfredsställelse >= 6) {
+                return "Du har identifierat både styrkor och förbättringsområden. Detta är en utmärkt utgångspunkt för ett konstruktivt samtal.";
+            } else {
+                return "Att vara ärlig om utmaningar är modet. Din chef vill hjälpa dig - använd detta tillfälle för att skapa positiv förändring.";
+            }
+        }
+
+        function displayResults(advice, formData) {
+            const resultsContent = document.getElementById('resultsContent');
+            
+            let html = `
+                <div class="vision-highlight">
+                    ${advice.encouragement}
+                </div>
+                
+                <div class="advice-category">
+                    <h3>🎯 Så här kan du presentera dina tankar</h3>
+                    <ul class="advice-list">
+            `;
+            
+            advice.talkingPoints.forEach(point => {
+                html += `<li>${point}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                </div>
+                
+                <div class="tips-section">
+                    <h4>💡 Tips för ett framgångsrikt samtal</h4>
+                    <ul>
+            `;
+            
+            advice.tips.forEach(tip => {
+                html += `<li>${tip}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                </div>
+            `;
+            
+            resultsContent.innerHTML = html;
+            resultsContent.classList.add('show');
+        }
+    </script>
+</body>
+</html>
