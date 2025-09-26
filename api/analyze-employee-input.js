@@ -83,7 +83,7 @@ Använd arbetsuppgifterna för att ge mer specifika och relevanta råd. Om någo
           { role: 'user', content: userPrompt }
         ],
         max_tokens: 2000,
-        temperature: 0.7
+        temperature: 0.95
       })
     });
 
