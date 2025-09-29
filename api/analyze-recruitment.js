@@ -116,4 +116,10 @@ Skapa ett professionellt och balanserat intervjuunderlag.`;
     res.status(200).json(aiResponse);
     
   } catch (error) {
-    console.error('Error:', error
+    console.error('Error:', error);
+    res.status(500).json({
+      error: 'Something went wrong',
+      details: error.message
+    });
+  }
+}
