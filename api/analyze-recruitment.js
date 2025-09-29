@@ -1,6 +1,3 @@
-// Updated to GPT-3.5-turbo at 16:30
-export default async function handler(req, res) {
-
 // api/analyze-recruitment.js
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
