@@ -305,7 +305,26 @@
     </style>
 </head>
 <body>
-
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html">🎯 Rekrytering</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
 
     <div class="container">
         <div class="header">
@@ -353,6 +372,16 @@
                 <p class="tool-description">
                     AI-assisterad förberedelse för medarbetare. Få stöd att formulera dina tankar, 
                     utvecklingsönskemål och hur du vill presentera dem under samtalet.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html" class="tool-card available">
+                <span class="tool-icon">🎯</span>
+                <h2 class="tool-title">Rekryteringsstöd</h2>
+                <p class="tool-description">
+                    Ladda upp annons, CV och personligt brev för att få AI-genererat intervjuunderlag. 
+                    Matchningsanalys, föreslagna frågor och tips för anställningsintervjun.
                 </p>
                 <span class="tool-status status-available">Tillgänglig Nu</span>
             </a>
@@ -416,7 +445,7 @@
             }
         });
 
-        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
+        // Stäng mobilmeny när en länk klickas
         document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
             link.addEventListener('click', function() {
                 const navMenu = document.getElementById('navMenu');
