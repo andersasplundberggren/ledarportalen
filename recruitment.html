@@ -167,6 +167,23 @@
             min-height: 120px;
         }
 
+        .char-counter {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .char-counter.warning {
+            color: #FF9800;
+            font-weight: 600;
+        }
+
+        .char-counter.error {
+            color: #f44336;
+            font-weight: 600;
+        }
+
         .checkbox-group {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -411,6 +428,7 @@
                     <label for="annonstext">Annonstext</label>
                     <textarea id="annonstext" class="form-control" required 
                               placeholder="Klistra in hela jobbannonsen här..."></textarea>
+                    <small class="char-counter"><span id="annonsLength">0</span> tecken</small>
                 </div>
 
                 <div class="form-group">
@@ -418,6 +436,7 @@
                     <textarea id="cvText" class="form-control" required 
                               placeholder="Klistra in kandidatens CV här som text..."
                               style="min-height: 200px;"></textarea>
+                    <small class="char-counter"><span id="cvLength">0</span> tecken</small>
                 </div>
 
                 <div class="form-group">
@@ -425,6 +444,11 @@
                     <textarea id="pbText" class="form-control"
                               placeholder="Klistra in personligt brev här som text..."
                               style="min-height: 150px;"></textarea>
+                    <small class="char-counter"><span id="pbLength">0</span> tecken</small>
+                </div>
+
+                <div class="form-group">
+                    <small class="char-counter" id="totalLength">Totalt: 0 tecken (max 50 000)</small>
                 </div>
 
                 <div class="form-group">
@@ -489,6 +513,7 @@
 
     <script>
         const API_URL = 'https://ledarportalen.vercel.app/api/analyze-recruitment';
+        const MAX_LENGTH = 50000;
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -506,6 +531,34 @@
             }
         });
 
+        // Uppdatera teckenkontroll
+        function updateCharCount() {
+            const annonsLength = document.getElementById('annonstext').value.length;
+            const cvLength = document.getElementById('cvText').value.length;
+            const pbLength = document.getElementById('pbText').value.length;
+            const totalLength = annonsLength + cvLength + pbLength;
+
+            document.getElementById('annonsLength').textContent = annonsLength.toLocaleString('sv-SE');
+            document.getElementById('cvLength').textContent = cvLength.toLocaleString('sv-SE');
+            document.getElementById('pbLength').textContent = pbLength.toLocaleString('sv-SE');
+            
+            const totalElement = document.getElementById('totalLength');
+            totalElement.textContent = `Totalt: ${totalLength.toLocaleString('sv-SE')} tecken (max ${MAX_LENGTH.toLocaleString('sv-SE')})`;
+            
+            // Färgkodning
+            totalElement.classList.remove('warning', 'error');
+            if (totalLength > MAX_LENGTH) {
+                totalElement.classList.add('error');
+            } else if (totalLength > MAX_LENGTH * 0.8) {
+                totalElement.classList.add('warning');
+            }
+        }
+
+        // Lägg till event listeners för teckenkontroll
+        document.getElementById('annonstext').addEventListener('input', updateCharCount);
+        document.getElementById('cvText').addEventListener('input', updateCharCount);
+        document.getElementById('pbText').addEventListener('input', updateCharCount);
+
         // Hantera formulärinlämning
         document.getElementById('rekryteringForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -519,6 +572,23 @@
             if (fokusomraden.length === 0) {
                 alert('Vänligen välj minst ett fokusområde.');
                 return;
+            }
+
+            // Kontrollera textlängd
+            const totalLength = annonstext.length + cvText.length + pbText.length;
+            
+            if (totalLength > MAX_LENGTH) {
+                const overage = totalLength - MAX_LENGTH;
+                alert(`Texten är för lång!\n\nTotalt: ${totalLength.toLocaleString('sv-SE')} tecken\nMax: ${MAX_LENGTH.toLocaleString('sv-SE')} tecken\nÖverskridning: ${overage.toLocaleString('sv-SE')} tecken\n\nFörkorta texterna för att fortsätta.`);
+                return;
+            }
+
+            // Varning vid stor text (80% av gränsen)
+            if (totalLength > MAX_LENGTH * 0.8) {
+                const remaining = MAX_LENGTH - totalLength;
+                if (!confirm(`Texten är ganska lång (${totalLength.toLocaleString('sv-SE')} tecken).\n${remaining.toLocaleString('sv-SE')} tecken kvar till max.\n\nFortsätt ändå?`)) {
+                    return;
+                }
             }
 
             // Visa loading
@@ -543,6 +613,12 @@
                 });
 
                 if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    
+                    if (response.status === 400 && errorData.details && errorData.details.includes('context_length_exceeded')) {
+                        throw new Error('Texten är för lång för AI-modellen. Förkorta texterna.');
+                    }
+                    
                     throw new Error(`Backend-fel: ${response.status}`);
                 }
 
@@ -551,7 +627,7 @@
                 
             } catch (error) {
                 console.error('Fel vid generering:', error);
-                alert('Något gick fel vid genereringen. Försök igen.');
+                alert(`${error.message}\n\nOm problemet kvarstår, försök förkorta texterna.`);
             } finally {
                 document.getElementById('loading').classList.remove('show');
                 document.getElementById('generateBtn').disabled = false;
