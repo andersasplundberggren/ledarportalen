@@ -74,27 +74,47 @@ ${anpassningar ? `SÄRSKILDA ÖNSKEMÅL: ${anpassningar}` : ''}
 
 Skapa ett professionellt och balanserat intervjuunderlag.`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_tokens: 3000,
-        temperature: 0.7
-      })
-    });
+    // Retry-funktion för rate limits
+    async function callOpenAIWithRetry(maxRetries = 2) {
+      for (let i = 0; i < maxRetries; i++) {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENAI_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',  // Ändrat från gpt-4
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt }
+            ],
+            max_tokens: 2000,
+            temperature: 0.7
+          })
+        });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+        if (response.status === 429) {
+          if (i < maxRetries - 1) {
+            const waitTime = Math.pow(2, i) * 1000; // 1s, 2s
+            console.log(`Rate limit hit, waiting ${waitTime}ms before retry ${i + 1}`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            continue;
+          } else {
+            throw new Error('Rate limit nådd. Vänta en minut och försök igen.');
+          }
+        }
+
+        if (!response.ok) {
+          const errorData = await response.text();
+          throw new Error(`OpenAI API error: ${response.status} - ${errorData}`);
+        }
+
+        return response;
+      }
     }
 
+    const response = await callOpenAIWithRetry();
     const data = await response.json();
     let aiResponse;
     
@@ -118,7 +138,7 @@ Skapa ett professionellt och balanserat intervjuunderlag.`;
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({
-      error: 'Something went wrong',
+      error: 'Något gick fel vid analysen',
       details: error.message
     });
   }
