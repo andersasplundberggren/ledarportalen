@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekryteringsstöd - Karlskoga kommun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section, .results-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            margin: -30px -30px 25px -30px;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .section-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #362E7D;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #DBDEF4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5863C7;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #DBDEF4;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            background: #F8F9FF;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #5863C7;
+            background: #EFF2FF;
+        }
+
+        .file-upload-area.drag-over {
+            border-color: #5863C7;
+            background: #EFF2FF;
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .file-icon {
+            font-size: 32px;
+        }
+
+        .file-name {
+            color: #00A78B;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #EFF2FF;
+            border-color: #5863C7;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #5863C7;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #5863C7, #362E7D);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vision-highlight {
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #5863C7;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-content {
+            display: none;
+        }
+
+        .results-content.show {
+            display: block;
+        }
+
+        .analysis-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #EFF2FF;
+            border-radius: 10px;
+            border-left: 4px solid #5863C7;
+        }
+
+        .analysis-section h3 {
+            color: #362E7D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analysis-list {
+            list-style: none;
+        }
+
+        .analysis-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #DBDEF4;
+            color: #333;
+        }
+
+        .analysis-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-section {
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tips-section h4 {
+            color: #0F6F60;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .form-section, .results-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                margin: -20px -20px 20px -20px;
+                padding: 15px 20px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/rekrytering.html">🎯 Rekrytering</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
+    <div class="container">
+        <!-- Formulärsektion -->
+        <div class="form-section">
+            <div class="section-header">
+                <h1>🎯 Rekryteringsstöd</h1>
+                <p>Generera intervjuunderlag baserat på annons och kandidatens dokument</p>
+            </div>
+
+            <div class="vision-highlight">
+                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
+            </div>
+
+            <form id="rekryteringForm">
+                <div class="form-group">
+                    <label for="annonstext">Annonstext</label>
+                    <textarea id="annonstext" class="form-control" required 
+                              placeholder="Klistra in hela jobbannonsen här..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>CV (PDF eller Word)</label>
+                    <div class="file-upload-area" id="cvUploadArea">
+                        <label for="cvFile" class="file-upload-label">
+                            <span class="file-icon">📄</span>
+                            <span>Klicka för att välja fil eller dra och släpp här</span>
+                            <small style="color: #666;">Max 10 MB - PDF, DOC eller DOCX</small>
+                        </label>
+                        <input type="file" id="cvFile" accept=".pdf,.doc,.docx" required>
+                        <div class="file-name" id="cvFileName"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Personligt brev (valfritt)</label>
+                    <div class="file-upload-area" id="pbUploadArea">
+                        <label for="pbFile" class="file-upload-label">
+                            <span class="file-icon">📝</span>
+                            <span>Klicka för att välja fil eller dra och släpp här</span>
+                            <small style="color: #666;">Max 10 MB - PDF, DOC eller DOCX</small>
+                        </label>
+                        <input type="file" id="pbFile" accept=".pdf,.doc,.docx">
+                        <div class="file-name" id="pbFileName"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Vad vill du fokusera på i analysen?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kompetens" name="fokus" value="kompetens" checked>
+                            <label for="kompetens">Kompetens & erfarenhet</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="motivation" name="fokus" value="motivation" checked>
+                            <label for="motivation">Motivation & drivkrafter</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kulturfit" name="fokus" value="kulturfit" checked>
+                            <label for="kulturfit">Kulturell passform</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="utveckling" name="fokus" value="utveckling">
+                            <label for="utveckling">Utvecklingspotential</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ledarskap" name="fokus" value="ledarskap">
+                            <label for="ledarskap">Ledaregenskaper</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gaps" name="fokus" value="gaps">
+                            <label for="gaps">Kompetens gaps</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="anpassningar">Övriga önskemål</label>
+                    <textarea id="anpassningar" class="form-control" 
+                              placeholder="T.ex. specifika områden att fördjupa, särskilda kompetenser att undersöka..."></textarea>
+                </div>
+
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    🚀 Generera intervjuunderlag
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultatsektion -->
+        <div class="results-section">
+            <div class="section-header">
+                <h1>💡 Intervjuunderlag</h1>
+                <p>AI-genererad analys och förslag på intervjufrågor</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyserar dokument och genererar underlag...</p>
+            </div>
+
+            <div class="results-content" id="resultsContent">
+                <!-- Resultaten kommer att fyllas i här av JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://ledarportalen.vercel.app/api/analyze-recruitment';
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // File upload hantering
+        function setupFileUpload(areaId, inputId, fileNameId) {
+            const area = document.getElementById(areaId);
+            const input = document.getElementById(inputId);
+            const fileName = document.getElementById(fileNameId);
+
+            area.addEventListener('click', () => input.click());
+
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('drag-over');
+            });
+
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('drag-over');
+            });
+
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    input.files = e.dataTransfer.files;
+                    updateFileName(input, fileName);
+                }
+            });
+
+            input.addEventListener('change', () => {
+                updateFileName(input, fileName);
+            });
+        }
+
+        function updateFileName(input, displayElement) {
+            if (input.files.length > 0) {
+                displayElement.textContent = `✓ ${input.files[0].name}`;
+            } else {
+                displayElement.textContent = '';
+            }
+        }
+
+        setupFileUpload('cvUploadArea', 'cvFile', 'cvFileName');
+        setupFileUpload('pbUploadArea', 'pbFile', 'pbFileName');
+
+        // Hantera formulärinlämning
+        document.getElementById('rekryteringForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const annonstext = document.getElementById('annonstext').value;
+            const cvFile = document.getElementById('cvFile').files[0];
+            const pbFile = document.getElementById('pbFile').files[0];
+            const fokusomraden = Array.from(document.querySelectorAll('input[name="fokus"]:checked')).map(cb => cb.value);
+            const anpassningar = document.getElementById('anpassningar').value;
+
+            if (fokusomraden.length === 0) {
+                alert('Vänligen välj minst ett fokusområde.');
+                return;
+            }
+
+            // Visa loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultsContent').classList.remove('show');
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                // Läs filer
+                const cvText = await readFile(cvFile);
+                const pbText = pbFile ? await readFile(pbFile) : null;
+
+                // Skicka till API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        annonstext,
+                        cvText,
+                        pbText,
+                        fokusomraden,
+                        anpassningar
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend-fel: ${response.status}`);
+                }
+
+                const aiResponse = await response.json();
+                displayResults(aiResponse);
+                
+            } catch (error) {
+                console.error('Fel vid generering:', error);
+                alert('Något gick fel vid genereringen. Försök igen.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('generateBtn').disabled = false;
+            }
+        });
+
+        async function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsText(file);
+            });
+        }
+
+        function displayResults(data) {
+            const resultsContent = document.getElementById('resultsContent');
+            
+            let html = `
+                <div class="vision-highlight">
+                    ${data.summary || 'Intervjuunderlag genererat'}
+                </div>
+            `;
+
+            // Kandidatsammanfattning
+            if (data.candidateSummary) {
+                html += `
+                    <div class="analysis-section">
+                        <h3>👤 Kandidatsammanfattning</h3>
+                        <p>${data.candidateSummary}</p>
+                    </div>
+                `;
+            }
+
+            // Styrkor
+            if (data.strengths && data.strengths.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h3>✅ Styrkor & Matchning</h3>
+                        <ul class="analysis-list">
+                `;
+                data.strengths.forEach(item => html += `<li>${item}</li>`);
+                html += `</ul></div>`;
+            }
+
+            // Frågetecken/Gaps
+            if (data.concerns && data.concerns.length > 0) {
+                html += `
+                    <div class="analysis-section" style="background: #FFF4E6; border-left-color: #FF9800;">
+                        <h3>⚠️ Att undersöka närmare</h3>
+                        <ul class="analysis-list">
+                `;
+                data.concerns.forEach(item => html += `<li>${item}</li>`);
+                html += `</ul></div>`;
+            }
+
+            // Intervjufrågor
+            if (data.interviewQuestions && data.interviewQuestions.length > 0) {
+                html += `
+                    <div class="analysis-section">
+                        <h3>❓ Föreslagna intervjufrågor</h3>
+                        <ul class="analysis-list">
+                `;
+                data.interviewQuestions.forEach(q => html += `<li>${q}</li>`);
+                html += `</ul></div>`;
+            }
+
+            // Tips
+            if (data.tips && data.tips.length > 0) {
+                html += `
+                    <div class="tips-section">
+                        <h4>💡 Tips för intervjun</h4>
+                        <ul>
+                `;
+                data.tips.forEach(tip => html += `<li>${tip}</li>`);
+                html += `</ul></div>`;
+            }
+            
+            resultsContent.innerHTML = html;
+            resultsContent.classList.add('show');
+        }
+    </script>
+</body>
+</html>
