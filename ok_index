@@ -305,7 +305,12 @@
     </style>
 </head>
 <body>
-
+    
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
 
     <div class="container">
         <div class="header">
@@ -319,7 +324,7 @@
         <div class="tools-grid">
             <a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html" class="tool-card available">
                 <span class="tool-icon">📅</span>
-                <h2 class="tool-title">Årshjul för Chefer</h2>
+                <h2 class="tool-title">Årshjul för chefer</h2>
                 <p class="tool-description">
                     Översikt över årets viktigaste HR-aktiviteter, deadlines och återkommande processer. 
                     Planera och följ upp personalarbetet systematiskt genom hela året.
@@ -329,7 +334,7 @@
 
             <a href="https://andersasplundberggren.github.io/ledarportalen/chat.html" class="tool-card available">
                 <span class="tool-icon">💬</span>
-                <h2 class="tool-title">Chatta med Lagtexten</h2>
+                <h2 class="tool-title">Chatta med lagtexten</h2>
                 <p class="tool-description">
                     Ställ frågor om arbetsmiljölagen, medbestämmandelagen och lagen om anställningsskydd. 
                     Få snabba, korrekta svar baserat på aktuell lagstiftning.
@@ -339,7 +344,7 @@
 
             <a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html" class="tool-card available">
                 <span class="tool-icon">👥</span>
-                <h2 class="tool-title">Medarbetarsamtal Generator</h2>
+                <h2 class="tool-title">Generera underlag för medarbetarsamtal/h2>
                 <p class="tool-description">
                     AI-assisterad förberedelse av utvecklingssamtal med personaliserade frågor och uppföljning. 
                     Anpassas efter yrkesroll och önskad samtalstyp.
@@ -349,10 +354,20 @@
 
             <a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html" class="tool-card available">
                 <span class="tool-icon">📝</span>
-                <h2 class="tool-title">Förbered ditt Medarbetarsamtal</h2>
+                <h2 class="tool-title">Förbered ditt eget medarbetarsamtal</h2>
                 <p class="tool-description">
                     AI-assisterad förberedelse för medarbetare. Få stöd att formulera dina tankar, 
                     utvecklingsönskemål och hur du vill presentera dem under samtalet.
+                </p>
+                <span class="tool-status status-available">Tillgänglig Nu</span>
+            </a>
+
+            <a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html" class="tool-card available">
+                <span class="tool-icon">🎯</span>
+                <h2 class="tool-title">Rekryteringsstöd</h2>
+                <p class="tool-description">
+                    Ladda upp annons, CV och personligt brev för att få AI-genererat intervjuunderlag. 
+                    Matchningsanalys, föreslagna frågor och tips för anställningsintervjun.
                 </p>
                 <span class="tool-status status-available">Tillgänglig Nu</span>
             </a>
@@ -416,7 +431,7 @@
             }
         });
 
-        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
+        // Stäng mobilmeny när en länk klickas
         document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
             link.addEventListener('click', function() {
                 const navMenu = document.getElementById('navMenu');
