@@ -200,6 +200,7 @@
             border-radius: 15px;
             font-size: 14px;
             line-height: 1.5;
+            white-space: pre-wrap;
         }
 
         .message.ai .message-content {
@@ -422,6 +423,27 @@
 
             .nav-menu {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
             }
         }
     </style>
@@ -463,11 +485,9 @@
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
                     <div class="message-avatar">AI</div>
-                    <div class="message-content">
-                        Hej! Jag är din kommunikationsassistent. Berätta vad du vill kommunicera så hjälper jag dig att skapa professionella texter för olika kanaler. 
-                        
-                        Vad vill du berätta om?
-                    </div>
+                    <div class="message-content">Hej! Jag är din kommunikationsassistent. Jag hjälper dig att skapa professionella texter för olika kanaler.
+
+Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna skapa de bästa texterna åt dig!</div>
                 </div>
             </div>
 
@@ -511,6 +531,16 @@
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('show');
         }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
 
         // Auto-resize textarea
         document.getElementById('chatInput').addEventListener('input', function() {
@@ -601,7 +631,7 @@
                 
                 // Add AI response
                 addMessage(data.message);
-                conversationHistory.push({ role: 'assistant', content: data.message });
+                conversationHistory.push({ role: 'assistant', content: data.fullResponse });
                 
                 // Update results if we have generated content
                 if (data.generatedContent) {
@@ -611,7 +641,7 @@
             } catch (error) {
                 hideTyping();
                 console.error('Fel:', error);
-                addMessage('😔 Något gick fel. Försök igen.');
+                addMessage('😔 Något gick fel. Försök igen om en stund.');
             }
             
             isWaiting = false;
@@ -655,15 +685,16 @@
                     html += `<div class="comm-content"><strong>${data.rubrik}</strong></div>`;
                 }
 
+                const textEscaped = data.text.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/\\/g, '\\\\');
                 html += `
                         <div class="comm-content">${data.text}</div>
                         <div class="comm-meta">
                             <span class="char-count">${data.charCount} tecken</span>
-                            <button class="copy-btn" onclick='copyToClipboard(\`${data.text.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, this)'>📋 Kopiera</button>
+                            <button class="copy-btn" onclick='copyToClipboard(\`${textEscaped}\`, this)'>📋 Kopiera</button>
                         </div>
                 `;
 
-                if (data.hashtags) {
+                if (data.hashtags && data.hashtags.length > 0) {
                     html += `
                         <div style="margin-top: 8px; font-size: 11px; color: #666;">
                             <strong>Hashtags:</strong> ${data.hashtags.join(' ')}
@@ -695,11 +726,9 @@
                 document.getElementById('chatMessages').innerHTML = `
                     <div class="message ai">
                         <div class="message-avatar">AI</div>
-                        <div class="message-content">
-                            Hej! Jag är din kommunikationsassistent. Berätta vad du vill kommunicera så hjälper jag dig att skapa professionella texter för olika kanaler. 
-                            
-                            Vad vill du berätta om?
-                        </div>
+                        <div class="message-content">Hej! Jag är din kommunikationsassistent. Jag hjälper dig att skapa professionella texter för olika kanaler.
+
+Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna skapa de bästa texterna åt dig!</div>
                     </div>
                 `;
                 document.getElementById('resultsContent').innerHTML = `
