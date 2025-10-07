@@ -3,173 +3,183 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-  
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-  
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
   try {
-    const { conversationHistory } = req.body;
+    const { conversationHistory } = req.body || {};
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-    
+
     if (!OPENAI_API_KEY) {
-      console.error('Missing API key');
-      throw new Error('API key not configured');
+      return res.status(500).json({ error: 'Saknar OPENAI_API_KEY i Vercel', details: 'Env saknas' });
+    }
+    if (!Array.isArray(conversationHistory)) {
+      return res.status(400).json({ error: 'Invalid conversation history' });
     }
 
-    // Validera input
-    if (!conversationHistory || !Array.isArray(conversationHistory)) {
-      throw new Error('Invalid conversation history');
-    }
-
-    // Begränsa till senaste 10 meddelanden
     const recentHistory = conversationHistory.slice(-10);
 
-    // System prompt
     const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun med vision "Välkomnande, kloka och innovativa Karlskoga".
 
 PROCESS:
 1. Ställ EN fråga i taget för att samla: budskap, målgrupp, syfte, detaljer (datum/plats/kontakt), ton
 2. När du har minst: budskap + målgrupp + syfte → generera texter
 
-GENERERA TEXTER:
-Skapa JSON inom <GENERATED_CONTENT> taggar:
-
-<GENERATED_CONTENT>
-{
-  "channels": {
-    "nyhet": {"rubrik": "Rubrik här", "text": "Nyhettext 300-500 tecken", "charCount": 400},
-    "epost": {"rubrik": "Ämnesrad", "text": "E-posttext 250-400 tecken", "charCount": 300},
-    "facebook": {"text": "Facebook-text 150-250 tecken", "hashtags": ["#Karlskoga"], "charCount": 200},
-    "linkedin": {"text": "LinkedIn-text 200-300 tecken", "hashtags": ["#Karlskoga"], "charCount": 250},
-    "instagram": {"text": "Instagram-text 100-180 tecken", "hashtags": ["#Karlskoga"], "charCount": 150},
-    "pressmeddelande": {"rubrik": "Pressrubrik", "text": "Presstext 400-700 tecken", "charCount": 550}
-  }
-}
-</GENERATED_CONTENT>
-
 VIKTIGT:
-- Använd Karlskogas värderingar
 - Korta, tydliga texter
 - Anpassa ton till målgrupp
 - Inkludera relevanta detaljer
-- Räkna tecken korrekt`;
+- Räkna tecken korrekt
+- När du genererar, följ exakt JSON-schemat (inga extra fält).`;
 
-    console.log(`Processing ${recentHistory.length} messages`);
-
-    // Bygg meddelanden för OpenAI
+    // Bygg meddelanden
     const messages = [
       { role: 'system', content: systemPrompt },
-      ...recentHistory.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }))
+      ...recentHistory.map(m => ({ role: m.role, content: m.content })),
+      {
+        role: 'system',
+        content:
+          'När du har tillräckligt med information ska du endast svara med JSON enligt givet schema. Inga förklaringar, inga taggar.'
+      }
     ];
 
-    // API-anrop med timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 28000);
-
-    let response;
-    try {
-      response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`
+    // JSON-schema för output
+    const jsonSchema = {
+      name: "KommunikationOutput",
+      schema: {
+        type: "object",
+        properties: {
+          channels: {
+            type: "object",
+            properties: {
+              nyhet: {
+                type: "object",
+                properties: {
+                  rubrik: { type: "string" },
+                  text: { type: "string" },
+                  charCount: { type: "integer" }
+                },
+                required: ["rubrik", "text", "charCount"]
+              },
+              epost: {
+                type: "object",
+                properties: {
+                  rubrik: { type: "string" },
+                  text: { type: "string" },
+                  charCount: { type: "integer" }
+                },
+                required: ["rubrik", "text", "charCount"]
+              },
+              facebook: {
+                type: "object",
+                properties: {
+                  text: { type: "string" },
+                  hashtags: { type: "array", items: { type: "string" } },
+                  charCount: { type: "integer" }
+                },
+                required: ["text", "charCount"]
+              },
+              linkedin: {
+                type: "object",
+                properties: {
+                  text: { type: "string" },
+                  hashtags: { type: "array", items: { type: "string" } },
+                  charCount: { type: "integer" }
+                },
+                required: ["text", "charCount"]
+              },
+              instagram: {
+                type: "object",
+                properties: {
+                  text: { type: "string" },
+                  hashtags: { type: "array", items: { type: "string" } },
+                  charCount: { type: "integer" }
+                },
+                required: ["text", "charCount"]
+              },
+              pressmeddelande: {
+                type: "object",
+                properties: {
+                  rubrik: { type: "string" },
+                  text: { type: "string" },
+                  charCount: { type: "integer" }
+                },
+                required: ["rubrik", "text", "charCount"]
+              }
+            },
+            additionalProperties: false
+          }
         },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: messages,
-          max_tokens: 2500,
-          temperature: 0.7
-        }),
-        signal: controller.signal
-      });
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      console.error('Fetch error:', fetchError);
-      if (fetchError.name === 'AbortError') {
-        throw new Error('Timeout - AI svarade inte i tid');
-      }
-      throw new Error('Kunde inte kontakta OpenAI');
-    }
-
-    clearTimeout(timeoutId);
-
-    // Hantera OpenAI fel
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`OpenAI error ${response.status}:`, errorText);
-      
-      if (response.status === 429) {
-        throw new Error('För många förfrågningar. Vänta 30 sekunder.');
-      }
-      if (response.status === 401) {
-        throw new Error('API-nyckel är ogiltig');
-      }
-      throw new Error(`OpenAI fel: ${response.status}`);
-    }
-
-    // Parse svar
-    const data = await response.json();
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Invalid OpenAI response:', data);
-      throw new Error('Ogiltigt svar från AI');
-    }
-
-    const assistantMessage = data.choices[0].message.content;
-    console.log('AI response length:', assistantMessage.length);
-
-    // Extrahera genererat innehåll
-    let generatedContent = null;
-    const contentMatch = assistantMessage.match(/<GENERATED_CONTENT>([\s\S]*?)<\/GENERATED_CONTENT>/);
-    
-    if (contentMatch) {
-      try {
-        const jsonStr = contentMatch[1].trim();
-        generatedContent = JSON.parse(jsonStr);
-        console.log('Successfully parsed generated content');
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError);
-        console.error('JSON string:', contentMatch[1].substring(0, 200));
-        // Fortsätt ändå utan genererat innehåll
-      }
-    }
-
-    // Ta bort GENERATED_CONTENT-taggar från visat meddelande
-    const cleanMessage = assistantMessage
-      .replace(/<GENERATED_CONTENT>[\s\S]*?<\/GENERATED_CONTENT>/g, '')
-      .trim();
-
-    // Returnera svar
-    const responseData = {
-      message: cleanMessage || 'Jag har skapat texterna åt dig!',
-      fullResponse: assistantMessage,
-      generatedContent: generatedContent
+        required: ["channels"],
+        additionalProperties: false
+      },
+      strict: true
     };
 
-    console.log('Sending response, has content:', !!generatedContent);
-    res.status(200).json(responseData);
-    
-  } catch (error) {
-    console.error('Handler error:', error);
-    console.error('Error stack:', error.stack);
-    
-    res.status(500).json({
+    // Anropa OpenAI Responses API (stabilt JSON-svar)
+    const controller = new AbortController();
+    const to = setTimeout(() => controller.abort(), 28000);
+
+    const resp = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini', // fungerar för JSON-formaterade svar
+        input: messages,
+        response_format: { type: 'json_schema', json_schema: jsonSchema },
+        temperature: 0.7,
+        max_output_tokens: 2000
+      }),
+      signal: controller.signal
+    }).catch(e => {
+      throw e.name === 'AbortError' ? new Error('Timeout - AI svarade inte i tid') : e;
+    });
+
+    clearTimeout(to);
+
+    if (!resp.ok) {
+      const t = await resp.text();
+      return res.status(resp.status).json({ error: 'OpenAI fel', details: t });
+    }
+
+    const data = await resp.json();
+
+    // Responses API returnerar svaret i data.output[0].content[0].text (eller data.output_text).
+    const raw = data.output_text || (
+      data.output && data.output[0] && data.output[0].content && data.output[0].content[0] && data.output[0].content[0].text
+    ) || null;
+
+    if (!raw) {
+      return res.status(500).json({ error: 'Tomt AI-svar' });
+    }
+
+    let generatedContent;
+    try {
+      generatedContent = JSON.parse(raw);
+    } catch {
+      return res.status(500).json({ error: 'Kunde inte tolka AI-JSON', details: raw.slice(0, 300) });
+    }
+
+    // Skapa vänligt meddelande att visa i chatten
+    const message = 'Jag har skapat förslag för respektive kanal i rutan till höger. Vill du justera ton, längd eller målgrupp?';
+
+    return res.status(200).json({
+      message,
+      fullResponse: raw,
+      generatedContent
+    });
+
+  } catch (err) {
+    return res.status(500).json({
       error: 'Något gick fel',
-      details: error.message,
+      details: err.message,
       timestamp: new Date().toISOString()
     });
   }
 }
 
-export const config = {
-  maxDuration: 30
-};
+export const config = { maxDuration: 30 };
