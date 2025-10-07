@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kommunikationsstöd - Karlskoga kommun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-item a:hover {
+            background: #EFF2FF;
+            color: #362E7D;
+        }
+
+        .nav-item.active a {
+            background: #5863C7;
+            color: white;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #362E7D;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #EFF2FF;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section, .results-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            margin: -30px -30px 25px -30px;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .section-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .section-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #362E7D;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #DBDEF4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5863C7;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #EFF2FF;
+            border-color: #5863C7;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #5863C7;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #5863C7, #362E7D);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .vision-highlight {
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #5863C7;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-content {
+            display: none;
+        }
+
+        .results-content.show {
+            display: block;
+        }
+
+        .comm-channel {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #EFF2FF;
+            border-radius: 10px;
+            border-left: 4px solid #5863C7;
+            position: relative;
+        }
+
+        .comm-channel h3 {
+            color: #362E7D;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comm-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .comm-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .char-count {
+            background: #D2EFE7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #0F6F60;
+        }
+
+        .copy-btn {
+            background: #00A78B;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #00C4A7;
+            transform: translateY(-1px);
+        }
+
+        .tips-section {
+            background: #D2EFE7;
+            border-left: 4px solid #00A78B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tips-section h4 {
+            color: #0F6F60;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px;
+                padding: 10px 0;
+                gap: 0;
+                z-index: 1000;
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .nav-item a {
+                padding: 15px 25px;
+                border-radius: 0;
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .form-section, .results-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                margin: -20px -20px 20px -20px;
+                padding: 15px 20px;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html">📢 Kommunikation</a></li>
+        </ul>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+    </nav>
+
+    <div class="container">
+        <!-- Formulärsektion -->
+        <div class="form-section">
+            <div class="section-header">
+                <h1>📢 Kommunikationsstöd</h1>
+                <p>Skapa anpassade texter för olika kommunikationskanaler</p>
+            </div>
+
+            <div class="vision-highlight">
+                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
+            </div>
+
+            <form id="kommunikationForm">
+                <div class="form-group">
+                    <label for="budskap">Vad vill du kommunicera?</label>
+                    <textarea id="budskap" class="form-control" required 
+                              placeholder="Beskriv huvudbudskapet du vill förmedla..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="varfor">Varför är detta viktigt att berätta?</label>
+                    <textarea id="varfor" class="form-control" required
+                              placeholder="Förklara syftet och värdet med att kommunicera detta..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Vem är målgruppen?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="medarbetare" name="malgrupp" value="medarbetare" checked>
+                            <label for="medarbetare">Medarbetare</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="medborgare" name="malgrupp" value="medborgare">
+                            <label for="medborgare">Medborgare</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="media" name="malgrupp" value="media">
+                            <label for="media">Media/Press</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="politiker" name="malgrupp" value="politiker">
+                            <label for="politiker">Politiker</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="andra_kommuner" name="malgrupp" value="andra_kommuner">
+                            <label for="andra_kommuner">Andra kommuner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="specifik_avdelning" name="malgrupp" value="specifik_avdelning">
+                            <label for="specifik_avdelning">Specifik avdelning</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ton & stil</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="formell" name="ton" value="formell">
+                            <label for="formell">Formell</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="informell" name="ton" value="informell" checked>
+                            <label for="informell">Informell</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="inspirerande" name="ton" value="inspirerande">
+                            <label for="inspirerande">Inspirerande</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="informativ" name="ton" value="informativ" checked>
+                            <label for="informativ">Informativ</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="angelagen" name="ton" value="angelägen">
+                            <label for="angelagen">Angelägen</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bakgrund">Bakgrundsinformation (valfritt)</label>
+                    <textarea id="bakgrund" class="form-control"
+                              placeholder="Kontext, tidigare händelser eller annan relevant bakgrund..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="nyckelord">Viktiga nyckelord att inkludera (valfritt)</label>
+                    <input type="text" id="nyckelord" class="form-control"
+                           placeholder="T.ex. hållbarhet, innovation, samarbete...">
+                </div>
+
+                <div class="form-group">
+                    <label for="tidpunkt">När ska detta kommuniceras?</label>
+                    <input type="date" id="tidpunkt" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Vilka kommunikationskanaler vill du ha texter för?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="nyhet" name="kanal" value="nyhet" checked>
+                            <label for="nyhet">Nyhet (webb/intranät)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="epost" name="kanal" value="epost" checked>
+                            <label for="epost">E-postutskick</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="facebook" name="kanal" value="facebook">
+                            <label for="facebook">Facebook</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="linkedin" name="kanal" value="linkedin">
+                            <label for="linkedin">LinkedIn</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="instagram" name="kanal" value="instagram">
+                            <label for="instagram">Instagram</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pressmeddelande" name="kanal" value="pressmeddelande">
+                            <label for="pressmeddelande">Pressmeddelande</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="generate-btn" id="generateBtn">
+                    🚀 Generera kommunikationsmaterial
+                </button>
+            </form>
+        </div>
+
+        <!-- Resultatsektion -->
+        <div class="results-section">
+            <div class="section-header">
+                <h1>💡 Färdiga texter</h1>
+                <p>AI-genererade texter anpassade för dina valda kanaler</p>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Skapar anpassade texter...</p>
+            </div>
+
+            <div class="results-content" id="resultsContent">
+                <!-- Resultaten kommer att fyllas i här av JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://ledarportalen.vercel.app/api/generate-communication';
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('show');
+        }
+
+        // Stäng mobilmeny vid klick utanför
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('show');
+            }
+        });
+
+        // Kopiera text till urklipp
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Kopierad!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Hantera formulärinlämning
+        document.getElementById('kommunikationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                budskap: document.getElementById('budskap').value,
+                varfor: document.getElementById('varfor').value,
+                malgrupper: Array.from(document.querySelectorAll('input[name="malgrupp"]:checked')).map(cb => cb.value),
+                toner: Array.from(document.querySelectorAll('input[name="ton"]:checked')).map(cb => cb.value),
+                bakgrund: document.getElementById('bakgrund').value,
+                nyckelord: document.getElementById('nyckelord').value,
+                tidpunkt: document.getElementById('tidpunkt').value,
+                kanaler: Array.from(document.querySelectorAll('input[name="kanal"]:checked')).map(cb => cb.value)
+            };
+
+            if (formData.malgrupper.length === 0) {
+                alert('Vänligen välj minst en målgrupp.');
+                return;
+            }
+
+            if (formData.toner.length === 0) {
+                alert('Vänligen välj minst en ton.');
+                return;
+            }
+
+            if (formData.kanaler.length === 0) {
+                alert('Vänligen välj minst en kommunikationskanal.');
+                return;
+            }
+
+            // Visa loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultsContent').classList.remove('show');
+            document.getElementById('generateBtn').disabled = true;
+
+            try {
+                await generateCommunication(formData);
+            } catch (error) {
+                console.error('Fel vid generering:', error);
+                alert('Något gick fel vid genereringen. Försök igen.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('generateBtn').disabled = false;
+            }
+        });
+
+        async function generateCommunication(formData) {
+            // Simulera API-anrop
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const mockData = generateMockContent(formData);
+            displayResults(mockData, formData);
+        }
+
+        function generateMockContent(formData) {
+            const channels = {};
+            
+            formData.kanaler.forEach(kanal => {
+                switch(kanal) {
+                    case 'nyhet':
+                        channels.nyhet = {
+                            rubrik: "Ny satsning på digital utveckling i Karlskoga kommun",
+                            text: `Karlskoga kommun tar nästa steg i den digitala utvecklingen. ${formData.budskap}\n\n${formData.varfor}\n\nDetta är ett led i kommunens vision om att vara välkomnande, kloka och innovativa.`,
+                            charCount: 250
+                        };
+                        break;
+                    case 'epost':
+                        channels.epost = {
+                            rubrik: "Viktig information",
+                            text: `Hej!\n\n${formData.budskap}\n\n${formData.varfor}\n\nMed vänlig hälsning,\nKarlskoga kommun`,
+                            charCount: 180
+                        };
+                        break;
+                    case 'facebook':
+                        channels.facebook = {
+                            text: `${formData.budskap} 🌟\n\n${formData.varfor}\n\n#Karlskoga #Kommun #Innovation`,
+                            charCount: 150,
+                            hashtags: ['#Karlskoga', '#Kommun', '#Innovation']
+                        };
+                        break;
+                    case 'linkedin':
+                        channels.linkedin = {
+                            text: `${formData.budskap}\n\n${formData.varfor}\n\nKarlskoga kommun arbetar kontinuerligt med att utveckla verksamheten för att skapa bästa möjliga service till våra medborgare.`,
+                            charCount: 200
+                        };
+                        break;
+                    case 'instagram':
+                        channels.instagram = {
+                            text: `${formData.budskap} ✨\n\n${formData.varfor.substring(0, 100)}...\n\n#Karlskoga #KommunLiv`,
+                            charCount: 120,
+                            hashtags: ['#Karlskoga', '#KommunLiv']
+                        };
+                        break;
+                    case 'pressmeddelande':
+                        channels.pressmeddelande = {
+                            rubrik: "Pressmeddelande: Karlskoga kommun",
+                            text: `${formData.budskap}\n\n${formData.varfor}\n\nFör mer information, kontakta:\nKommunikationsavdelningen\nKarlskoga kommun`,
+                            charCount: 300
+                        };
+                        break;
+                }
+            });
+
+            return {
+                channels,
+                tips: [
+                    "Publicera på morgonen (08:00-10:00) för bäst räckvidd",
+                    "Använd relevant bild eller grafik för ökad engagemang",
+                    "Följ upp med eventuella frågor inom 24 timmar",
+                    "Överväg att pinna viktiga inlägg för ökad synlighet"
+                ]
+            };
+        }
+
+        function displayResults(data, formData) {
+            const resultsContent = document.getElementById('resultsContent');
+            
+            let html = `
+                <div class="vision-highlight">
+                    Texter genererade för ${formData.kanaler.length} kommunikationskanal${formData.kanaler.length > 1 ? 'er' : ''}
+                </div>
+            `;
+
+            const channelIcons = {
+                nyhet: '📰',
+                epost: '📧',
+                facebook: '📘',
+                linkedin: '💼',
+                instagram: '📸',
+                pressmeddelande: '📢'
+            };
+
+            const channelNames = {
+                nyhet: 'Nyhet (Webb/Intranät)',
+                epost: 'E-postutskick',
+                facebook: 'Facebook',
+                linkedin: 'LinkedIn',
+                instagram: 'Instagram',
+                pressmeddelande: 'Pressmeddelande'
+            };
+
+            Object.entries(data.channels).forEach(([kanal, content]) => {
+                html += `
+                    <div class="comm-channel">
+                        <h3>${channelIcons[kanal]} ${channelNames[kanal]}</h3>
+                `;
+
+                if (content.rubrik) {
+                    html += `<div class="comm-content"><strong>${content.rubrik}</strong></div>`;
+                }
+
+                html += `
+                        <div class="comm-content">${content.text}</div>
+                        <div class="comm-meta">
+                            <span class="char-count">${content.charCount} tecken</span>
+                            <button class="copy-btn" onclick='copyToClipboard(\`${content.text.replace(/`/g, '\\`')}\`, this)'>📋 Kopiera text</button>
+                        </div>
+                `;
+
+                if (content.hashtags) {
+                    html += `
+                        <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                            <strong>Förslag på hashtags:</strong> ${content.hashtags.join(' ')}
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            });
+
+            // Tips
+            if (data.tips && data.tips.length > 0) {
+                html += `
+                    <div class="tips-section">
+                        <h4>💡 Tips för kommunikationen</h4>
+                        <ul>
+                `;
+                data.tips.forEach(tip => html += `<li>${tip}</li>`);
+                html += `</ul></div>`;
+            }
+            
+            resultsContent.innerHTML = html;
+            resultsContent.classList.add('show');
+        }
+    </script>
+</body>
+</html>
