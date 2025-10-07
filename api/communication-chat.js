@@ -18,61 +18,66 @@ export default async function handler(req, res) {
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
     
     if (!OPENAI_API_KEY) {
+      console.error('Missing API key');
       throw new Error('API key not configured');
     }
 
-    // Begränsa historik till senaste 8 meddelanden för att minska token-användning
-    const recentHistory = conversationHistory.slice(-8);
+    // Validera input
+    if (!conversationHistory || !Array.isArray(conversationHistory)) {
+      throw new Error('Invalid conversation history');
+    }
 
-    // Kompakt system prompt
-    const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun. Vision: "Välkomnande, kloka och innovativa Karlskoga".
+    // Begränsa till senaste 10 meddelanden
+    const recentHistory = conversationHistory.slice(-10);
 
-UPPGIFT: Samla info genom korta frågor, sedan generera texter.
+    // System prompt
+    const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun med vision "Välkomnande, kloka och innovativa Karlskoga".
 
-FRÅGA OM:
-- Budskap/ämne
-- Målgrupp
-- Syfte
-- Viktiga detaljer (datum, plats, kontakt)
-- Önskad ton
+PROCESS:
+1. Ställ EN fråga i taget för att samla: budskap, målgrupp, syfte, detaljer (datum/plats/kontakt), ton
+2. När du har minst: budskap + målgrupp + syfte → generera texter
 
-När du har info (budskap + målgrupp + syfte + några detaljer), generera texter i denna JSON-struktur inom <GENERATED_CONTENT> taggar:
+GENERERA TEXTER:
+Skapa JSON inom <GENERATED_CONTENT> taggar:
 
 <GENERATED_CONTENT>
 {
   "channels": {
-    "nyhet": {"rubrik": "...", "text": "...", "charCount": 450},
-    "epost": {"rubrik": "...", "text": "...", "charCount": 300},
-    "facebook": {"text": "...", "hashtags": ["#Karlskoga", "..."], "charCount": 250},
-    "linkedin": {"text": "...", "hashtags": ["#Karlskoga"], "charCount": 280},
-    "instagram": {"text": "...", "hashtags": ["#Karlskoga", "..."], "charCount": 180},
-    "pressmeddelande": {"rubrik": "...", "text": "...", "charCount": 600}
+    "nyhet": {"rubrik": "Rubrik här", "text": "Nyhettext 300-500 tecken", "charCount": 400},
+    "epost": {"rubrik": "Ämnesrad", "text": "E-posttext 250-400 tecken", "charCount": 300},
+    "facebook": {"text": "Facebook-text 150-250 tecken", "hashtags": ["#Karlskoga"], "charCount": 200},
+    "linkedin": {"text": "LinkedIn-text 200-300 tecken", "hashtags": ["#Karlskoga"], "charCount": 250},
+    "instagram": {"text": "Instagram-text 100-180 tecken", "hashtags": ["#Karlskoga"], "charCount": 150},
+    "pressmeddelande": {"rubrik": "Pressrubrik", "text": "Presstext 400-700 tecken", "charCount": 550}
   }
 }
 </GENERATED_CONTENT>
 
-RIKTLINJER:
-- Nyhet: 300-600 tecken, informativ
-- E-post: 200-400 tecken, personlig
-- Facebook: 150-300 tecken, engagerande, 2-3 hashtags
-- LinkedIn: 200-350 tecken, professionell, 2-3 hashtags  
-- Instagram: 100-200 tecken, visuell, 3-5 hashtags
-- Press: 400-800 tecken, formell, alla W-frågor
+VIKTIGT:
+- Använd Karlskogas värderingar
+- Korta, tydliga texter
+- Anpassa ton till målgrupp
+- Inkludera relevanta detaljer
+- Räkna tecken korrekt`;
 
-Var kortfattad, ställ EN fråga åt gången. När du genererar, berätta kort vad du skapar.`;
+    console.log(`Processing ${recentHistory.length} messages`);
 
-    // Bygg meddelanden
+    // Bygg meddelanden för OpenAI
     const messages = [
       { role: 'system', content: systemPrompt },
-      ...recentHistory
+      ...recentHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
     ];
 
-    // API-anrop med kortare timeout
+    // API-anrop med timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 sekunder
+    const timeoutId = setTimeout(() => controller.abort(), 28000);
 
+    let response;
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,70 +86,90 @@ Var kortfattad, ställ EN fråga åt gången. När du genererar, berätta kort v
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages: messages,
-          max_tokens: 2000, // Reducerad från 3000
-          temperature: 0.7, // Mer konsekvent än 0.8
-          presence_penalty: 0.3 // Undvik upprepningar
+          max_tokens: 2500,
+          temperature: 0.7
         }),
         signal: controller.signal
       });
-
-      clearTimeout(timeoutId);
-
-      if (response.status === 429) {
-        throw new Error('För många förfrågningar. Vänta en stund och försök igen.');
-      }
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('OpenAI error:', errorData);
-        throw new Error(`OpenAI API fel: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const assistantMessage = data.choices[0].message.content;
-
-      // Extrahera genererat innehåll
-      let generatedContent = null;
-      const contentMatch = assistantMessage.match(/<GENERATED_CONTENT>([\s\S]*?)<\/GENERATED_CONTENT>/);
-      
-      if (contentMatch) {
-        try {
-          generatedContent = JSON.parse(contentMatch[1].trim());
-        } catch (e) {
-          console.error('JSON parse error:', e);
-        }
-      }
-
-      // Ta bort GENERATED_CONTENT-taggar från visat meddelande
-      const cleanMessage = assistantMessage
-        .replace(/<GENERATED_CONTENT>[\s\S]*?<\/GENERATED_CONTENT>/g, '')
-        .trim();
-
-      // Returnera svar
-      res.status(200).json({
-        message: cleanMessage || assistantMessage,
-        fullResponse: assistantMessage,
-        generatedContent: generatedContent
-      });
-
     } catch (fetchError) {
       clearTimeout(timeoutId);
+      console.error('Fetch error:', fetchError);
       if (fetchError.name === 'AbortError') {
-        throw new Error('Timeout - försök med kortare meddelanden');
+        throw new Error('Timeout - AI svarade inte i tid');
       }
-      throw fetchError;
+      throw new Error('Kunde inte kontakta OpenAI');
     }
+
+    clearTimeout(timeoutId);
+
+    // Hantera OpenAI fel
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`OpenAI error ${response.status}:`, errorText);
+      
+      if (response.status === 429) {
+        throw new Error('För många förfrågningar. Vänta 30 sekunder.');
+      }
+      if (response.status === 401) {
+        throw new Error('API-nyckel är ogiltig');
+      }
+      throw new Error(`OpenAI fel: ${response.status}`);
+    }
+
+    // Parse svar
+    const data = await response.json();
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Invalid OpenAI response:', data);
+      throw new Error('Ogiltigt svar från AI');
+    }
+
+    const assistantMessage = data.choices[0].message.content;
+    console.log('AI response length:', assistantMessage.length);
+
+    // Extrahera genererat innehåll
+    let generatedContent = null;
+    const contentMatch = assistantMessage.match(/<GENERATED_CONTENT>([\s\S]*?)<\/GENERATED_CONTENT>/);
+    
+    if (contentMatch) {
+      try {
+        const jsonStr = contentMatch[1].trim();
+        generatedContent = JSON.parse(jsonStr);
+        console.log('Successfully parsed generated content');
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('JSON string:', contentMatch[1].substring(0, 200));
+        // Fortsätt ändå utan genererat innehåll
+      }
+    }
+
+    // Ta bort GENERATED_CONTENT-taggar från visat meddelande
+    const cleanMessage = assistantMessage
+      .replace(/<GENERATED_CONTENT>[\s\S]*?<\/GENERATED_CONTENT>/g, '')
+      .trim();
+
+    // Returnera svar
+    const responseData = {
+      message: cleanMessage || 'Jag har skapat texterna åt dig!',
+      fullResponse: assistantMessage,
+      generatedContent: generatedContent
+    };
+
+    console.log('Sending response, has content:', !!generatedContent);
+    res.status(200).json(responseData);
     
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Handler error:', error);
+    console.error('Error stack:', error.stack);
+    
     res.status(500).json({
       error: 'Något gick fel',
-      details: error.message
+      details: error.message,
+      timestamp: new Date().toISOString()
     });
   }
 }
 
-// Vercel config - öka timeout till max (hobby plan)
 export const config = {
   maxDuration: 30
 };
