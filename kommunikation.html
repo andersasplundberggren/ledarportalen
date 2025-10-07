@@ -110,18 +110,20 @@
             gap: 30px;
         }
 
-        .form-section, .results-section {
+        .chat-section, .results-section {
             background: white;
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            height: fit-content;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
         }
 
         .section-header {
             background: linear-gradient(135deg, #362E7D, #5863C7);
             color: white;
-            margin: -30px -30px 25px -30px;
+            margin: -30px -30px 20px -30px;
             padding: 20px 30px;
             border-radius: 15px 15px 0 0;
         }
@@ -136,144 +138,165 @@
             font-size: 14px;
         }
 
-        .form-group {
-            margin-bottom: 25px;
+        .vision-highlight {
+            background: linear-gradient(135deg, #00A78B, #00C4A7);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
         }
 
-        .form-group label {
-            display: block;
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #F8F9FF;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.ai {
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 600;
-            color: #362E7D;
-            margin-bottom: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
-        .form-control {
-            width: 100%;
+        .message.ai .message-avatar {
+            background: #00A78B;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #5863C7;
+            color: white;
+            order: 2;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.ai .message-content {
+            background: white;
+            border: 1px solid #E0E5F0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: #5863C7;
+            color: white;
+            border-bottom-right-radius: 4px;
+            order: 1;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
             padding: 12px 16px;
             border: 2px solid #DBDEF4;
-            border-radius: 10px;
+            border-radius: 20px;
             font-size: 14px;
             font-family: inherit;
-            transition: border-color 0.3s ease;
+            resize: none;
+            max-height: 120px;
+            min-height: 44px;
         }
 
-        .form-control:focus {
+        .chat-input:focus {
             outline: none;
             border-color: #5863C7;
         }
 
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .checkbox-item {
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: #5863C7;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 8px;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
+            justify-content: center;
             transition: all 0.3s ease;
+            font-size: 18px;
         }
 
-        .checkbox-item:hover {
-            background: #EFF2FF;
-            border-color: #5863C7;
+        .send-btn:hover:not(:disabled) {
+            background: #362E7D;
+            transform: scale(1.05);
         }
 
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
-            accent-color: #5863C7;
-        }
-
-        .generate-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #5863C7, #362E7D);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .generate-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
+        .send-btn:disabled {
+            background: #DBDEF4;
             cursor: not-allowed;
-            transform: none;
-        }
-
-        .vision-highlight {
-            background: linear-gradient(135deg, #00A78B, #00C4A7);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #5863C7;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .results-content {
-            display: none;
+            flex: 1;
+            overflow-y: auto;
         }
 
-        .results-content.show {
-            display: block;
+        .results-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .results-empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
         }
 
         .comm-channel {
-            margin-bottom: 25px;
-            padding: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
             background: #EFF2FF;
             border-radius: 10px;
             border-left: 4px solid #5863C7;
-            position: relative;
         }
 
         .comm-channel h3 {
             color: #362E7D;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -281,26 +304,27 @@
 
         .comm-content {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             white-space: pre-wrap;
             line-height: 1.6;
             color: #333;
+            font-size: 14px;
         }
 
         .comm-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .char-count {
             background: #D2EFE7;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
             color: #0F6F60;
         }
@@ -309,93 +333,95 @@
             background: #00A78B;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: all 0.3s ease;
         }
 
         .copy-btn:hover {
             background: #00C4A7;
+        }
+
+        .reset-btn {
+            background: #FF9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #F57C00;
             transform: translateY(-1px);
         }
 
-        .tips-section {
-            background: #D2EFE7;
-            border-left: 4px solid #00A78B;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #E0E5F0;
+            border-radius: 15px;
+            border-bottom-left-radius: 4px;
+            max-width: 75px;
         }
 
-        .tips-section h4 {
-            color: #0F6F60;
-            margin-bottom: 10px;
+        .typing-indicator.show {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
-            .global-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                height: 35px;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-            
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
-            }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-
             .container {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
-            body {
-                padding: 10px;
+
+            .chat-section, .results-section {
+                height: 500px;
             }
-            
-            .form-section, .results-section {
-                padding: 20px;
+
+            .mobile-menu-toggle {
+                display: block;
             }
-            
-            .section-header {
-                margin: -20px -20px 20px -20px;
-                padding: 15px 20px;
-            }
-            
-            .checkbox-group {
-                grid-template-columns: 1fr;
+
+            .nav-menu {
+                display: none;
             }
         }
     </style>
@@ -423,159 +449,62 @@
     </nav>
 
     <div class="container">
-        <!-- Formulärsektion -->
-        <div class="form-section">
+        <!-- Chat-sektion -->
+        <div class="chat-section">
             <div class="section-header">
-                <h1>📢 Kommunikationsstöd</h1>
-                <p>Skapa anpassade texter för olika kommunikationskanaler</p>
+                <h1>📢 Kommunikationsassistent</h1>
+                <p>Berätta vad du vill kommunicera - jag hjälper dig formulera det!</p>
             </div>
 
             <div class="vision-highlight">
                 ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
             </div>
 
-            <form id="kommunikationForm">
-                <div class="form-group">
-                    <label for="budskap">Vad vill du kommunicera?</label>
-                    <textarea id="budskap" class="form-control" required 
-                              placeholder="Beskriv huvudbudskapet du vill förmedla..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="varfor">Varför är detta viktigt att berätta?</label>
-                    <textarea id="varfor" class="form-control" required
-                              placeholder="Förklara syftet och värdet med att kommunicera detta..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Vem är målgruppen?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="medarbetare" name="malgrupp" value="medarbetare">
-                            <label for="medarbetare">Medarbetare</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="medborgare" name="malgrupp" value="medborgare">
-                            <label for="medborgare">Medborgare</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="media" name="malgrupp" value="media">
-                            <label for="media">Media/Press</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="politiker" name="malgrupp" value="politiker">
-                            <label for="politiker">Politiker</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="andra_kommuner" name="malgrupp" value="andra_kommuner">
-                            <label for="andra_kommuner">Andra kommuner</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="specifik_avdelning" name="malgrupp" value="specifik_avdelning">
-                            <label for="specifik_avdelning">Specifik avdelning</label>
-                        </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        Hej! Jag är din kommunikationsassistent. Berätta vad du vill kommunicera så hjälper jag dig att skapa professionella texter för olika kanaler. 
+                        
+                        Vad vill du berätta om?
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label>Ton & stil</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="formell" name="ton" value="formell">
-                            <label for="formell">Formell</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="informell" name="ton" value="informell">
-                            <label for="informell">Informell</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="inspirerande" name="ton" value="inspirerande">
-                            <label for="inspirerande">Inspirerande</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="informativ" name="ton" value="informativ">
-                            <label for="informativ">Informativ</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="angelagen" name="ton" value="angelägen">
-                            <label for="angelagen">Angelägen</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="bakgrund">Bakgrundsinformation (valfritt)</label>
-                    <textarea id="bakgrund" class="form-control"
-                              placeholder="Kontext, tidigare händelser eller annan relevant bakgrund..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="nyckelord">Viktiga nyckelord att inkludera (valfritt)</label>
-                    <input type="text" id="nyckelord" class="form-control"
-                           placeholder="T.ex. hållbarhet, innovation, samarbete...">
-                </div>
-
-                <div class="form-group">
-                    <label for="tidpunkt">När ska detta kommuniceras?</label>
-                    <input type="date" id="tidpunkt" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label>Vilka kommunikationskanaler vill du ha texter för?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="nyhet" name="kanal" value="nyhet">
-                            <label for="nyhet">Nyhet (webb/intranät)</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="epost" name="kanal" value="epost">
-                            <label for="epost">E-postutskick</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="facebook" name="kanal" value="facebook">
-                            <label for="facebook">Facebook</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="linkedin" name="kanal" value="linkedin">
-                            <label for="linkedin">LinkedIn</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="instagram" name="kanal" value="instagram">
-                            <label for="instagram">Instagram</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="pressmeddelande" name="kanal" value="pressmeddelande">
-                            <label for="pressmeddelande">Pressmeddelande</label>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="generate-btn" id="generateBtn">
-                    🚀 Generera kommunikationsmaterial
+            <div class="chat-input-area">
+                <textarea 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Skriv ditt svar här..."
+                    rows="1"
+                ></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    ➤
                 </button>
-            </form>
+            </div>
         </div>
 
         <!-- Resultatsektion -->
         <div class="results-section">
             <div class="section-header">
                 <h1>💡 Färdiga texter</h1>
-                <p>AI-genererade texter anpassade för dina valda kanaler</p>
-            </div>
-
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Skapar anpassade texter...</p>
+                <p>Texterna uppdateras automatiskt</p>
             </div>
 
             <div class="results-content" id="resultsContent">
-                <!-- Resultaten kommer att fyllas i här av JavaScript -->
+                <div class="results-empty">
+                    <div class="results-empty-icon">📝</div>
+                    <p>Texterna kommer att visas här när du har svarat på mina frågor</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://ledarportalen.vercel.app/api/generate-communication';
+        const API_URL = 'https://ledarportalen.vercel.app/api/communication-chat';
+        
+        let conversationHistory = [];
+        let isWaiting = false;
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -583,150 +512,121 @@
             navMenu.classList.toggle('show');
         }
 
-        // Stäng mobilmeny vid klick utanför
-        document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            
-            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
-                navMenu.classList.remove('show');
+        // Auto-resize textarea
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send on Enter (but not Shift+Enter)
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
             }
         });
 
-        // Kopiera text till urklipp
-        function copyToClipboard(text, button) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.textContent;
-                button.textContent = '✓ Kopierad!';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                }, 2000);
-            });
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? 'Du' : 'AI'}</div>
+                <div class="message-content">${content}</div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Hantera formulärinlämning
-        document.getElementById('kommunikationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                budskap: document.getElementById('budskap').value,
-                varfor: document.getElementById('varfor').value,
-                malgrupper: Array.from(document.querySelectorAll('input[name="malgrupp"]:checked')).map(cb => cb.value),
-                toner: Array.from(document.querySelectorAll('input[name="ton"]:checked')).map(cb => cb.value),
-                bakgrund: document.getElementById('bakgrund').value,
-                nyckelord: document.getElementById('nyckelord').value,
-                tidpunkt: document.getElementById('tidpunkt').value,
-                kanaler: Array.from(document.querySelectorAll('input[name="kanal"]:checked')).map(cb => cb.value)
-            };
-
-            if (formData.malgrupper.length === 0) {
-                alert('Vänligen välj minst en målgrupp.');
-                return;
-            }
-
-            if (formData.toner.length === 0) {
-                alert('Vänligen välj minst en ton.');
-                return;
-            }
-
-            if (formData.kanaler.length === 0) {
-                alert('Vänligen välj minst en kommunikationskanal.');
-                return;
-            }
-
-            // Visa loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('resultsContent').classList.remove('show');
-            document.getElementById('generateBtn').disabled = true;
-
-            try {
-                await generateCommunication(formData);
-            } catch (error) {
-                console.error('Fel vid generering:', error);
-                alert('Något gick fel vid genereringen. Försök igen.');
-            } finally {
-                document.getElementById('loading').classList.remove('show');
-                document.getElementById('generateBtn').disabled = false;
-            }
-        });
-
-        async function generateCommunication(formData) {
-            // Simulera API-anrop
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const mockData = generateMockContent(formData);
-            displayResults(mockData, formData);
-        }
-
-        function generateMockContent(formData) {
-            const channels = {};
-            
-            formData.kanaler.forEach(kanal => {
-                switch(kanal) {
-                    case 'nyhet':
-                        channels.nyhet = {
-                            rubrik: "Ny satsning på digital utveckling i Karlskoga kommun",
-                            text: `Karlskoga kommun tar nästa steg i den digitala utvecklingen. ${formData.budskap}\n\n${formData.varfor}\n\nDetta är ett led i kommunens vision om att vara välkomnande, kloka och innovativa.`,
-                            charCount: 250
-                        };
-                        break;
-                    case 'epost':
-                        channels.epost = {
-                            rubrik: "Viktig information",
-                            text: `Hej!\n\n${formData.budskap}\n\n${formData.varfor}\n\nMed vänlig hälsning,\nKarlskoga kommun`,
-                            charCount: 180
-                        };
-                        break;
-                    case 'facebook':
-                        channels.facebook = {
-                            text: `${formData.budskap} 🌟\n\n${formData.varfor}\n\n#Karlskoga #Kommun #Innovation`,
-                            charCount: 150,
-                            hashtags: ['#Karlskoga', '#Kommun', '#Innovation']
-                        };
-                        break;
-                    case 'linkedin':
-                        channels.linkedin = {
-                            text: `${formData.budskap}\n\n${formData.varfor}\n\nKarlskoga kommun arbetar kontinuerligt med att utveckla verksamheten för att skapa bästa möjliga service till våra medborgare.`,
-                            charCount: 200
-                        };
-                        break;
-                    case 'instagram':
-                        channels.instagram = {
-                            text: `${formData.budskap} ✨\n\n${formData.varfor.substring(0, 100)}...\n\n#Karlskoga #KommunLiv`,
-                            charCount: 120,
-                            hashtags: ['#Karlskoga', '#KommunLiv']
-                        };
-                        break;
-                    case 'pressmeddelande':
-                        channels.pressmeddelande = {
-                            rubrik: "Pressmeddelande: Karlskoga kommun",
-                            text: `${formData.budskap}\n\n${formData.varfor}\n\nFör mer information, kontakta:\nKommunikationsavdelningen\nKarlskoga kommun`,
-                            charCount: 300
-                        };
-                        break;
-                }
-            });
-
-            return {
-                channels,
-                tips: [
-                    "Publicera på morgonen (08:00-10:00) för bäst räckvidd",
-                    "Använd relevant bild eller grafik för ökad engagemang",
-                    "Följ upp med eventuella frågor inom 24 timmar",
-                    "Överväg att pinna viktiga inlägg för ökad synlighet"
-                ]
-            };
-        }
-
-        function displayResults(data, formData) {
-            const resultsContent = document.getElementById('resultsContent');
-            
-            let html = `
-                <div class="vision-highlight">
-                    Texter genererade för ${formData.kanaler.length} kommunikationskanal${formData.kanaler.length > 1 ? 'er' : ''}
+        function showTyping() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">AI</div>
+                <div class="typing-indicator show">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
                 </div>
             `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
+        function hideTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        async function sendMessage() {
+            if (isWaiting) return;
+            
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            conversationHistory.push({ role: 'user', content: message });
+            input.value = '';
+            input.style.height = 'auto';
+            
+            isWaiting = true;
+            document.getElementById('sendBtn').disabled = true;
+            showTyping();
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        conversationHistory
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Backend-fel: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                hideTyping();
+                
+                // Add AI response
+                addMessage(data.message);
+                conversationHistory.push({ role: 'assistant', content: data.message });
+                
+                // Update results if we have generated content
+                if (data.generatedContent) {
+                    displayResults(data.generatedContent);
+                }
+                
+            } catch (error) {
+                hideTyping();
+                console.error('Fel:', error);
+                addMessage('😔 Något gick fel. Försök igen.');
+            }
+            
+            isWaiting = false;
+            document.getElementById('sendBtn').disabled = false;
+        }
+
+        function displayResults(content) {
+            const resultsContent = document.getElementById('resultsContent');
+            
+            if (!content || !content.channels || Object.keys(content.channels).length === 0) {
+                return;
+            }
+            
+            let html = '';
+            
             const channelIcons = {
                 nyhet: '📰',
                 epost: '📧',
@@ -745,28 +645,28 @@
                 pressmeddelande: 'Pressmeddelande'
             };
 
-            Object.entries(data.channels).forEach(([kanal, content]) => {
+            Object.entries(content.channels).forEach(([kanal, data]) => {
                 html += `
                     <div class="comm-channel">
                         <h3>${channelIcons[kanal]} ${channelNames[kanal]}</h3>
                 `;
 
-                if (content.rubrik) {
-                    html += `<div class="comm-content"><strong>${content.rubrik}</strong></div>`;
+                if (data.rubrik) {
+                    html += `<div class="comm-content"><strong>${data.rubrik}</strong></div>`;
                 }
 
                 html += `
-                        <div class="comm-content">${content.text}</div>
+                        <div class="comm-content">${data.text}</div>
                         <div class="comm-meta">
-                            <span class="char-count">${content.charCount} tecken</span>
-                            <button class="copy-btn" onclick='copyToClipboard(\`${content.text.replace(/`/g, '\\`')}\`, this)'>📋 Kopiera text</button>
+                            <span class="char-count">${data.charCount} tecken</span>
+                            <button class="copy-btn" onclick='copyToClipboard(\`${data.text.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, this)'>📋 Kopiera</button>
                         </div>
                 `;
 
-                if (content.hashtags) {
+                if (data.hashtags) {
                     html += `
-                        <div style="margin-top: 10px; font-size: 12px; color: #666;">
-                            <strong>Förslag på hashtags:</strong> ${content.hashtags.join(' ')}
+                        <div style="margin-top: 8px; font-size: 11px; color: #666;">
+                            <strong>Hashtags:</strong> ${data.hashtags.join(' ')}
                         </div>
                     `;
                 }
@@ -774,19 +674,41 @@
                 html += `</div>`;
             });
 
-            // Tips
-            if (data.tips && data.tips.length > 0) {
-                html += `
-                    <div class="tips-section">
-                        <h4>💡 Tips för kommunikationen</h4>
-                        <ul>
-                `;
-                data.tips.forEach(tip => html += `<li>${tip}</li>`);
-                html += `</ul></div>`;
-            }
+            html += `<button class="reset-btn" onclick="resetConversation()">🔄 Starta ny konversation</button>`;
             
             resultsContent.innerHTML = html;
-            resultsContent.classList.add('show');
+        }
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Kopierad!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function resetConversation() {
+            if (confirm('Vill du starta en ny konversation? All nuvarande information går förlorad.')) {
+                conversationHistory = [];
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="message ai">
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            Hej! Jag är din kommunikationsassistent. Berätta vad du vill kommunicera så hjälper jag dig att skapa professionella texter för olika kanaler. 
+                            
+                            Vad vill du berätta om?
+                        </div>
+                    </div>
+                `;
+                document.getElementById('resultsContent').innerHTML = `
+                    <div class="results-empty">
+                        <div class="results-empty-icon">📝</div>
+                        <p>Texterna kommer att visas här när du har svarat på mina frågor</p>
+                    </div>
+                `;
+            }
         }
     </script>
 </body>
