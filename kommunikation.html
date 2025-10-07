@@ -4,459 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kommunikationsstöd - Karlskoga kommun</title>
+    <!-- Inbyggd favicon (emoji) för att undvika 404 -->
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><text y="50%" x="50%" dominant-baseline="middle" text-anchor="middle" font-size="56">📢</text></svg>' />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
-            min-height: 100vh;
-            padding: 20px;
+            min-height: 100vh; padding: 20px;
         }
-
         .global-header {
-            background: white;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
+            background: white; width: 100%; max-width: 1200px; margin: 0 auto 20px;
+            border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; position: relative;
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            height: 45px;
-            background: white;
-            padding: 6px 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #362E7D;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .logo-text:hover {
-            color: #5863C7;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 5px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-item a {
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .nav-item a:hover {
-            background: #EFF2FF;
-            color: #362E7D;
-        }
-
-        .nav-item.active a {
-            background: #5863C7;
-            color: white;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #362E7D;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .mobile-menu-toggle:hover {
-            background: #EFF2FF;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 45px; background: white; padding: 6px 10px; border-radius: 6px; box-shadow: 0 2px 8px rgba(88,99,199,.1); }
+        .logo-text { font-size: 24px; font-weight: 700; color: #362E7D; text-decoration: none; transition: color .3s ease; }
+        .logo-text:hover { color: #5863C7; }
+        .nav-menu { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
+        .nav-item a { text-decoration: none; padding: 10px 16px; border-radius: 25px; font-weight: 500; color: #666; transition: all .3s ease; font-size: 14px; }
+        .nav-item a:hover { background: #EFF2FF; color: #362E7D; }
+        .nav-item.active a { background: #5863C7; color: white; }
+        .mobile-menu-toggle { display: none; background: none; border: none; font-size: 24px; color: #362E7D; cursor: pointer; padding: 5px; border-radius: 5px; transition: background .3s ease; }
+        .mobile-menu-toggle:hover { background: #EFF2FF; }
+        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .chat-section, .results-section {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            height: 700px;
-            display: flex;
-            flex-direction: column;
+            background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,.1);
+            padding: 30px; height: 700px; display: flex; flex-direction: column;
         }
-
         .section-header {
-            background: linear-gradient(135deg, #362E7D, #5863C7);
-            color: white;
-            margin: -30px -30px 20px -30px;
-            padding: 20px 30px;
-            border-radius: 15px 15px 0 0;
+            background: linear-gradient(135deg, #362E7D, #5863C7); color: white;
+            margin: -30px -30px 20px -30px; padding: 20px 30px; border-radius: 15px 15px 0 0;
         }
-
-        .section-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .section-header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .vision-highlight {
-            background: linear-gradient(135deg, #00A78B, #00C4A7);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            background: #F8F9FF;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .message.ai {
-            align-items: flex-start;
-        }
-
-        .message.user {
-            justify-content: flex-end;
-        }
-
+        .section-header h1 { font-size: 24px; margin-bottom: 5px; }
+        .section-header p { opacity: .9; font-size: 14px; }
+        .vision-highlight { background: linear-gradient(135deg, #00A78B, #00C4A7); color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; background: #F8F9FF; border-radius: 10px; margin-bottom: 15px; }
+        .message { margin-bottom: 15px; display: flex; gap: 10px; }
+        .message.ai { align-items: flex-start; }
+        .message.user { justify-content: flex-end; }
         .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
-            flex-shrink: 0;
+            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; flex-shrink: 0;
         }
-
-        .message.ai .message-avatar {
-            background: #00A78B;
-            color: white;
-        }
-
-        .message.user .message-avatar {
-            background: #5863C7;
-            color: white;
-            order: 2;
-        }
-
+        .message.ai .message-avatar { background: #00A78B; color: white; }
+        .message.user .message-avatar { background: #5863C7; color: white; order: 2; }
         .message-content {
-            max-width: 75%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: pre-wrap;
+            max-width: 75%; padding: 12px 16px; border-radius: 15px; font-size: 14px; line-height: 1.5; white-space: pre-wrap;
         }
-
-        .message.ai .message-content {
-            background: white;
-            border: 1px solid #E0E5F0;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message.user .message-content {
-            background: #5863C7;
-            color: white;
-            border-bottom-right-radius: 4px;
-            order: 1;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
+        .message.ai .message-content { background: white; border: 1px solid #E0E5F0; border-bottom-left-radius: 4px; }
+        .message.user .message-content { background: #5863C7; color: white; border-bottom-right-radius: 4px; order: 1; }
+        .chat-input-area { display: flex; gap: 10px; align-items: flex-end; }
         .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #DBDEF4;
-            border-radius: 20px;
-            font-size: 14px;
-            font-family: inherit;
-            resize: none;
-            max-height: 120px;
-            min-height: 44px;
+            flex: 1; padding: 12px 16px; border: 2px solid #DBDEF4; border-radius: 20px; font-size: 14px; font-family: inherit; resize: none; max-height: 120px; min-height: 44px;
         }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: #5863C7;
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: #5863C7;
-            color: white;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 18px;
-        }
-
-        .send-btn:hover:not(:disabled) {
-            background: #362E7D;
-            transform: scale(1.05);
-        }
-
-        .send-btn:disabled {
-            background: #DBDEF4;
-            cursor: not-allowed;
-        }
-
-        .results-content {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .results-empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #999;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .results-empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .comm-channel {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #EFF2FF;
-            border-radius: 10px;
-            border-left: 4px solid #5863C7;
-        }
-
-        .comm-channel h3 {
-            color: #362E7D;
-            margin-bottom: 12px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .comm-content {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .comm-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        .char-count {
-            background: #D2EFE7;
-            padding: 3px 8px;
-            border-radius: 4px;
-            color: #0F6F60;
-        }
-
-        .copy-btn {
-            background: #00A78B;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: #00C4A7;
-        }
-
-        .reset-btn {
-            background: #FF9800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 15px;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .reset-btn:hover {
-            background: #F57C00;
-            transform: translateY(-1px);
-        }
-
-        .typing-indicator {
-            display: none;
-            align-items: center;
-            gap: 5px;
-            padding: 12px 16px;
-            background: white;
-            border: 1px solid #E0E5F0;
-            border-radius: 15px;
-            border-bottom-left-radius: 4px;
-            max-width: 75px;
-        }
-
-        .typing-indicator.show {
-            display: flex;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #999;
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-                opacity: 0.5;
-            }
-            30% {
-                transform: translateY(-10px);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .chat-section, .results-section {
-                height: 500px;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
+        .chat-input:focus { outline: none; border-color: #5863C7; }
+        .send-btn { width: 44px; height: 44px; border: none; background: #5863C7; color: white; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .3s ease; font-size: 18px; }
+        .send-btn:hover:not(:disabled) { background: #362E7D; transform: scale(1.05); }
+        .send-btn:disabled { background: #DBDEF4; cursor: not-allowed; }
+        .results-content { flex: 1; overflow-y: auto; }
+        .results-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #999; text-align: center; padding: 20px; }
+        .results-empty-icon { font-size: 64px; margin-bottom: 20px; opacity: .3; }
+        .comm-channel { margin-bottom: 20px; padding: 15px; background: #EFF2FF; border-radius: 10px; border-left: 4px solid #5863C7; }
+        .comm-channel h3 { color: #362E7D; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .comm-content { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; white-space: pre-wrap; line-height: 1.6; color: #333; font-size: 14px; }
+        .comm-meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #666; margin-top: 8px; }
+        .char-count { background: #D2EFE7; padding: 3px 8px; border-radius: 4px; color: #0F6F60; }
+        .copy-btn { background: #00A78B; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px; transition: all .3s ease; }
+        .copy-btn:hover { background: #00C4A7; }
+        .reset-btn { background: #FF9800; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; margin-top: 15px; width: 100%; transition: all .3s ease; }
+        .reset-btn:hover { background: #F57C00; transform: translateY(-1px); }
+        .typing-indicator { display: none; align-items: center; gap: 5px; padding: 12px 16px; background: white; border: 1px solid #E0E5F0; border-radius: 15px; border-bottom-left-radius: 4px; max-width: 75px; }
+        .typing-indicator.show { display: flex; }
+        .typing-dot { width: 8px; height: 8px; background: #999; border-radius: 50%; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: .2s; }
+        .typing-dot:nth-child(3) { animation-delay: .4s; }
+        @keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:.5} 30%{transform:translateY(-10px);opacity:1} }
+        @media (max-width: 768px){
+            .container { grid-template-columns: 1fr; gap: 20px; }
+            .chat-section, .results-section { height: 500px; }
+            .mobile-menu-toggle { display: block; }
             .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
+                display: none; position: absolute; top: 100%; left: 0; right: 0; background: white;
+                flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,.1); border-radius: 0 0 15px 15px; padding: 10px 0; gap: 0; z-index: 1000;
             }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
+            .nav-menu.show { display: flex; }
+            .nav-item a { padding: 15px 25px; border-radius: 0; display: block; }
         }
     </style>
 </head>
 <body>
     <nav class="global-header">
         <div class="logo-section">
-            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
-                 alt="Karlskoga kommun" 
-                 class="logo">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
-        
         <ul class="nav-menu" id="navMenu">
             <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
             <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
@@ -464,24 +106,17 @@
             <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
             <li class="nav-item active"><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html">📢 Kommunikation</a></li>
         </ul>
-        
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-            ☰
-        </button>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">☰</button>
     </nav>
 
     <div class="container">
-        <!-- Chat-sektion -->
+        <!-- Chat -->
         <div class="chat-section">
             <div class="section-header">
                 <h1>📢 Kommunikationsassistent</h1>
                 <p>Berätta vad du vill kommunicera - jag hjälper dig formulera det!</p>
             </div>
-
-            <div class="vision-highlight">
-                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
-            </div>
-
+            <div class="vision-highlight">✨ "Välkomnande, kloka och innovativa Karlskoga" ✨</div>
             <div class="chat-messages" id="chatMessages">
                 <div class="message ai">
                     <div class="message-avatar">AI</div>
@@ -490,27 +125,18 @@
 Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna skapa de bästa texterna åt dig!</div>
                 </div>
             </div>
-
             <div class="chat-input-area">
-                <textarea 
-                    class="chat-input" 
-                    id="chatInput" 
-                    placeholder="Skriv ditt svar här..."
-                    rows="1"
-                ></textarea>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                    ➤
-                </button>
+                <textarea class="chat-input" id="chatInput" placeholder="Skriv ditt svar här..." rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
             </div>
         </div>
 
-        <!-- Resultatsektion -->
+        <!-- Resultat -->
         <div class="results-section">
             <div class="section-header">
                 <h1>💡 Färdiga texter</h1>
                 <p>Texterna uppdateras automatiskt</p>
             </div>
-
             <div class="results-content" id="resultsContent">
                 <div class="results-empty">
                     <div class="results-empty-icon">📝</div>
@@ -522,50 +148,55 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
 
     <script>
         const API_URL = 'https://ledarportalen.vercel.app/api/communication-chat';
-        
         let conversationHistory = [];
         let isWaiting = false;
 
-        // Mobile menu toggle
+        // --- Helpers ---
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('show');
         }
-
-        // Stäng mobilmeny vid klick utanför
         document.addEventListener('click', function(event) {
             const navMenu = document.getElementById('navMenu');
             const mobileToggle = document.getElementById('mobileMenuToggle');
-            
             if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
                 navMenu.classList.remove('show');
             }
         });
-
-        // Auto-resize textarea
         document.getElementById('chatInput').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
-
-        // Send on Enter (but not Shift+Enter)
         document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
 
-        function addMessage(content, isUser = false) {
+        function addMessage(content, isUser = false, isRawHTML = false) {
             const messagesContainer = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${isUser ? 'Du' : 'AI'}</div>
-                <div class="message-content">${content}</div>
-            `;
-            
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? 'Du' : 'AI';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-content';
+            if (isRawHTML) {
+                bubble.innerHTML = content; // använd sparsamt
+            } else {
+                bubble.textContent = content;
+            }
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(bubble);
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -581,12 +212,10 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
-                </div>
-            `;
+                </div>`;
             messagesContainer.appendChild(typingDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-
         function hideTyping() {
             const typing = document.getElementById('typingIndicator');
             if (typing) typing.remove();
@@ -594,69 +223,80 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
 
         async function sendMessage() {
             if (isWaiting) return;
-            
+
+            // Säkerställ att history finns (fix för 400)
+            if (!Array.isArray(conversationHistory)) {
+                conversationHistory = [];
+            }
+
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
-            
             if (!message) return;
-            
-            // Add user message
+
             addMessage(message, true);
             conversationHistory.push({ role: 'user', content: message });
             input.value = '';
             input.style.height = 'auto';
-            
+
             isWaiting = true;
             document.getElementById('sendBtn').disabled = true;
             showTyping();
-            
+
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        conversationHistory
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversationHistory })
                 });
-                
+
+                let data;
                 if (!response.ok) {
-                    throw new Error(`Backend-fel: ${response.status}`);
+                    // Försök läsa felkropp
+                    let errText = '';
+                    try {
+                        const err = await response.json();
+                        errText = (err.error || 'Okänt fel') + (err.details ? ` – ${String(err.details).slice(0, 300)}` : '');
+                    } catch {
+                        errText = `HTTP ${response.status}`;
+                    }
+                    throw new Error(errText);
+                } else {
+                    data = await response.json();
                 }
-                
-                const data = await response.json();
-                
+
                 hideTyping();
-                
-                // Add AI response
-                addMessage(data.message);
-                conversationHistory.push({ role: 'assistant', content: data.fullResponse });
-                
-                // Update results if we have generated content
-                if (data.generatedContent) {
+
+                // Visa AI-meddelande (vänlig bekräftelse)
+                addMessage(data.message || 'Klart! Jag har skapat texter i rutan till höger.');
+
+                // Spara hela raw-svaret i historiken (om du vill låta backend se sammanhanget)
+                if (data.fullResponse) {
+                    conversationHistory.push({ role: 'assistant', content: data.fullResponse });
+                }
+
+                // Uppdatera resultat
+                if (
+                    data.generatedContent &&
+                    data.generatedContent.channels &&
+                    Object.keys(data.generatedContent.channels).length > 0
+                ) {
                     displayResults(data.generatedContent);
                 }
-                
+
             } catch (error) {
                 hideTyping();
                 console.error('Fel:', error);
-                addMessage('😔 Något gick fel. Försök igen om en stund.');
+                addMessage(`😔 Fel: ${error.message}`, false);
             }
-            
+
             isWaiting = false;
             document.getElementById('sendBtn').disabled = false;
         }
 
         function displayResults(content) {
             const resultsContent = document.getElementById('resultsContent');
-            
-            if (!content || !content.channels || Object.keys(content.channels).length === 0) {
-                return;
-            }
-            
-            let html = '';
-            
+            if (!content || !content.channels || Object.keys(content.channels).length === 0) return;
+
             const channelIcons = {
                 nyhet: '📰',
                 epost: '📧',
@@ -665,7 +305,6 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                 instagram: '📸',
                 pressmeddelande: '📢'
             };
-
             const channelNames = {
                 nyhet: 'Nyhet (Webb/Intranät)',
                 epost: 'E-postutskick',
@@ -675,38 +314,42 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                 pressmeddelande: 'Pressmeddelande'
             };
 
+            let html = '';
             Object.entries(content.channels).forEach(([kanal, data]) => {
-                html += `
-                    <div class="comm-channel">
-                        <h3>${channelIcons[kanal]} ${channelNames[kanal]}</h3>
-                `;
+                if (!data) return;
+                const hasText = typeof data.text === 'string' && data.text.length > 0;
+                const hasRubrik = typeof data.rubrik === 'string' && data.rubrik.length > 0;
 
-                if (data.rubrik) {
-                    html += `<div class="comm-content"><strong>${data.rubrik}</strong></div>`;
+                // För kopiering vill vi ha originaltexten (utan HTML-escape)
+                const rawTextForCopy = hasText ? data.text : (hasRubrik ? data.rubrik : '');
+                const safeTextForRender = escapeHTML(hasText ? data.text : '');
+                const safeRubrikForRender = escapeHTML(hasRubrik ? data.rubrik : '');
+                const charCount = Number.isFinite(data.charCount) ? data.charCount : (hasText ? data.text.length : 0);
+
+                html += `<div class="comm-channel">
+                    <h3>${channelIcons[kanal] || '📝'} ${channelNames[kanal] || kanal}</h3>`;
+
+                if (hasRubrik) {
+                    html += `<div class="comm-content"><strong>${safeRubrikForRender}</strong></div>`;
+                }
+                if (hasText) {
+                    html += `<div class="comm-content">${safeTextForRender}</div>`;
                 }
 
-                const textEscaped = data.text.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/\\/g, '\\\\');
-                html += `
-                        <div class="comm-content">${data.text}</div>
-                        <div class="comm-meta">
-                            <span class="char-count">${data.charCount} tecken</span>
-                            <button class="copy-btn" onclick='copyToClipboard(\`${textEscaped}\`, this)'>📋 Kopiera</button>
-                        </div>
-                `;
+                html += `<div class="comm-meta">
+                        <span class="char-count">${charCount} tecken</span>
+                        <button class="copy-btn" onclick='copyToClipboard(${JSON.stringify(rawTextForCopy)}, this)'>📋 Kopiera</button>
+                    </div>`;
 
-                if (data.hashtags && data.hashtags.length > 0) {
-                    html += `
-                        <div style="margin-top: 8px; font-size: 11px; color: #666;">
-                            <strong>Hashtags:</strong> ${data.hashtags.join(' ')}
-                        </div>
-                    `;
+                if (Array.isArray(data.hashtags) && data.hashtags.length > 0) {
+                    const tags = data.hashtags.join(' ');
+                    html += `<div style="margin-top: 8px; font-size: 11px; color: #666;"><strong>Hashtags:</strong> ${escapeHTML(tags)}</div>`;
                 }
 
                 html += `</div>`;
             });
 
             html += `<button class="reset-btn" onclick="resetConversation()">🔄 Starta ny konversation</button>`;
-            
             resultsContent.innerHTML = html;
         }
 
@@ -714,9 +357,7 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = button.textContent;
                 button.textContent = '✓ Kopierad!';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                }, 2000);
+                setTimeout(() => { button.textContent = originalText; }, 2000);
             });
         }
 
@@ -729,14 +370,12 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                         <div class="message-content">Hej! Jag är din kommunikationsassistent. Jag hjälper dig att skapa professionella texter för olika kanaler.
 
 Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna skapa de bästa texterna åt dig!</div>
-                    </div>
-                `;
+                    </div>`;
                 document.getElementById('resultsContent').innerHTML = `
                     <div class="results-empty">
                         <div class="results-empty-icon">📝</div>
                         <p>Texterna kommer att visas här när du har svarat på mina frågor</p>
-                    </div>
-                `;
+                    </div>`;
             }
         }
     </script>
