@@ -140,7 +140,7 @@ REGLER:
       strict: true
     };
 
-    // --- OpenAI Responses API-anrop ---
+    // --- OpenAI Responses API-anrop (UPPDATERAD SYNTAX) ---
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 28000);
 
@@ -153,7 +153,13 @@ REGLER:
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         input: messages,
-        response_format: { type: 'json_schema', json_schema: jsonSchema },
+        // ÄNDRAT: response_format flyttad till text.format enligt nya API
+        text: {
+          format: { 
+            type: 'json_schema', 
+            json_schema: jsonSchema 
+          }
+        },
         temperature: 0.7,
         max_output_tokens: 2000
       }),
@@ -267,7 +273,6 @@ REGLER:
 
     if (parsed.status === 'ask') {
       const question = String(parsed.question || 'Vad är huvudsakligt budskap? Vem är målgruppen?');
-      // Litet, koncist innehåll i historiken så inte JSON spammar kontexten
       const assistantHistoryContent = `FRÅGA: ${question}`;
       return res.status(200).json({
         message: question,
