@@ -55,92 +55,88 @@ REGLER:
 
     // --- JSON-schema: två lägen: "ask" (ställ fråga) eller "ready" (generera texter) ---
     const jsonSchema = {
-      name: "KommunikationFlow",
-      schema: {
-        type: "object",
-        properties: {
-          status: { type: "string", enum: ["ask", "ready"] },
-          // Om status = ask
-          question: { type: "string" },
-          // Om status = ready
-          channels: {
-            type: "object",
-            properties: {
-              nyhet: {
-                type: "object",
-                properties: {
-                  rubrik: { type: "string" },
-                  text: { type: "string" },
-                  charCount: { type: "integer" }
-                },
-                required: ["rubrik", "text", "charCount"],
-                additionalProperties: false
+      type: "object",
+      properties: {
+        status: { type: "string", enum: ["ask", "ready"] },
+        // Om status = ask
+        question: { type: "string" },
+        // Om status = ready
+        channels: {
+          type: "object",
+          properties: {
+            nyhet: {
+              type: "object",
+              properties: {
+                rubrik: { type: "string" },
+                text: { type: "string" },
+                charCount: { type: "integer" }
               },
-              epost: {
-                type: "object",
-                properties: {
-                  rubrik: { type: "string" },
-                  text: { type: "string" },
-                  charCount: { type: "integer" }
-                },
-                required: ["rubrik", "text", "charCount"],
-                additionalProperties: false
-              },
-              facebook: {
-                type: "object",
-                properties: {
-                  text: { type: "string" },
-                  hashtags: { type: "array", items: { type: "string" } },
-                  charCount: { type: "integer" }
-                },
-                required: ["text", "charCount"],
-                additionalProperties: false
-              },
-              linkedin: {
-                type: "object",
-                properties: {
-                  text: { type: "string" },
-                  hashtags: { type: "array", items: { type: "string" } },
-                  charCount: { type: "integer" }
-                },
-                required: ["text", "charCount"],
-                additionalProperties: false
-              },
-              instagram: {
-                type: "object",
-                properties: {
-                  text: { type: "string" },
-                  hashtags: { type: "array", items: { type: "string" } },
-                  charCount: { type: "integer" }
-                },
-                required: ["text", "charCount"],
-                additionalProperties: false
-              },
-              pressmeddelande: {
-                type: "object",
-                properties: {
-                  rubrik: { type: "string" },
-                  text: { type: "string" },
-                  charCount: { type: "integer" }
-                },
-                required: ["rubrik", "text", "charCount"],
-                additionalProperties: false
-              }
+              required: ["rubrik", "text", "charCount"],
+              additionalProperties: false
             },
-            additionalProperties: false
-          }
-        },
-        required: ["status"],
-        additionalProperties: false,
-        oneOf: [
-          { required: ["status", "question"] },
-          { required: ["status", "channels"] }
-        ]
+            epost: {
+              type: "object",
+              properties: {
+                rubrik: { type: "string" },
+                text: { type: "string" },
+                charCount: { type: "integer" }
+              },
+              required: ["rubrik", "text", "charCount"],
+              additionalProperties: false
+            },
+            facebook: {
+              type: "object",
+              properties: {
+                text: { type: "string" },
+                hashtags: { type: "array", items: { type: "string" } },
+                charCount: { type: "integer" }
+              },
+              required: ["text", "charCount"],
+              additionalProperties: false
+            },
+            linkedin: {
+              type: "object",
+              properties: {
+                text: { type: "string" },
+                hashtags: { type: "array", items: { type: "string" } },
+                charCount: { type: "integer" }
+              },
+              required: ["text", "charCount"],
+              additionalProperties: false
+            },
+            instagram: {
+              type: "object",
+              properties: {
+                text: { type: "string" },
+                hashtags: { type: "array", items: { type: "string" } },
+                charCount: { type: "integer" }
+              },
+              required: ["text", "charCount"],
+              additionalProperties: false
+            },
+            pressmeddelande: {
+              type: "object",
+              properties: {
+                rubrik: { type: "string" },
+                text: { type: "string" },
+                charCount: { type: "integer" }
+              },
+              required: ["rubrik", "text", "charCount"],
+              additionalProperties: false
+            }
+          },
+          additionalProperties: false
+        }
       },
-      strict: true
+      required: ["status"],
+      additionalProperties: false,
+      oneOf: [
+        { required: ["status", "question"] },
+        { required: ["status", "channels"] }
+      ]
     };
 
-    // --- OpenAI Responses API-anrop (UPPDATERAD SYNTAX) ---
+    // --- OpenAI Responses API-anrop (UPPDATERAD SYNTAX MED NAME) ---
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 28000);
 
@@ -153,11 +149,13 @@ REGLER:
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         input: messages,
-        // ÄNDRAT: response_format flyttad till text.format enligt nya API
+        // ÄNDRAT: Lagt till name och strict flaggor
         text: {
           format: { 
-            type: 'json_schema', 
-            json_schema: jsonSchema 
+            type: 'json_schema',
+            name: 'KommunikationFlow',
+            schema: jsonSchema,
+            strict: true
           }
         },
         temperature: 0.7,
