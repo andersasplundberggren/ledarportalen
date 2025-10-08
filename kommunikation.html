@@ -22,12 +22,131 @@
         .logo { height: 45px; background: white; padding: 6px 10px; border-radius: 6px; box-shadow: 0 2px 8px rgba(88,99,199,.1); }
         .logo-text { font-size: 24px; font-weight: 700; color: #362E7D; text-decoration: none; transition: color .3s ease; }
         .logo-text:hover { color: #5863C7; }
-        .nav-menu { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
-        .nav-item a { text-decoration: none; padding: 10px 16px; border-radius: 25px; font-weight: 500; color: #666; transition: all .3s ease; font-size: 14px; }
-        .nav-item a:hover { background: #EFF2FF; color: #362E7D; }
-        .nav-item.active a { background: #5863C7; color: white; }
-        .mobile-menu-toggle { display: none; background: none; border: none; font-size: 24px; color: #362E7D; cursor: pointer; padding: 5px; border-radius: 5px; transition: background .3s ease; }
-        .mobile-menu-toggle:hover { background: #EFF2FF; }
+        
+        /* Hamburgermeny styling */
+        .menu-toggle { 
+            background: #5863C7; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .menu-toggle:hover { 
+            background: #362E7D; 
+            transform: scale(1.05);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.show {
+            right: 0;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 22px;
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar nav {
+            padding: 0;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar nav li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 25px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all .3s ease;
+        }
+        
+        .sidebar nav a:hover {
+            background: #EFF2FF;
+            color: #5863C7;
+            padding-left: 30px;
+        }
+        
+        .sidebar nav a span:first-child {
+            font-size: 22px;
+            width: 30px;
+            text-align: center;
+        }
+
         .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .chat-section, .results-section {
             background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,.1);
@@ -83,13 +202,7 @@
         @media (max-width: 768px){
             .container { grid-template-columns: 1fr; gap: 20px; }
             .chat-section, .results-section { height: 500px; }
-            .mobile-menu-toggle { display: block; }
-            .nav-menu {
-                display: none; position: absolute; top: 100%; left: 0; right: 0; background: white;
-                flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,.1); border-radius: 0 0 15px 15px; padding: 10px 0; gap: 0; z-index: 1000;
-            }
-            .nav-menu.show { display: flex; }
-            .nav-item a { padding: 15px 25px; border-radius: 0; display: block; }
+            .sidebar { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -99,28 +212,32 @@
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
-  <button class="menu-toggle" onclick="toggleSidebar()">☰ Meny</button>
-
-<aside class="sidebar" id="sidebar">
-    <button class="close-btn" onclick="toggleSidebar()">✕</button>
-    <nav>
-        <h3>Ledarportalen</h3>
-  <ul class="nav-menu icon-only">
-    <li><a href="/" title="Hem">🏠</a></li>
-    <li><a href="/chat.html" title="AI Chatt">💬</a></li>
-    <li><a href="/arshjul.html" title="Årshjul">📅</a></li>
-    <li><a href="/samtal.html" title="Medarbetarsamtal">👥</a></li>
-    <li><a href="/forbered.html" title="Förbered samtal">📋</a></li>
-    <li><a href="/kompetens.html" title="Kompetens">🎓</a></li>
-    <li><a href="/recruitment.html" title="Rekrytering">🔍</a></li>
-    <li><a href="/kommunikation.html" title="Kommunikation">📢</a></li>
-</ul>
-    </li>
-    
-    <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html">📢 Kommunikation</a></li>
-</ul>
-<button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">☰</button>
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span>☰</span>
+            <span>Meny</span>
+        </button>
     </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Ledarportalen</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/"><span>🏠</span><span>Hem</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html"><span>💬</span><span>AI Chatt</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html"><span>📅</span><span>Årshjul</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html"><span>👥</span><span>Medarbetarsamtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html"><span>📋</span><span>Förbered samtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kompetens.html"><span>🎓</span><span>Kompetens</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html"><span>🔍</span><span>Rekrytering</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html"><span>📢</span><span>Kommunikation</span></a></li>
+            </ul>
+        </nav>
+    </aside>
 
     <div class="container">
         <!-- Chat -->
@@ -164,6 +281,15 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
         let conversationHistory = [];
         let isWaiting = false;
 
+        // Hamburgermeny funktioner
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+        }
+
         // --- Helpers ---
         function escapeHTML(str) {
             if (typeof str !== 'string') return '';
@@ -172,17 +298,17 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
         }
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('show');
-        }
+        
         document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
-                navMenu.classList.remove('show');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (sidebar && menuToggle && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                if (sidebar.classList.contains('show')) {
+                    toggleSidebar();
+                }
             }
         });
+        
         document.getElementById('chatInput').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
@@ -203,7 +329,7 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
             const bubble = document.createElement('div');
             bubble.className = 'message-content';
             if (isRawHTML) {
-                bubble.innerHTML = content; // använd sparsamt
+                bubble.innerHTML = content;
             } else {
                 bubble.textContent = content;
             }
@@ -237,7 +363,6 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
         async function sendMessage() {
             if (isWaiting) return;
 
-            // Säkerställ att history finns (fix för 400)
             if (!Array.isArray(conversationHistory)) {
                 conversationHistory = [];
             }
@@ -264,7 +389,6 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
 
                 let data;
                 if (!response.ok) {
-                    // Försök läsa felkropp
                     let errText = '';
                     try {
                         const err = await response.json();
@@ -279,15 +403,12 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
 
                 hideTyping();
 
-                // Visa AI-meddelande (vänlig bekräftelse)
                 addMessage(data.message || 'Klart! Jag har skapat texter i rutan till höger.');
 
-                // Spara hela raw-svaret i historiken (om du vill låta backend se sammanhanget)
                 if (data.fullResponse) {
                     conversationHistory.push({ role: 'assistant', content: data.fullResponse });
                 }
 
-                // Uppdatera resultat
                 if (
                     data.generatedContent &&
                     data.generatedContent.channels &&
@@ -333,7 +454,6 @@ Berätta vad du vill kommunicera, så ställer jag några frågor för att kunna
                 const hasText = typeof data.text === 'string' && data.text.length > 0;
                 const hasRubrik = typeof data.rubrik === 'string' && data.rubrik.length > 0;
 
-                // För kopiering vill vi ha originaltexten (utan HTML-escape)
                 const rawTextForCopy = hasText ? data.text : (hasRubrik ? data.rubrik : '');
                 const safeTextForRender = escapeHTML(hasText ? data.text : '');
                 const safeRubrikForRender = escapeHTML(hasRubrik ? data.rubrik : '');
