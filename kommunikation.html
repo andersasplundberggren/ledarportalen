@@ -99,16 +99,28 @@
             <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
-      <ul class="nav-menu icon-only">
-    <li><a href="/" title="Hem">🏠</a></li>
-    <li><a href="/chat.html" title="AI Chatt">💬</a></li>
-    <li><a href="/arshjul.html" title="Årshjul">📅</a></li>
-    <li><a href="/samtal.html" title="Medarbetarsamtal">👥</a></li>
-    <li><a href="/forbered.html" title="Förbered samtal">📋</a></li>
-    <li><a href="/kompetens.html" title="Kompetens">🎓</a></li>
-    <li><a href="/recruitment.html" title="Rekrytering">🔍</a></li>
-    <li><a href="/kommunikation.html" title="Kommunikation">📢</a></li>
-</ul>
+  <button class="menu-toggle" onclick="toggleSidebar()">☰ Meny</button>
+
+<aside class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+    <nav>
+        <h3>Ledarportalen</h3>
+        <ul>
+            <li><a href="/">🏠 Hem</a></li>
+            <li><a href="/chat.html">💬 AI Chatt</a></li>
+            <li><a href="/arshjul.html">📅 Årshjul</a></li>
+            
+            <li class="section-title">Personal</li>
+            <li><a href="/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li><a href="/forbered.html">📋 Förbered samtal</a></li>
+            <li><a href="/kompetens.html">🎓 Kompetens</a></li>
+            <li><a href="/recruitment.html">🔍 Rekrytering</a></li>
+            
+            <li class="section-title">Övrigt</li>
+            <li><a href="/kommunikation.html">📢 Kommunikation</a></li>
+        </ul>
+    </nav>
+</aside>
     </li>
     
     <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html">📢 Kommunikation</a></li>
