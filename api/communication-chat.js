@@ -1,6 +1,5 @@
 // api/communication-chat.js
 export default async function handler(req, res) {
-  // --- CORS ---
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -31,8 +30,10 @@ export default async function handler(req, res) {
     const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun med vision "Välkomnande, kloka och innovativa Karlskoga".
 
 PROCESS:
-1) Ställ EN kort fråga i taget för att samla in: budskap, målgrupp, syfte, och relevanta detaljer (datum/plats/kontakt) samt önskad ton.
-2) När du har minst budskap + målgrupp + syfte => generera texter för kanalerna.
+1) Om du behöver mer information: Svara med JSON: {"status": "ask", "question": "din fråga här"}
+2) När du har tillräckligt med info: Svara med JSON: {"status": "ready", "channels": {...alla kanaler...}}
+
+Ställ EN kort fråga i taget för att samla in: budskap, målgrupp, syfte, relevanta detaljer (datum/plats/kontakt) och önskad ton.
 
 TONALITET & STIL:
 - Professionell men varm och tillgänglig
@@ -41,42 +42,110 @@ TONALITET & STIL:
 - Inkluderande språk som speglar vår vision
 - Undvik byråkratiska uttryck och onödiga facktermer
 
-MALLAR PER KANAL:
+=== EXEMPELTEXTER PER KANAL ===
 
-NYHET (Webb/Intranät):
-Rubrik: Kort, tydlig och engagerande (max 60 tecken)
-Text: 2-3 stycken som ger komplett information.
+📰 NYHET (Webb/Intranät):
+Rubrik: "Karlskoga satsar på solenergi"
+Text: "Vi investerar i solceller på alla kommunala fastigheter. Under 2025 installeras solpaneler på totalt 15 byggnader, vilket minskar våra utsläpp med 200 ton CO2 per år.
 
-E-POST:
-Rubrik: Personlig och tydlig om vad mottagaren får
-Text: Kort inledning + kärnbudskap + tydlig uppmaning/nästa steg
+– Det här är ett viktigt steg för att nå våra klimatmål och samtidigt minska elkostnaderna, säger Jane Andersson, miljöstrateg.
 
-FACEBOOK:
-Ton: Lite mer avslappnad och personlig än på webben
-Längd: 1-2 stycken + visuell uppmaning
-Emoji: Använd sparsamt (1-2 stycken max)
-Hashtags: 3-5 relevanta taggar
+Installationen startar i mars och beräknas vara klar i november."
 
-LINKEDIN:
-Ton: Professionell och strategisk
-Fokus: Verksamhet, utveckling, och värde för samhället
-Hashtags: 3-5 relevanta taggar
+📧 E-POST:
+Rubrik: "Nya digitala verktyg för enklare vardag"
+Text: "Hej!
 
-INSTAGRAM:
-Ton: Visuell, inspirerande och personlig
-Längd: Kort och kärnfullt, max 150 tecken i huvudtext
-Hashtags: 3-5 relevanta taggar
+Nu lanserar vi nya digitala verktyg som gör det enklare för dig att jobba smartare. Från och med måndag kan du boka möten, rapportera tid och hitta dokument – allt på ett ställe.
 
-PRESSMEDDELANDE:
-Rubrik: Nyhetsvärde och konkret information
-Text: Klassisk struktur med alla W-frågor besvarade
-Inklusive: Datum, plats, kontaktperson med telefon/mejl
+Logga in på Ledarportalen och upptäck funktionerna. Behöver du hjälp? Kontakta IT-supporten på 0586-610 00."
 
-REGLER:
-- Räkna tecken på textfält (inte rubrik)
-- Anpassa alltid ton till målgrupp och kanal
-- Inkludera relevanta fakta (datum, kontakter, konkreta siffror)
-- Svara ENDAST som strikt JSON enligt schemat.`;
+📘 FACEBOOK:
+Text: "Nu gör vi Karlskoga grönare! 🌱
+
+Vi installerar solceller på 15 kommunala byggnader under 2025. Det innebär 200 ton mindre CO2-utsläpp varje år – och lägre elkostnader.
+
+Installationen startar i mars. Följ gärna projektet här!"
+Hashtags: ["#KarlskogaKommun", "#Hållbarhet", "#Solenergi"]
+
+💼 LINKEDIN:
+Text: "Karlskoga kommun tar strategiska steg mot klimatneutralitet
+
+Under 2025 investerar vi i solcellsinstallationer på 15 kommunala fastigheter. Projektet minskar våra CO2-utsläpp med 200 ton årligen och bidrar till långsiktig kostnadsbesparing.
+
+Detta är en del av vår vision om ett välkomnande, klokt och innovativt Karlskoga där hållbarhet genomsyrar allt vi gör."
+Hashtags: ["#Hållbarhet", "#Innovation", "#KommunalUtveckling"]
+
+📸 INSTAGRAM:
+Text: "Solenergi = framtiden ☀️
+
+15 byggnader får solceller 2025. Vi skapar ett grönare Karlskoga – tillsammans!"
+Hashtags: ["#KarlskogaKommun", "#Hållbarhet", "#Solenergi", "#Innovation"]
+
+📢 PRESSMEDDELANDE:
+Rubrik: "Karlskoga kommun investerar i solenergi"
+Text: "KARLSKOGA 2025-03-15
+
+Karlskoga kommun påbörjar installation av solceller på 15 kommunala byggnader. Investeringen minskar CO2-utsläppen med 200 ton per år.
+
+– Det här visar att vi tar klimatansvar samtidigt som vi skapar besparingar, säger Jane Andersson, miljöstrateg.
+
+Installationen påbörjas mars 2025 och slutförs november samma år.
+
+För mer information:
+Jane Andersson, miljöstrateg
+Tel: 0586-610 00
+E-post: jane.andersson@karlskoga.se"
+
+=== JSON-FORMAT ===
+
+När status är "ask":
+{
+  "status": "ask",
+  "question": "Din fråga här"
+}
+
+När status är "ready", inkludera ALLA sex kanaler:
+{
+  "status": "ready",
+  "channels": {
+    "nyhet": {
+      "rubrik": "...",
+      "text": "...",
+      "charCount": 123
+    },
+    "epost": {
+      "rubrik": "...",
+      "text": "...",
+      "charCount": 123
+    },
+    "facebook": {
+      "text": "...",
+      "hashtags": ["#tag1", "#tag2"],
+      "charCount": 123
+    },
+    "linkedin": {
+      "text": "...",
+      "hashtags": ["#tag1", "#tag2"],
+      "charCount": 123
+    },
+    "instagram": {
+      "text": "...",
+      "hashtags": ["#tag1", "#tag2"],
+      "charCount": 123
+    },
+    "pressmeddelande": {
+      "rubrik": "...",
+      "text": "...",
+      "charCount": 123
+    }
+  }
+}
+
+VIKTIGT: 
+- Räkna charCount ENDAST på text-fältet (inte rubrik)
+- Svara ENDAST med ren JSON, inga andra kommentarer
+- Följ exemplens ton och struktur`;
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -86,101 +155,11 @@ REGLER:
       }))
     ];
 
-    // Förenkla schemat - gör hashtags required men tillåt tom array
-    const jsonSchema = {
-      type: "object",
-      properties: {
-        status: { 
-          type: "string", 
-          enum: ["ask", "ready"]
-        },
-        question: { 
-          type: "string"
-        },
-        channels: {
-          type: "object",
-          properties: {
-            nyhet: {
-              type: "object",
-              properties: {
-                rubrik: { type: "string" },
-                text: { type: "string" },
-                charCount: { type: "integer" }
-              },
-              required: ["rubrik", "text", "charCount"],
-              additionalProperties: false
-            },
-            epost: {
-              type: "object",
-              properties: {
-                rubrik: { type: "string" },
-                text: { type: "string" },
-                charCount: { type: "integer" }
-              },
-              required: ["rubrik", "text", "charCount"],
-              additionalProperties: false
-            },
-            facebook: {
-              type: "object",
-              properties: {
-                text: { type: "string" },
-                hashtags: { 
-                  type: "array", 
-                  items: { type: "string" }
-                },
-                charCount: { type: "integer" }
-              },
-              required: ["text", "hashtags", "charCount"],
-              additionalProperties: false
-            },
-            linkedin: {
-              type: "object",
-              properties: {
-                text: { type: "string" },
-                hashtags: { 
-                  type: "array", 
-                  items: { type: "string" }
-                },
-                charCount: { type: "integer" }
-              },
-              required: ["text", "hashtags", "charCount"],
-              additionalProperties: false
-            },
-            instagram: {
-              type: "object",
-              properties: {
-                text: { type: "string" },
-                hashtags: { 
-                  type: "array", 
-                  items: { type: "string" }
-                },
-                charCount: { type: "integer" }
-              },
-              required: ["text", "hashtags", "charCount"],
-              additionalProperties: false
-            },
-            pressmeddelande: {
-              type: "object",
-              properties: {
-                rubrik: { type: "string" },
-                text: { type: "string" },
-                charCount: { type: "integer" }
-              },
-              required: ["rubrik", "text", "charCount"],
-              additionalProperties: false
-            }
-          },
-          additionalProperties: false
-        }
-      },
-      required: ["status"],
-      additionalProperties: false
-    };
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 28000);
 
-    const resp = await fetch('https://api.openai.com/v1/responses', {
+    // Använd CHAT COMPLETIONS istället för Responses API
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -188,17 +167,10 @@ REGLER:
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        input: messages,
-        text: {
-          format: { 
-            type: 'json_schema',
-            name: 'KommunikationFlow',
-            schema: jsonSchema,
-            strict: true
-          }
-        },
+        messages: messages,
+        response_format: { type: 'json_object' },
         temperature: 0.7,
-        max_output_tokens: 2000
+        max_tokens: 2000
       }),
       signal: controller.signal
     }).catch(e => {
@@ -213,17 +185,7 @@ REGLER:
     }
 
     const data = await resp.json();
-
-    const raw =
-      data.output_text ||
-      (
-        data.output &&
-        data.output[0] &&
-        data.output[0].content &&
-        data.output[0].content[0] &&
-        data.output[0].content[0].text
-      ) ||
-      null;
+    const raw = data.choices?.[0]?.message?.content;
 
     if (!raw) {
       return res.status(500).json({ error: 'Tomt AI-svar' });
@@ -323,7 +285,7 @@ REGLER:
           error: 'Saknar kanalinnehåll trots status=ready'
         });
       }
-      const friendly = 'Jag har skapat förslag för respektive kanal i rutan till höger. Vill du justera ton, längd eller målgrupp?';
+      const friendly = 'Jag har skapat förslag för respektive kanal i rutan till höger. Vill du justera något?';
       const assistantHistoryContent = 'KLAR: genererade kanaltexter';
       return res.status(200).json({
         message: friendly,
