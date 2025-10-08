@@ -31,10 +31,7 @@ export default async function handler(req, res) {
     const recentHistory = conversationHistory.slice(-10);
 
     // --- Prompts ---
-   // api/communication-chat.js
-// ... (behåll allt fram till systemPrompt)
-
-const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun med vision "Välkomnande, kloka och innovativa Karlskoga".
+    const systemPrompt = `Du är kommunikationsassistent för Karlskoga kommun med vision "Välkomnande, kloka och innovativa Karlskoga".
 
 PROCESS:
 1) Ställ EN kort fråga i taget för att samla in: budskap, målgrupp, syfte, och relevanta detaljer (datum/plats/kontakt) samt önskad ton.
@@ -130,7 +127,6 @@ REGLER:
 - Inkludera relevanta fakta (datum, kontakter, konkreta siffror)
 - Svara ENDAST som strikt JSON enligt schemat. Inga andra fält eller kommentarer.`;
 
-// ... (fortsätt med resten av koden som tidigare)
     // Gör om frontends historik (user/assistant) till minimalt format
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -140,16 +136,22 @@ REGLER:
       }))
     ];
 
-    // --- JSON-schema: två lägen: "ask" (ställ fråga) eller "ready" (generera texter) ---
+    // --- JSON-schema UTAN oneOf (stöds ej av OpenAI structured output) ---
     const jsonSchema = {
       type: "object",
       properties: {
-        status: { type: "string", enum: ["ask", "ready"] },
-        // Om status = ask
-        question: { type: "string" },
-        // Om status = ready
+        status: { 
+          type: "string", 
+          enum: ["ask", "ready"],
+          description: "Use 'ask' when you need more information, 'ready' when you can generate content"
+        },
+        question: { 
+          type: "string",
+          description: "Only include this when status is 'ask'"
+        },
         channels: {
           type: "object",
+          description: "Only include this when status is 'ready'",
           properties: {
             nyhet: {
               type: "object",
@@ -175,7 +177,11 @@ REGLER:
               type: "object",
               properties: {
                 text: { type: "string" },
-                hashtags: { type: "array", items: { type: "string" } },
+                hashtags: { 
+                  type: "array", 
+                  items: { type: "string" },
+                  description: "3-5 relevanta hashtags"
+                },
                 charCount: { type: "integer" }
               },
               required: ["text", "charCount"],
@@ -185,7 +191,11 @@ REGLER:
               type: "object",
               properties: {
                 text: { type: "string" },
-                hashtags: { type: "array", items: { type: "string" } },
+                hashtags: { 
+                  type: "array", 
+                  items: { type: "string" },
+                  description: "3-5 relevanta hashtags"
+                },
                 charCount: { type: "integer" }
               },
               required: ["text", "charCount"],
@@ -195,7 +205,11 @@ REGLER:
               type: "object",
               properties: {
                 text: { type: "string" },
-                hashtags: { type: "array", items: { type: "string" } },
+                hashtags: { 
+                  type: "array", 
+                  items: { type: "string" },
+                  description: "3-5 relevanta hashtags"
+                },
                 charCount: { type: "integer" }
               },
               required: ["text", "charCount"],
@@ -216,14 +230,10 @@ REGLER:
         }
       },
       required: ["status"],
-      additionalProperties: false,
-      oneOf: [
-        { required: ["status", "question"] },
-        { required: ["status", "channels"] }
-      ]
+      additionalProperties: false
     };
 
-    // --- OpenAI Responses API-anrop (UPPDATERAD SYNTAX MED NAME) ---
+    // --- OpenAI Responses API-anrop ---
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 28000);
 
@@ -236,7 +246,6 @@ REGLER:
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         input: messages,
-        // ÄNDRAT: Lagt till name och strict flaggor
         text: {
           format: { 
             type: 'json_schema',
