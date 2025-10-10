@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Förbered ditt eget medarbetarsamtal - Karlskoga kommun</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,6 +13,7 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         .global-header {
             background: white;
             width: 100%;
@@ -30,372 +27,165 @@
             justify-content: space-between;
             position: relative;
         }
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
         .logo {
-            height: 45px;
-            background: white;
-            padding: 6px 10px;
-            border-radius: 6px;
+            height: 45px; background: white; padding: 6px 10px; border-radius: 6px;
             box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
         }
-
         .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #362E7D;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 24px; font-weight: 700; color: #362E7D; text-decoration: none; transition: color 0.3s ease;
         }
+        .logo-text:hover { color: #5863C7; }
 
-        .logo-text:hover {
-            color: #5863C7;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 5px;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Befintlig toppmeny (lämnas) */
+        .nav-menu { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
         .nav-item a {
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            text-decoration: none; padding: 10px 16px; border-radius: 25px; font-weight: 500; color: #666;
+            transition: all 0.3s ease; font-size: 14px;
         }
-        .nav-item a:hover {
-            background: #EFF2FF;
-            color: #362E7D;
-        }
-
-        .nav-item.active a {
-            background: #5863C7;
-            color: white;
-        }
+        .nav-item a:hover { background: #EFF2FF; color: #362E7D; }
+        .nav-item.active a { background: #5863C7; color: white; }
 
         .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #362E7D;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+            display: none; background: none; border: none; font-size: 24px; color: #362E7D;
+            cursor: pointer; padding: 5px; border-radius: 5px; transition: background 0.3s ease;
         }
+        .mobile-menu-toggle:hover { background: #EFF2FF; }
 
-        .mobile-menu-toggle:hover {
-            background: #EFF2FF;
+        /* === HAMBURGERMENY (NY) === */
+        .menu-toggle { 
+            background: #5863C7; color: white; border: none; padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-size: 16px; font-weight: 600; transition: all .3s ease;
+            display: flex; align-items: center; gap: 8px;
         }
+        .menu-toggle:hover { background: #362E7D; transform: scale(1.05); }
+
+        .sidebar {
+            position: fixed; top: 0; right: -350px; width: 350px; height: 100vh; background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2); transition: right 0.3s ease; z-index: 10000; overflow-y: auto;
+        }
+        .sidebar.show { right: 0; }
+
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 9999; display: none;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7); color: white; padding: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sidebar-header h3 { font-size: 22px; margin: 0; }
+
+        .close-btn {
+            background: rgba(255,255,255,0.2); border: none; color: white; font-size: 24px; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer; transition: all .3s ease; display: flex; align-items: center; justify-content: center;
+        }
+        .close-btn:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+
+        .sidebar nav { padding: 0; }
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav li { border-bottom: 1px solid #f0f0f0; }
+        .sidebar nav a {
+            display: flex; align-items: center; gap: 12px; padding: 18px 25px; text-decoration: none;
+            color: #333; font-size: 16px; font-weight: 500; transition: all .3s ease;
+        }
+        .sidebar nav a:hover { background: #EFF2FF; color: #5863C7; padding-left: 30px; }
+        .sidebar nav a span:first-child { font-size: 22px; width: 30px; text-align: center; }
+        /* === slut hamburgermeny === */
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
         }
-
         .form-section, .results-section {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            height: fit-content;
+            background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 30px; height: fit-content;
         }
-
         .section-header {
-            background: linear-gradient(135deg, #00A78B, #00C4A7);
-            color: white;
-            margin: -30px -30px 25px -30px;
-            padding: 20px 30px;
-            border-radius: 15px 15px 0 0;
+            background: linear-gradient(135deg, #00A78B, #00C4A7); color: white;
+            margin: -30px -30px 25px -30px; padding: 20px 30px; border-radius: 15px 15px 0 0;
         }
+        .section-header h1 { font-size: 24px; margin-bottom: 5px; }
+        .section-header p { opacity: 0.9; font-size: 14px; }
 
-        .section-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .section-header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #362E7D;
-            margin-bottom: 8px;
-        }
-
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #362E7D; margin-bottom: 8px; }
         .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #DBDEF4;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.3s ease;
+            width: 100%; padding: 12px 16px; border: 2px solid #DBDEF4; border-radius: 10px;
+            font-size: 14px; font-family: inherit; transition: border-color 0.3s ease;
         }
+        .form-control:focus { outline: none; border-color: #00A78B; }
+        textarea.form-control { resize: vertical; min-height: 80px; }
 
-        .form-control:focus {
-            outline: none;
-            border-color: #00A78B;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
+        .checkbox-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
         .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            display: flex; align-items: center; padding: 8px; border: 1px solid #e1e5e9; border-radius: 8px; transition: all 0.3s ease;
         }
-
-        .checkbox-item:hover {
-            background: #D2EFE7;
-            border-color: #00A78B;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
-            accent-color: #00A78B;
-        }
+        .checkbox-item:hover { background: #D2EFE7; border-color: #00A78B; }
+        .checkbox-item input[type="checkbox"] { margin-right: 8px; accent-color: #00A78B; }
 
         .generate-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #00A78B, #00C4A7);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            width: 100%; background: linear-gradient(135deg, #00A78B, #00C4A7); color: white; border: none; padding: 15px;
+            border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
         }
-
-        .generate-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 167, 139, 0.4);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .generate-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 167, 139, 0.4); }
+        .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .vision-highlight {
-            background: linear-gradient(135deg, #5863C7, #362E7D);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-style: italic;
+            background: linear-gradient(135deg, #5863C7, #362E7D); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-style: italic;
         }
         .encouragement-box {
-            background: #D2EFE7;
-            border-left: 4px solid #00A78B;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            color: #0F6F60;
+            background: #D2EFE7; border-left: 4px solid #00A78B; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #0F6F60;
         }
 
-        .scale-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
+        .scale-group { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .scale-label { font-size: 12px; color: #666; min-width: 80px; }
+        .scale-input { flex: 1; accent-color: #00A78B; }
+        .scale-value { font-weight: 600; color: #00A78B; min-width: 30px; }
 
-        .scale-label {
-            font-size: 12px;
-            color: #666;
-            min-width: 80px;
-        }
-
-        .scale-input {
-            flex: 1;
-            accent-color: #00A78B;
-        }
-
-        .scale-value {
-            font-weight: 600;
-            color: #00A78B;
-            min-width: 30px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
+        .loading { display: none; text-align: center; padding: 40px; color: #666; }
+        .loading.show { display: block; }
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #00A78B;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            border: 3px solid #f3f3f3; border-top: 3px solid #00A78B; border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 0 auto 15px;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .results-content { display: none; }
+        .results-content.show { display: block; }
 
-        .results-content {
-            display: none;
-        }
+        .advice-category { margin-bottom: 25px; padding: 15px; background: #EFF2FF; border-radius: 10px; border-left: 4px solid #00A78B; }
+        .advice-category h3 { color: #362E7D; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .advice-list { list-style: none; }
+        .advice-list li { padding: 8px 0; border-bottom: 1px solid #DBDEF4; color: #333; }
+        .advice-list li:last-child { border-bottom: none; }
 
-        .results-content.show {
-            display: block;
-        }
-
-        .advice-category {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #EFF2FF;
-            border-radius: 10px;
-            border-left: 4px solid #00A78B;
-        }
-
-        .advice-category h3 {
-            color: #362E7D;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .advice-list {
-            list-style: none;
-        }
-
-        .advice-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #DBDEF4;
-            color: #333;
-        }
-
-        .advice-list li:last-child {
-            border-bottom: none;
-        }
-
-        .tips-section {
-            background: #D2EFE7;
-            border-left: 4px solid #00A78B;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .tips-section h4 {
-            color: #0F6F60;
-            margin-bottom: 10px;
-        }
+        .tips-section { background: #D2EFE7; border-left: 4px solid #00A78B; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .tips-section h4 { color: #0F6F60; margin-bottom: 10px; }
 
         @media (max-width: 768px) {
-            .global-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                height: 35px;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-            
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
-            }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
+            .global-header { padding: 15px 20px; }
+            .logo { height: 35px; }
+            .logo-text { font-size: 20px; }
 
-            .container {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .nav-menu {
+                display: none; position: absolute; top: 100%; left: 0; right: 0; background: white;
+                flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 0 0 15px 15px;
+                padding: 10px 0; gap: 0; z-index: 1000;
             }
-            
-            body {
-                padding: 10px;
-            }
-            
-            .form-section, .results-section {
-                padding: 20px;
-            }
-            
-            .section-header {
-                margin: -20px -20px 20px -20px;
-                padding: 15px 20px;
-            }
-            
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
+            .nav-menu.show { display: flex; }
+            .nav-item a { padding: 15px 25px; border-radius: 0; display: block; }
+
+            .mobile-menu-toggle { display: block; }
+
+            .sidebar { width: 100%; right: -100%; } /* Sidomeny helbredd på mobil */
+
+            .container { grid-template-columns: 1fr; gap: 20px; }
+            body { padding: 10px; }
+            .form-section, .results-section { padding: 20px; }
+            .section-header { margin: -20px -20px 20px -20px; padding: 15px 20px; }
+            .checkbox-group { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -407,20 +197,42 @@
                  class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
-        
-    <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html">📝 Förberedelse</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html">🎯 Rekrytering</a></li>
-    </ul>
-        
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-            ☰
+
+        <!-- Befintlig toppmeny -->
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html">📝 Förberedelse</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html">🎯 Rekrytering</a></li>
+        </ul>
+
+        <!-- HAMBURGER-KNAPP (ny) -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span>☰</span><span>Meny</span>
         </button>
     </nav>
+
+    <!-- OVERLAY + SIDEBAR (nya) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Ledarportalen</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/"><span>🏠</span><span>Hem</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html"><span>💬</span><span>AI Chatt</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html"><span>📅</span><span>Årshjul</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html"><span>👥</span><span>Medarbetarsamtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html"><span>📝</span><span>Förberedelse</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html"><span>🎯</span><span>Rekrytering</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html"><span>📢</span><span>Kommunikation</span></a></li>
+            </ul>
+        </nav>
+    </aside>
 
     <div class="container">
         <!-- Formulärsektion -->
@@ -545,17 +357,16 @@
         // API URL för OpenAI integration
         const API_URL = '/api/analyze-employee-input'; // Din backend endpoint
 
-        // Mobile menu toggle
+        // Mobile menu toggle (befintlig toppmeny)
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('show');
         }
 
-        // Stäng mobilmeny vid klick utanför
+        // Stäng mobilmeny vid klick utanför (befintlig toppmeny)
         document.addEventListener('click', function(event) {
             const navMenu = document.getElementById('navMenu');
             const mobileToggle = document.getElementById('mobileMenuToggle');
-            
             if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
                 navMenu.classList.remove('show');
             }
@@ -569,8 +380,6 @@
         // Hantera formulärinlämning
         document.getElementById('forberedelseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Samla formulärdata
             const formData = {
                 roll: document.getElementById('min_roll').value,
                 arbetsuppgifter: document.getElementById('arbetsuppgifter').value,
@@ -583,7 +392,6 @@
                 framtid: document.getElementById('framtidsplaner').value
             };
 
-            // Visa loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('resultsContent').classList.remove('show');
             document.getElementById('generateBtn').disabled = true;
@@ -601,36 +409,24 @@
 
         async function generateAIAdvice(formData) {
             try {
-                // Anropa AI backend
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        employeeData: formData,
-                        context: "Karlskoga kommun medarbetarsamtal"
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employeeData: formData, context: "Karlskoga kommun medarbetarsamtal" })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Backend-fel: ${response.status}`);
-                }
+                if (!response.ok) { throw new Error(`Backend-fel: ${response.status}`); }
 
                 const aiResponse = await response.json();
                 displayResults(aiResponse, formData);
-                
             } catch (error) {
                 console.error('AI API fel:', error);
-                // Fallback till lokal generering
                 await generateLocalAdvice(formData);
             }
         }
 
         async function generateLocalAdvice(formData) {
-            // Simulera AI-anrop med mer sofistikerad lokal logik
             await new Promise(resolve => setTimeout(resolve, 2000));
-            
             const advice = generateIntelligentAdvice(formData);
             displayResults(advice, formData);
         }
@@ -641,13 +437,11 @@
             let actionableAdvice = [];
             let diplomaticPhrasing = [];
 
-            // AI-inspirerad analys av tillfredsställelse och mönster
             const satisfactionLevel = formData.tillfredsställelse;
             const hasUtmaningar = formData.utmaningar.trim().length > 0;
             const hasUtvecklingsönskemål = formData.utvecklingsomraden.length > 0;
             const hasKonkretaMål = formData.mål.trim().length > 0;
 
-            // Generera insikter baserat på mönster
             if (satisfactionLevel >= 8 && hasUtvecklingsönskemål) {
                 aiInsights.push("Du verkar vara en driven medarbetare som trivs men vill växa - det är en stark position att förhandla från.");
                 actionableAdvice.push("Föreslå en utvecklingsplan med tydlig timeline och mätbara mål");
@@ -656,28 +450,23 @@
                 actionableAdvice.push("Kom med minst en konkret förbättringsåtgärd för varje utmaning du nämner");
             }
 
-            // Analysera textinnehåll för känslotoner (simulerad AI-analys)
             const utmaningarText = formData.utmaningar.toLowerCase();
             if (utmaningarText.includes('stress') || utmaningarText.includes('överbelastning')) {
                 actionableAdvice.push("Föreslå konkreta lösningar för stresshantering - arbetstidsfördelning, prioritering eller stöd");
                 diplomaticPhrasing.push("Istället för 'Jag är stressad' säg 'Jag skulle må bra av hjälp att prioritera mina arbetsuppgifter'");
             }
-
             if (utmaningarText.includes('kolleg') || utmaningarText.includes('samarbete')) {
                 actionableAdvice.push("Föreslå teamutvecklingsaktiviteter eller tydligare kommunikationsstrukturer");
                 diplomaticPhrasing.push("Fokusera på processer snarare än personer: 'Vi skulle kunna förbättra våra rutiner för...'");
             }
-
             if (utmaningarText.includes('resurs') || utmaningarText.includes('material') || utmaningarText.includes('verktyg')) {
                 actionableAdvice.push("Var specifik om vilka resurser som skulle göra störst skillnad för din produktivitet");
             }
 
-            // Generera diplomatiska formuleringar
             if (hasUtmaningar && satisfactionLevel >= 6) {
                 diplomaticPhrasing.push("Börja med det positiva: 'Jag uppskattar verkligen [specifikt exempel], och för att bygga vidare på det skulle jag vilja...'");
             }
 
-            // Skapa huvudtalarpunkter
             if (satisfactionLevel >= 8) {
                 talkingPoints.push("Jag känner mig verkligen engagerad i mitt arbete och ser fram emot att diskutera hur jag kan bidra ännu mer till våra mål.");
             } else if (satisfactionLevel >= 6) {
@@ -686,13 +475,10 @@
                 talkingPoints.push("Jag vill gärna arbeta tillsammans med dig för att förbättra min arbetssituation så att jag kan prestera bättre.");
             }
 
-            // Lägg till utvecklingsbaserade talarpunkter
             if (hasKonkretaMål) {
                 talkingPoints.push(`Jag har tänkt igenom mina utvecklingsmål: ${formData.mål}`);
                 actionableAdvice.push("Föreslå en konkret plan för hur ni tillsammans kan uppnå dessa mål");
             }
-
-            // Framtidsfokuserade råd
             if (formData.framtid.trim().length > 0) {
                 talkingPoints.push(`Min vision för framtiden är: ${formData.framtid}`);
                 actionableAdvice.push("Fråga om konkreta steg för att röra dig mot den visionen");
@@ -710,7 +496,7 @@
         function generateSmartEncouragement(formData) {
             const satisfaction = formData.tillfredsställelse;
             const hasGrowthMindset = formData.utvecklingsomraden.length > 0 || formData.mål.trim().length > 0;
-            
+
             if (satisfaction >= 8 && hasGrowthMindset) {
                 return "Du har en stark grund och tydlig vision - använd detta samtal för att bygga broar mot dina mål.";
             } else if (satisfaction >= 6) {
@@ -724,65 +510,28 @@
 
         function displayResults(advice, formData) {
             const resultsContent = document.getElementById('resultsContent');
-            
-            let html = `
-                <div class="vision-highlight">
-                    ${advice.encouragement}
-                </div>
-            `;
+            let html = `<div class="vision-highlight">${advice.encouragement}</div>`;
 
-            // AI Insikter (om de finns)
             if (advice.aiInsights && advice.aiInsights.length > 0) {
-                html += `
-                    <div class="advice-category">
-                        <h3>🤖 AI-analys av din situation</h3>
-                        <ul class="advice-list">
-                `;
-                advice.aiInsights.forEach(insight => {
-                    html += `<li>${insight}</li>`;
-                });
+                html += `<div class="advice-category"><h3>🤖 AI-analys av din situation</h3><ul class="advice-list">`;
+                advice.aiInsights.forEach(insight => { html += `<li>${insight}</li>`; });
                 html += `</ul></div>`;
             }
-
-            // Talarpunkter - nu från AI:s talkingPoints
             if (advice.talkingPoints && advice.talkingPoints.length > 0) {
-                html += `
-                    <div class="advice-category">
-                        <h3>🎯 Så här kan du presentera dina tankar</h3>
-                        <ul class="advice-list">
-                `;
-                advice.talkingPoints.forEach(point => {
-                    html += `<li>${point}</li>`;
-                });
+                html += `<div class="advice-category"><h3>🎯 Så här kan du presentera dina tankar</h3><ul class="advice-list">`;
+                advice.talkingPoints.forEach(point => { html += `<li>${point}</li>`; });
                 html += `</ul></div>`;
             }
-
-            // Handlingsriktade råd
             if (advice.actionableAdvice && advice.actionableAdvice.length > 0) {
-                html += `
-                    <div class="advice-category">
-                        <h3>💡 Konkreta förslag att ta upp</h3>
-                        <ul class="advice-list">
-                `;
-                advice.actionableAdvice.forEach(actionAdvice => {
-                    html += `<li>${actionAdvice}</li>`;
-                });
+                html += `<div class="advice-category"><h3>💡 Konkreta förslag att ta upp</h3><ul class="advice-list">`;
+                advice.actionableAdvice.forEach(a => { html += `<li>${a}</li>`; });
                 html += `</ul></div>`;
             }
-
-            // Diplomatiska formuleringar
             if (advice.diplomaticPhrasing && advice.diplomaticPhrasing.length > 0) {
-                html += `
-                    <div class="tips-section">
-                        <h4>🎭 Diplomatiska formuleringar</h4>
-                        <ul>
-                `;
-                advice.diplomaticPhrasing.forEach(phrase => {
-                    html += `<li>${phrase}</li>`;
-                });
+                html += `<div class="tips-section"><h4>🎭 Diplomatiska formuleringar</h4><ul>`;
+                advice.diplomaticPhrasing.forEach(p => { html += `<li>${p}</li>`; });
                 html += `</ul></div>`;
             }
-              // Allmänna tips
             html += `
                 <div class="tips-section">
                     <h4>📋 Tips för samtalet</h4>
@@ -795,10 +544,40 @@
                     </ul>
                 </div>
             `;
-            
             resultsContent.innerHTML = html;
             resultsContent.classList.add('show');
         }
+
+        // === HAMBURGERMENY JS (ny) ===
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+        }
+        // Stäng sidomeny vid klick utanför (desktop)
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (
+                sidebar && menuToggle &&
+                !sidebar.contains(event.target) &&
+                !menuToggle.contains(event.target) &&
+                !overlay.contains(event.target) &&
+                sidebar.classList.contains('show')
+            ) {
+                toggleSidebar();
+            }
+        });
+        // Stäng när en länk i sidomenyn klickas
+        document.querySelectorAll('.sidebar a').forEach(a => {
+            a.addEventListener('click', () => {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('show')) toggleSidebar();
+            });
+        });
     </script>
 </body>
 </html>
