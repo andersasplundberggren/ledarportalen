@@ -59,48 +59,128 @@
             color: #5863C7;
         }
 
-        .nav-menu {
+        /* Hamburgermeny styling */
+        .menu-toggle { 
+            background: #5863C7; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600;
+            transition: all .3s ease;
             display: flex;
-            list-style: none;
-            gap: 5px;
+            align-items: center;
+            gap: 8px;
+        }
+        .menu-toggle:hover { 
+            background: #362E7D; 
+            transform: scale(1.05);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.show {
+            right: 0;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 22px;
             margin: 0;
+        }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar nav {
             padding: 0;
         }
-
-        .nav-item a {
+        
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar nav li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 25px;
             text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 25px;
+            color: #333;
+            font-size: 16px;
             font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            transition: all .3s ease;
         }
-
-        .nav-item a:hover {
+        
+        .sidebar nav a:hover {
             background: #EFF2FF;
-            color: #362E7D;
+            color: #5863C7;
+            padding-left: 30px;
         }
-
-        .nav-item.active a {
-            background: #5863C7;
-            color: white;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #362E7D;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .mobile-menu-toggle:hover {
-            background: #EFF2FF;
+        
+        .sidebar nav a span:first-child {
+            font-size: 22px;
+            width: 30px;
+            text-align: center;
         }
 
         .container {
@@ -220,34 +300,10 @@
             .logo-text {
                 font-size: 20px;
             }
-            
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
-            }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
+
+            .sidebar { 
+                width: 100%; 
+                right: -100%; 
             }
 
             .container {
@@ -274,7 +330,37 @@
     </style>
 </head>
 <body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span>☰</span>
+            <span>Meny</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Ledarportalen</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/"><span>🏠</span><span>Hem</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html"><span>💬</span><span>AI Chatt</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html"><span>📅</span><span>Årshjul</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html"><span>👥</span><span>Medarbetarsamtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html"><span>📋</span><span>Förbered samtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kompetens.html"><span>🎓</span><span>Kompetens</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html"><span>🔍</span><span>Rekrytering</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html"><span>📢</span><span>Kommunikation</span></a></li>
+            </ul>
+        </nav>
+    </aside>
 
     <div class="container">
         <div class="header">
@@ -345,6 +431,16 @@
                 </p>
                 <span class="tool-status">Tillgänglig Nu</span>
             </a>
+
+            <a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html" class="tool-card">
+                <span class="tool-icon">📢</span>
+                <h2 class="tool-title">Kommunikationsstöd</h2>
+                <p class="tool-description">
+                    Skapa professionella texter för olika kommunikationskanaler. AI-assistans för nyhetsbrev, 
+                    e-post, sociala medier och pressmeddelanden.
+                </p>
+                <span class="tool-status">Tillgänglig Nu</span>
+            </a>
         </div>
 
         <div class="footer">
@@ -353,30 +449,24 @@
     </div>
 
     <script>
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('show');
+        // Hamburgermeny funktioner
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
         }
 
-        // Stäng mobilmeny vid klick utanför
+        // Stäng sidebar vid klick utanför
         document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            
-            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
-                navMenu.classList.remove('show');
-            }
-        });
-
-        // Stäng mobilmeny när en länk klickas
-        document.querySelectorAll('.nav-item a').forEach(link => {
-            link.addEventListener('click', function() {
-                const navMenu = document.getElementById('navMenu');
-                if (navMenu) {
-                    navMenu.classList.remove('show');
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (sidebar && menuToggle && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                if (sidebar.classList.contains('show')) {
+                    toggleSidebar();
                 }
-            });
+            }
         });
     </script>
 </body>
