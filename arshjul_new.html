@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Årshjul chefer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
+            min-height: 100vh;
+            color: #111827;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .global-header {
+            background: white;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 45px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #362E7D;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo-text:hover {
+            color: #5863C7;
+        }
+
+        /* Hamburgermeny styling */
+        .menu-toggle { 
+            background: #5863C7; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .menu-toggle:hover { 
+            background: #362E7D; 
+            transform: scale(1.05);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.show {
+            right: 0;
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 22px;
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar nav {
+            padding: 0;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar nav li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 25px;
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all .3s ease;
+        }
+        
+        .sidebar nav a:hover {
+            background: #EFF2FF;
+            color: #5863C7;
+            padding-left: 30px;
+        }
+        
+        .sidebar nav a span:first-child {
+            font-size: 22px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 24px 24px;
+            width: 100%;
+        }
+
+        .header {
+            margin-bottom: 32px;
+            text-align: center;
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 32px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #362E7D;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .global-header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                height: 35px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .sidebar { 
+                width: 100%; 
+                right: -100%; 
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 0 15px 15px 15px;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #362E7D;
+        }
+
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .calendar-svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .month-sector {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .month-sector:hover {
+            opacity: 0.7;
+            transform: scale(1.01);
+        }
+
+        .activity-ring {
+            cursor: pointer;
+            opacity: 0.85;
+            transition: all 0.3s ease;
+            stroke-width: 1;
+        }
+
+        .activity-ring:hover {
+            opacity: 1;
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .month-label {
+            fill: #374151;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .selected-month-info {
+            background: #DBDEF4;
+            color: #362E7D;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 0.875rem;
+        }
+
+        .activity-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #EFF2FF;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: #DBDEF4;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .activity-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .activity-details h3 {
+            font-weight: 500;
+            color: #362E7D;
+        }
+
+        .activity-details p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: #6b7280;
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            opacity: 0.5;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            padding: 16px;
+            background: #EFF2FF;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="global-header">
+        <div class="logo-section">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" 
+                 alt="Karlskoga kommun" 
+                 class="logo">
+            <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
+        </div>
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span>☰</span>
+            <span>Meny</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Ledarportalen</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/"><span>🏠</span><span>Hem</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html"><span>💬</span><span>AI Chatt</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html"><span>📅</span><span>Årshjul</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html"><span>👥</span><span>Medarbetarsamtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html"><span>📋</span><span>Förbered samtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kompetens.html"><span>🎓</span><span>Kompetens</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html"><span>🔍</span><span>Rekrytering</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html"><span>📢</span><span>Kommunikation</span></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="container">
+        <div class="header">
+            <h1>📅 Årshjul för chefer</h1>
+            <p>Årshjul över återkommande obligatoriska aktiviteter inom områdena arbetsmiljö, kompetensförsörjning och löneöversyn.</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Cirkulär kalender -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Kalendervy</h2>
+                </div>
+
+                <div class="calendar-container">
+                    <svg id="calendar-svg" width="500" height="500" class="calendar-svg">
+                        <!-- Kalendern renderas här av JavaScript -->
+                    </svg>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2563eb;"></div>
+                        <span>Lön</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #059669;"></div>
+                        <span>Arbetsmiljö</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #dc2626;"></div>
+                        <span>Kompetensförsörjning</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #7c3aed;"></div>
+                        <span>Kombinerat</span>
+                    </div>
+                </div>
+
+                <div id="selected-month-info" class="selected-month-info" style="display: none;">
+                    <!-- Månadsinfo visas här -->
+                </div>
+            </div>
+
+            <!-- Aktivitetslista -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; margin-right: 8px;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span id="activity-list-title">Alla aktiviteter</span>
+                    </h2>
+                </div>
+
+                <div id="activity-list" class="activity-list">
+                    <!-- Aktiviteter renderas här av JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Information section -->
+        <div class="card" style="margin-top: 32px;">
+            <div class="card-header">
+                <h2 class="card-title">Information och definitioner</h2>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #362E7D;">Förkortningar:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 0.875rem;">
+                    <div><strong>FC</strong> - Förvaltningschef</div>
+                    <div><strong>OC</strong> - Områdeschef</div>
+                    <div><strong>VC</strong> - Verksamhetschef</div>
+                    <div><strong>EC</strong> - Enhetschef</div>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 24px;">
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #362E7D;">
+                    Dessa aktiviteter planeras in årligen på resp. chefsområde när det passar för er verksamhet!
+                </h3>
+                
+                <ul style="list-style-type: disc; padding-left: 20px; line-height: 1.6; color: #374151;">
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö:</strong> årlig allmän skyddsrond</li>
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö:</strong> årlig skyddsrond OSA</li>
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö:</strong> årlig riskbedömning/rutinuppdatering hot och våld</li>
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö:</strong> informera om policys och rutiner</li>
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö:</strong> ev medarbetarundersökning/HME</li>
+                    <li style="margin-bottom: 8px;"><strong>Arbetsmiljö och Kompetensförsörjning:</strong> aktiviteter utifrån förvaltningens arbetsmiljö och kompetensförsörjningsstrategier</li>
+                </ul>
+                
+                <div style="margin-top: 16px; padding: 16px; background-color: #EFF2FF; border-radius: 8px; font-style: italic; color: #6b7280;">
+                    Utöver dessa obligatoriska aktiviteter ska det löpande systematiska arbetsmiljöarbetet ske så som t ex att arbeta förebyggande med tillbud, arbetsskador och rehabilitering mm
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Hamburgermeny funktioner
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('show');
+    overlay.classList.toggle('show');
+    document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+}
+
+// Stäng sidebar vid klick utanför
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+    if (sidebar && menuToggle && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+        if (sidebar.classList.contains('show')) {
+            toggleSidebar();
+        }
+    }
+});
+
+// Global variabler
+let categories = {
+    'lon': { name: 'Lön', color: '#2563eb' },
+    'arbetsmiljo': { name: 'Arbetsmiljö', color: '#059669' },
+    'kompetens': { name: 'Kompetensförsörjning', color: '#dc2626' },
+    'kombinerat': { name: 'Kombinerat', color: '#7c3aed' }
+};
+
+let activities = {
+    0: [ // Januari
+        { id: 1, name: 'Avtalskonferens om årets löneöversyn (ALLA CHEFER)', categoryId: 'lon' }
+    ],
+    1: [ // Februari
+        { id: 2, name: 'Utvecklings- och uppföljningssamtal genomförda senast 28 februari (ALLA CHEFER)', categoryId: 'kombinerat' },
+        { id: 3, name: 'Information om arbetsmiljöstrategi och kompetensförsörjningsstrategi (FC/OC/VC)', categoryId: 'kombinerat' }
+    ],
+    2: [ // Mars
+        { id: 4, name: 'Information till medarbetare om arbetsmiljöstrategi och kompetensförsörjning (EC)', categoryId: 'kombinerat' },
+        { id: 5, name: 'Information till medarbetare om löneöversyn (ALLA CHEFER)', categoryId: 'lon' },
+        { id: 6, name: 'Lönesättning och lönesamtal med medarbetare (ALLA CHEFER)', categoryId: 'lon' }
+    ],
+    8: [ // September
+        { id: 7, name: 'Årlig uppföljning av systematiskt arbetsmiljöarbete (ALLA CHEFER)', categoryId: 'arbetsmiljo' }
+    ],
+    9: [ // Oktober
+        { id: 8, name: 'Analyser i chefsgrupper - input till förvaltningens ledningsgrupp (OC/VC)', categoryId: 'kombinerat' },
+        { id: 9, name: 'Resultat och åtgärder från arbetsmiljöuppföljning återkopplas (ALLA CHEFER)', categoryId: 'arbetsmiljo' }
+    ],
+    10: [ // November
+        { id: 10, name: 'Analys i förvaltningens ledningsgrupp (FC)', categoryId: 'kombinerat' },
+        { id: 11, name: 'Utkast på arbetsmiljöstrategi tas fram och samverkas (FC)', categoryId: 'arbetsmiljo' },
+        { id: 12, name: 'Kompetensförsörjningsstrategi informeras på förvaltningssamverkan (FC)', categoryId: 'kompetens' },
+        { id: 13, name: 'Skriftlig löneanalys till HR för sammanställning (FC)', categoryId: 'lon' }
+    ]
+};
+
+let selectedMonth = null;
+
+const months = [
+    'Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni',
+    'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'
+];
+
+function renderCalendar() {
+    const svg = document.getElementById('calendar-svg');
+    svg.innerHTML = '';
+
+    const svgSize = 500;
+    const centerX = svgSize / 2;
+    const centerY = svgSize / 2;
+    const baseRadius = 60;
+    const maxOuterRadius = 190;
+    const outerLabelRadius = 220;
+    
+    let maxActivitiesCount = 0;
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        const monthActivities = activities[monthIndex] || [];
+        if (monthActivities.length > maxActivitiesCount) {
+            maxActivitiesCount = monthActivities.length;
+        }
+    }
+    
+    const availableSpace = maxOuterRadius - baseRadius;
+    const ringWidth = Math.max(8, Math.min(20, availableSpace / maxActivitiesCount));
+
+    svg.setAttribute('width', svgSize);
+    svg.setAttribute('height', svgSize);
+
+    const outerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    outerCircle.setAttribute('cx', centerX);
+    outerCircle.setAttribute('cy', centerY);
+    outerCircle.setAttribute('r', outerLabelRadius);
+    outerCircle.setAttribute('fill', 'none');
+    outerCircle.setAttribute('stroke', '#E5E7EB');
+    outerCircle.setAttribute('stroke-width', '1');
+    outerCircle.setAttribute('stroke-dasharray', '2,2');
+    svg.appendChild(outerCircle);
+
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    textPath.setAttribute('id', 'text-circle');
+    textPath.setAttribute('cx', centerX);
+    textPath.setAttribute('cy', centerY);
+    textPath.setAttribute('r', outerLabelRadius);
+    textPath.setAttribute('fill', 'none');
+    defs.appendChild(textPath);
+    svg.appendChild(defs);
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        const angle = (monthIndex * 30 - 90) * (Math.PI / 180);
+        
+        const lineInnerX = centerX + baseRadius * Math.cos(angle);
+        const lineInnerY = centerY + baseRadius * Math.sin(angle);
+        const lineOuterX = centerX + outerLabelRadius * Math.cos(angle);
+        const lineOuterY = centerY + outerLabelRadius * Math.sin(angle);
+        
+        const monthLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        monthLine.setAttribute('x1', lineInnerX);
+        monthLine.setAttribute('y1', lineInnerY);
+        monthLine.setAttribute('x2', lineOuterX);
+        monthLine.setAttribute('y2', lineOuterY);
+        monthLine.setAttribute('stroke', '#E5E7EB');
+        monthLine.setAttribute('stroke-width', '1');
+        monthLine.setAttribute('opacity', '0.5');
+        svg.appendChild(monthLine);
+    }
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        const startAngle = (monthIndex * 30 - 90) * (Math.PI / 180);
+        const endAngle = ((monthIndex + 1) * 30 - 90) * (Math.PI / 180);
+        const monthActivities = activities[monthIndex] || [];
+        const maxRadius = baseRadius + (monthActivities.length * ringWidth);
+
+        const monthSector = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const pathData = createSectorPath(centerX, centerY, baseRadius, maxRadius, startAngle, endAngle);
+        
+        monthSector.setAttribute('d', pathData);
+        monthSector.setAttribute('fill', selectedMonth === monthIndex ? '#E5E7EB' : '#F9FAFB');
+        monthSector.setAttribute('stroke', '#D1D5DB');
+        monthSector.setAttribute('stroke-width', '1');
+        monthSector.className = 'month-sector';
+        monthSector.onclick = () => selectMonth(monthIndex);
+        svg.appendChild(monthSector);
+
+        monthActivities.forEach((activity, activityIndex) => {
+            const innerRadius = baseRadius + (activityIndex * ringWidth);
+            const outerRadius = innerRadius + ringWidth;
+            
+            const activityRing = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const activityPath = createSectorPath(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle);
+            
+            const category = categories[activity.categoryId];
+            const activityColor = category ? category.color : '#888888';
+            
+            activityRing.setAttribute('d', activityPath);
+            activityRing.setAttribute('fill', activityColor);
+            activityRing.setAttribute('stroke', '#FFFFFF');
+            activityRing.setAttribute('stroke-width', '1');
+            activityRing.className = 'activity-ring';
+            activityRing.onclick = () => selectMonth(monthIndex);
+            
+            const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+            const categoryName = category ? category.name : 'Okänd kategori';
+            title.textContent = `${activity.name} (${categoryName})`;
+            activityRing.appendChild(title);
+            
+            svg.appendChild(activityRing);
+        });
+    }
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+        const angle = monthIndex * 30;
+        const offsetAngle = angle - 90 + 15;
+        
+        const arcPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const pathId = `month-arc-${monthIndex}`;
+        arcPath.setAttribute('id', pathId);
+        
+        const startAngle = (offsetAngle - 12) * (Math.PI / 180);
+        const endAngle = (offsetAngle + 12) * (Math.PI / 180);
+        
+        const startX = centerX + outerLabelRadius * Math.cos(startAngle);
+        const startY = centerY + outerLabelRadius * Math.sin(startAngle);
+        const endX = centerX + outerLabelRadius * Math.cos(endAngle);
+        const endY = centerY + outerLabelRadius * Math.sin(endAngle);
+        
+        const arcPathData = `M ${startX} ${startY} A ${outerLabelRadius} ${outerLabelRadius} 0 0 1 ${endX} ${endY}`;
+        arcPath.setAttribute('d', arcPathData);
+        arcPath.setAttribute('fill', 'none');
+        arcPath.setAttribute('stroke', 'none');
+        
+        defs.appendChild(arcPath);
+        
+        const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        textElement.className = 'month-label';
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.setAttribute('font-size', '13');
+        textElement.setAttribute('font-weight', '600');
+        textElement.setAttribute('fill', '#374151');
+        textElement.style.cursor = 'pointer';
+        textElement.onclick = () => select
+      Month(monthIndex);
+        
+        const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+        textPath.setAttribute('href', `#${pathId}`);
+        textPath.setAttribute('startOffset', '50%');
+        textPath.textContent = months[monthIndex];
+        
+        textElement.appendChild(textPath);
+        svg.appendChild(textElement);
+    }
+
+    const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    centerCircle.setAttribute('cx', centerX);
+    centerCircle.setAttribute('cy', centerY);
+    centerCircle.setAttribute('r', baseRadius);
+    centerCircle.setAttribute('fill', '#F3F4F6');
+    centerCircle.setAttribute('stroke', '#D1D5DB');
+    centerCircle.setAttribute('stroke-width', '2');
+    svg.appendChild(centerCircle);
+}
+
+function createSectorPath(centerX, centerY, innerRadius, outerRadius, startAngle, endAngle) {
+    const x1 = centerX + innerRadius * Math.cos(startAngle);
+    const y1 = centerY + innerRadius * Math.sin(startAngle);
+    const x2 = centerX + outerRadius * Math.cos(startAngle);
+    const y2 = centerY + outerRadius * Math.sin(startAngle);
+    const x3 = centerX + outerRadius * Math.cos(endAngle);
+    const y3 = centerY + outerRadius * Math.sin(endAngle);
+    const x4 = centerX + innerRadius * Math.cos(endAngle);
+    const y4 = centerY + innerRadius * Math.sin(endAngle);
+
+    return [
+        `M ${x1} ${y1}`,
+        `L ${x2} ${y2}`,
+        `A ${outerRadius} ${outerRadius} 0 0 1 ${x3} ${y3}`,
+        `L ${x4} ${y4}`,
+        `A ${innerRadius} ${innerRadius} 0 0 0 ${x1} ${y1}`,
+        'Z'
+    ].join(' ');
+}
+
+function selectMonth(monthIndex) {
+    if (selectedMonth === monthIndex) {
+        selectedMonth = null;
+    } else {
+        selectedMonth = monthIndex;
+    }
+    
+    renderCalendar();
+    renderActivityList();
+    updateSelectedMonthInfo();
+}
+
+function updateSelectedMonthInfo() {
+    const infoDiv = document.getElementById('selected-month-info');
+    if (selectedMonth !== null) {
+        infoDiv.style.display = 'block';
+        infoDiv.innerHTML = `Visar aktiviteter för <strong>${months[selectedMonth]}</strong>. Klicka igen för att visa alla månader.`;
+    } else {
+        infoDiv.style.display = 'none';
+    }
+}
+
+function renderActivityList() {
+    const listContainer = document.getElementById('activity-list');
+    const titleElement = document.getElementById('activity-list-title');
+    
+    titleElement.textContent = selectedMonth !== null ? 
+        `Aktiviteter för ${months[selectedMonth]}` : 'Alla aktiviteter';
+    
+    const filteredActivities = getFilteredActivities();
+    
+    if (filteredActivities.length === 0) {
+        listContainer.innerHTML = `
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                </svg>
+                <p>Inga aktiviteter att visa</p>
+            </div>
+        `;
+        return;
+    }
+    
+    listContainer.innerHTML = filteredActivities.map(activity => {
+        const category = categories[activity.categoryId];
+        const categoryColor = category ? category.color : '#888888';
+        const categoryName = category ? category.name : 'Okänd kategori';
+        
+        return `
+        <div class="activity-item">
+            <div class="activity-info">
+                <div class="activity-color" style="background-color: ${categoryColor}"></div>
+                <div class="activity-details">
+                    <h3>${activity.name}</h3>
+                    <p>${months[activity.month]} - ${categoryName}</p>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function getFilteredActivities() {
+    if (selectedMonth === null) {
+        return Object.entries(activities).flatMap(([monthIndex, monthActivities]) =>
+            monthActivities.map(activity => ({ ...activity, month: parseInt(monthIndex) }))
+        );
+    }
+    return (activities[selectedMonth] || []).map(activity => ({ ...activity, month: selectedMonth }));
+}
+
+// Initialisering
+document.addEventListener('DOMContentLoaded', function() {
+    renderCalendar();
+    renderActivityList();
+});
+</script>
+</body>
+</html>
