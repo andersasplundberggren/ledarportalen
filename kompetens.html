@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kompetensutveckling - Karlskoga kommun</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,11 +28,7 @@
             position: relative;
         }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
 
         .logo {
             height: 45px;
@@ -53,55 +45,86 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
+        .logo-text:hover { color: #5863C7; }
 
-        .logo-text:hover {
-            color: #5863C7;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 5px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-item a {
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .nav-item a:hover {
-            background: #EFF2FF;
-            color: #362E7D;
-        }
-
-        .nav-item.active a {
+        /* HAMBURGER / SIDEBAR (samma stil som övriga sidor) */
+        .menu-toggle {
             background: #5863C7;
             color: white;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
             border: none;
-            font-size: 24px;
-            color: #362E7D;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .menu-toggle:hover { background: #362E7D; transform: scale(1.05); }
 
-        .mobile-menu-toggle:hover {
-            background: #EFF2FF;
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease;
+            z-index: 10000;
+            overflow-y: auto;
         }
+        .sidebar.show { right: 0; }
 
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h3 { font-size: 22px; margin: 0; }
+
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-btn:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+
+        .sidebar nav { padding: 0; }
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav li { border-bottom: 1px solid #f0f0f0; }
+        .sidebar nav a {
+            display: flex; align-items: center; gap: 12px;
+            padding: 18px 25px; text-decoration: none; color: #333;
+            font-size: 16px; font-weight: 500; transition: all .3s ease;
+        }
+        .sidebar nav a:hover { background: #EFF2FF; color: #5863C7; padding-left: 30px; }
+        .sidebar nav a span:first-child { font-size: 22px; width: 30px; text-align: center; }
+
+        /* SIDINNEHÅLL */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -125,27 +148,11 @@
             padding: 20px 30px;
             border-radius: 15px 15px 0 0;
         }
+        .section-header h1 { font-size: 24px; margin-bottom: 5px; }
+        .section-header p { opacity: 0.9; font-size: 14px; }
 
-        .section-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .section-header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #362E7D;
-            margin-bottom: 8px;
-        }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; color: #362E7D; margin-bottom: 8px; }
 
         .form-control {
             width: 100%;
@@ -156,40 +163,14 @@
             font-family: inherit;
             transition: border-color 0.3s ease;
         }
+        .form-control:focus { outline: none; border-color: #5863C7; }
 
-        .form-control:focus {
-            outline: none;
-            border-color: #5863C7;
-        }
+        textarea.form-control { resize: vertical; min-height: 100px; }
 
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .scale-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .scale-label {
-            font-size: 12px;
-            color: #666;
-            min-width: 80px;
-        }
-
-        .scale-input {
-            flex: 1;
-            accent-color: #5863C7;
-        }
-
-        .scale-value {
-            font-weight: 600;
-            color: #5863C7;
-            min-width: 30px;
-        }
+        .scale-group { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .scale-label { font-size: 12px; color: #666; min-width: 80px; }
+        .scale-input { flex: 1; accent-color: #5863C7; }
+        .scale-value { font-weight: 600; color: #5863C7; min-width: 30px; }
 
         .checkbox-group {
             display: grid;
@@ -197,236 +178,84 @@
             gap: 10px;
             margin-top: 10px;
         }
-
         .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            display: flex; align-items: center; padding: 8px;
+            border: 1px solid #e1e5e9; border-radius: 8px; transition: all 0.3s ease;
         }
-
-        .checkbox-item:hover {
-            background: #EFF2FF;
-            border-color: #5863C7;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
-            accent-color: #5863C7;
-        }
+        .checkbox-item:hover { background: #EFF2FF; border-color: #5863C7; }
+        .checkbox-item input[type="checkbox"] { margin-right: 8px; accent-color: #5863C7; }
 
         .generate-btn {
             width: 100%;
             background: linear-gradient(135deg, #5863C7, #362E7D);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            color: white; border: none; padding: 15px; border-radius: 12px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
         }
-
-        .generate-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4);
-        }
-
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .generate-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(88, 99, 199, 0.4); }
+        .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .vision-highlight {
             background: linear-gradient(135deg, #00A78B, #00C4A7);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-style: italic;
+            color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-style: italic;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .loading.show {
-            display: block;
-        }
+        .loading { display: none; text-align: center; padding: 40px; color: #666; }
+        .loading.show { display: block; }
 
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #5863C7;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            border: 3px solid #f3f3f3; border-top: 3px solid #5863C7;
+            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .results-content {
-            display: none;
-        }
-
-        .results-content.show {
-            display: block;
-        }
+        .results-content { display: none; }
+        .results-content.show { display: block; }
 
         .development-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #EFF2FF;
-            border-radius: 10px;
-            border-left: 4px solid #5863C7;
+            margin-bottom: 25px; padding: 15px; background: #EFF2FF; border-radius: 10px; border-left: 4px solid #5863C7;
         }
+        .development-section h3 { color: #362E7D; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .development-list { list-style: none; }
+        .development-list li { padding: 8px 0; border-bottom: 1px solid #DBDEF4; color: #333; }
+        .development-list li:last-child { border-bottom: none; }
 
-        .development-section h3 {
-            color: #362E7D;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .gap-analysis { background: #FFF4E6; border-left-color: #FF9800; }
 
-        .development-list {
-            list-style: none;
-        }
+        .timeline-item { padding: 12px; background: white; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #00A78B; }
+        .timeline-item h4 { color: #362E7D; margin-bottom: 5px; }
 
-        .development-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #DBDEF4;
-            color: #333;
-        }
-
-        .development-list li:last-child {
-            border-bottom: none;
-        }
-
-        .gap-analysis {
-            background: #FFF4E6;
-            border-left-color: #FF9800;
-        }
-
-        .timeline-item {
-            padding: 12px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 3px solid #00A78B;
-        }
-
-        .timeline-item h4 {
-            color: #362E7D;
-            margin-bottom: 5px;
-        }
-
-        .tips-section {
-            background: #D2EFE7;
-            border-left: 4px solid #00A78B;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .tips-section h4 {
-            color: #0F6F60;
-            margin-bottom: 10px;
-        }
+        .tips-section { background: #D2EFE7; border-left: 4px solid #00A78B; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .tips-section h4 { color: #0F6F60; margin-bottom: 10px; }
 
         @media (max-width: 768px) {
-            .global-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                height: 35px;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-            
-            .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
-            }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
+            .global-header { padding: 15px 20px; }
+            .logo { height: 35px; }
+            .logo-text { font-size: 20px; }
 
-            .container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            body {
-                padding: 10px;
-            }
-            
-            .form-section, .results-section {
-                padding: 20px;
-            }
-            
-            .section-header {
-                margin: -20px -20px 20px -20px;
-                padding: 15px 20px;
-            }
-            
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
+            .sidebar { width: 100%; right: -100%; }
+
+            .container { grid-template-columns: 1fr; gap: 20px; }
+            body { padding: 10px; }
+            .form-section, .results-section { padding: 20px; }
+            .section-header { margin: -20px -20px 20px -20px; padding: 15px 20px; }
+            .checkbox-group { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <!-- Header med hamburgermeny -->
     <nav class="global-header">
         <div class="logo-section">
-            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo">
+            <img src="https://karlskoga.se/images/18.17cf90041722ce1749b5e/1640015633047/Karlskoga_liggande.png" alt="Karlskoga kommun" class="logo" />
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
         <button class="menu-toggle" onclick="toggleSidebar()">
-            <span>☰</span>
-            <span>Meny</span>
+            <span>☰</span><span>Meny</span>
         </button>
     </nav>
 
+    <!-- Overlay + sidomeny -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Ledarportalen</h3>
@@ -445,11 +274,6 @@
             </ul>
         </nav>
     </aside>
-        
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-            ☰
-        </button>
-    </nav>
 
     <div class="container">
         <!-- Formulärsektion -->
@@ -459,27 +283,22 @@
                 <p>Identifiera kompetensgap och skapa utvecklingsplan</p>
             </div>
 
-            <div class="vision-highlight">
-                ✨ "Välkomnande, kloka och innovativa Karlskoga" ✨
-            </div>
+            <div class="vision-highlight">✨ "Välkomnande, kloka och innovativa Karlskoga" ✨</div>
 
             <form id="kompetensForm">
                 <div class="form-group">
                     <label for="medarbetarNamn">Medarbetarens namn (valfritt)</label>
-                    <input type="text" id="medarbetarNamn" class="form-control" 
-                           placeholder="Lämna tomt för anonymitet">
+                    <input type="text" id="medarbetarNamn" class="form-control" placeholder="Lämna tomt för anonymitet" />
                 </div>
 
                 <div class="form-group">
                     <label for="roll">Nuvarande roll/befattning</label>
-                    <input type="text" id="roll" class="form-control" required
-                           placeholder="T.ex. Socialsekreterare, IT-tekniker, Förskollärare...">
+                    <input type="text" id="roll" class="form-control" required placeholder="T.ex. Socialsekreterare, IT-tekniker, Förskollärare..." />
                 </div>
 
                 <div class="form-group">
                     <label for="avdelning">Avdelning</label>
-                    <input type="text" id="avdelning" class="form-control" required
-                           placeholder="T.ex. Socialkontoret, IT-enheten, Förskola Tallkotten...">
+                    <input type="text" id="avdelning" class="form-control" required placeholder="T.ex. Socialkontoret, IT-enheten, Förskola Tallkotten..." />
                 </div>
 
                 <div class="form-group">
@@ -496,112 +315,73 @@
 
                 <div class="form-group">
                     <label for="nuvarandeKompetenser">Nuvarande kompetenser & styrkor</label>
-                    <textarea id="nuvarandeKompetenser" class="form-control" required
-                              placeholder="Beskriv medarbetarens huvudsakliga kompetenser, styrkor och vad hen är bra på..."></textarea>
+                    <textarea id="nuvarandeKompetenser" class="form-control" required placeholder="Beskriv medarbetarens huvudsakliga kompetenser, styrkor och vad hen är bra på..."></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="utmaningar">Nuvarande utmaningar i arbetet</label>
-                    <textarea id="utmaningar" class="form-control"
-                              placeholder="Vilka utmaningar eller svårigheter möter medarbetaren? (valfritt)"></textarea>
+                    <textarea id="utmaningar" class="form-control" placeholder="Vilka utmaningar eller svårigheter möter medarbetaren? (valfritt)"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Självskattning av kompetensområden</label>
                     <div class="scale-group">
                         <span class="scale-label">Digital kompetens:</span>
-                        <input type="range" id="digitalKomp" class="scale-input" min="1" max="10" value="5" 
-                               oninput="updateScaleValue('digitalKomp', this.value)">
+                        <input type="range" id="digitalKomp" class="scale-input" min="1" max="10" value="5" oninput="updateScaleValue('digitalKomp', this.value)" />
                         <span class="scale-value" id="digitalKomp-value">5</span>
                     </div>
                     <div class="scale-group">
                         <span class="scale-label">Kommunikation:</span>
-                        <input type="range" id="kommunikation" class="scale-input" min="1" max="10" value="7" 
-                               oninput="updateScaleValue('kommunikation', this.value)">
+                        <input type="range" id="kommunikation" class="scale-input" min="1" max="10" value="7" oninput="updateScaleValue('kommunikation', this.value)" />
                         <span class="scale-value" id="kommunikation-value">7</span>
                     </div>
                     <div class="scale-group">
                         <span class="scale-label">Ledarskap:</span>
-                        <input type="range" id="ledarskap" class="scale-input" min="1" max="10" value="5" 
-                               oninput="updateScaleValue('ledarskap', this.value)">
+                        <input type="range" id="ledarskap" class="scale-input" min="1" max="10" value="5" oninput="updateScaleValue('ledarskap', this.value)" />
                         <span class="scale-value" id="ledarskap-value">5</span>
                     </div>
                     <div class="scale-group">
                         <span class="scale-label">Problemlösning:</span>
-                        <input type="range" id="problemlosning" class="scale-input" min="1" max="10" value="6" 
-                               oninput="updateScaleValue('problemlosning', this.value)">
+                        <input type="range" id="problemlosning" class="scale-input" min="1" max="10" value="6" oninput="updateScaleValue('problemlosning', this.value)" />
                         <span class="scale-value" id="problemlosning-value">6</span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="karriarmal">Karriärmål (kort och lång sikt)</label>
-                    <textarea id="karriarmal" class="form-control" required
-                              placeholder="Var vill medarbetaren vara om 1-3 år? Vilka ambitioner finns?"></textarea>
+                    <textarea id="karriarmal" class="form-control" required placeholder="Var vill medarbetaren vara om 1-3 år? Vilka ambitioner finns?"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Önskade utvecklingsområden</label>
                     <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="digital" name="utveckling" value="digital-kompetens">
-                            <label for="digital">Digital kompetens</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="ledarskapsutv" name="utveckling" value="ledarskap">
-                            <label for="ledarskapsutv">Ledarskap</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="kommunikationsutv" name="utveckling" value="kommunikation">
-                            <label for="kommunikationsutv">Kommunikation</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="projektledning" name="utveckling" value="projektledning">
-                            <label for="projektledning">Projektledning</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="specialistkompetens" name="utveckling" value="specialistkompetens">
-                            <label for="specialistkompetens">Specialistkompetens</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="sprakinlarning" name="utveckling" value="språk">
-                            <label for="sprakinlarning">Språkinlärning</label>
-                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="digital" name="utveckling" value="digital-kompetens" /><label for="digital">Digital kompetens</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="ledarskapsutv" name="utveckling" value="ledarskap" /><label for="ledarskapsutv">Ledarskap</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="kommunikationsutv" name="utveckling" value="kommunikation" /><label for="kommunikationsutv">Kommunikation</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="projektledning" name="utveckling" value="projektledning" /><label for="projektledning">Projektledning</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="specialistkompetens" name="utveckling" value="specialistkompetens" /><label for="specialistkompetens">Specialistkompetens</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="sprakinlarning" name="utveckling" value="språk" /><label for="sprakinlarning">Språkinlärning</label></div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Föredragen inlärningsstil</label>
                     <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="kurser" name="inlarning" value="kurser">
-                            <label for="kurser">Kurser & utbildningar</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="mentorskap" name="inlarning" value="mentorskap">
-                            <label for="mentorskap">Mentorskap</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="learningbydoing" name="inlarning" value="praktisk">
-                            <label for="learningbydoing">Learning by doing</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="sjalvstudier" name="inlarning" value="självstudier">
-                            <label for="sjalvstudier">Självstudier</label>
-                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="kurser" name="inlarning" value="kurser" /><label for="kurser">Kurser & utbildningar</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="mentorskap" name="inlarning" value="mentorskap" /><label for="mentorskap">Mentorskap</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="learningbydoing" name="inlarning" value="praktisk" /><label for="learningbydoing">Learning by doing</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="sjalvstudier" name="inlarning" value="självstudier" /><label for="sjalvstudier">Självstudier</label></div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="framtidaKompetensbehov">Framtida kompetensbehov i verksamheten</label>
-                    <textarea id="framtidaKompetensbehov" class="form-control"
-                              placeholder="Vilka kompetenser kommer verksamheten behöva framöver? (valfritt)"></textarea>
+                    <textarea id="framtidaKompetensbehov" class="form-control" placeholder="Vilka kompetenser kommer verksamheten behöva framöver? (valfritt)"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="budget">Budget för kompetensutveckling (kr)</label>
-                    <input type="number" id="budget" class="form-control" 
-                           placeholder="T.ex. 20000" min="0" step="1000">
+                    <input type="number" id="budget" class="form-control" placeholder="T.ex. 20000" min="0" step="1000" />
                 </div>
 
                 <div class="form-group">
@@ -615,9 +395,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="generate-btn" id="generateBtn">
-                    🚀 Skapa utvecklingsplan
-                </button>
+                <button type="submit" class="generate-btn" id="generateBtn">🚀 Skapa utvecklingsplan</button>
             </form>
         </div>
 
@@ -633,40 +411,46 @@
                 <p>Analyserar kompetenser och skapar utvecklingsplan...</p>
             </div>
 
-            <div class="results-content" id="resultsContent">
-                <!-- Resultaten kommer att fyllas i här av JavaScript -->
-            </div>
+            <div class="results-content" id="resultsContent"><!-- Fylls av JS --></div>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://ledarportalen.vercel.app/api/analyze-competence';
 
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navMenu = document.getElementById('navMenu');
-            navMenu.classList.toggle('show');
+        /* SIDEBAR/HAMBURGER */
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
         }
 
-        // Stäng mobilmeny vid klick utanför
-        document.addEventListener('click', function(event) {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            
-            if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
-                navMenu.classList.remove('show');
+        // Stäng vid klick utanför
+        document.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (
+                sidebar &&
+                sidebar.classList.contains('show') &&
+                !sidebar.contains(event.target) &&
+                !menuToggle.contains(event.target) &&
+                !overlay.contains(event.target)
+            ) {
+                toggleSidebar();
             }
         });
 
-        // Uppdatera skala-värden
+        /* SIDANS FUNKTIONER */
         function updateScaleValue(id, value) {
             document.getElementById(id + '-value').textContent = value;
         }
 
-        // Hantera formulärinlämning
-        document.getElementById('kompetensForm').addEventListener('submit', async function(e) {
+        document.getElementById('kompetensForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const formData = {
                 medarbetarNamn: document.getElementById('medarbetarNamn').value,
                 roll: document.getElementById('roll').value,
@@ -688,16 +472,16 @@
                 tidsram: document.getElementById('tidsram').value
             };
 
-            // Visa loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('resultsContent').classList.remove('show');
             document.getElementById('generateBtn').disabled = true;
 
             try {
-                // Simulera API-anrop (ersätt med riktig backend när klar)
-                await generateDevelopmentPlan(formData);
-            } catch (error) {
-                console.error('Fel vid generering:', error);
+                await new Promise(resolve => setTimeout(resolve, 1500)); // simulering
+                const data = generateMockPlan(formData);
+                displayResults(data);
+            } catch (err) {
+                console.error(err);
                 alert('Något gick fel vid genereringen. Försök igen.');
             } finally {
                 document.getElementById('loading').classList.remove('show');
@@ -705,17 +489,9 @@
             }
         });
 
-        async function generateDevelopmentPlan(formData) {
-            // Simulera API-anrop
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const mockData = generateMockPlan(formData);
-            displayResults(mockData);
-        }
-
         function generateMockPlan(formData) {
             return {
-                summary: `Utvecklingsplan för ${formData.medarbetarNamn || 'medarbetare'} som ${formData.roll} med fokus på ${formData.utvecklingsomraden.join(', ')}.`,
+                summary: `Utvecklingsplan för ${formData.medarbetarNamn || 'medarbetare'} som ${formData.roll} med fokus på ${formData.utvecklingsomraden.join(', ') || 'prioriterade områden'}.`,
                 gaps: [
                     "Digital kompetens behöver utvecklas för att möta framtidens krav",
                     "Ledarskapsförmåga kan stärkas för att ta nästa steg i karriären",
@@ -727,18 +503,9 @@
                     "Leda minst ett mindre projekt inom 12 månader"
                 ],
                 actions: [
-                    {
-                        title: "3 månader",
-                        items: ["Påbörja digital grundkurs", "Delta i intern mentorskapsgrupp", "Observera erfarna projektledare"]
-                    },
-                    {
-                        title: "6 månader",
-                        items: ["Avsluta digital grundkurs", "Börja ledarskapsprogram", "Assistera i projektledning"]
-                    },
-                    {
-                        title: "12 månader",
-                        items: ["Certifiering inom digitala verktyg", "Avsluta ledarskapsprogram", "Leda eget projekt"]
-                    }
+                    { title: "3 månader", items: ["Påbörja digital grundkurs", "Delta i intern mentorskapsgrupp", "Observera erfarna projektledare"] },
+                    { title: "6 månader", items: ["Avsluta digital grundkurs", "Börja ledarskapsprogram", "Assistera i projektledning"] },
+                    { title: "12 månader", items: ["Certifiering inom digitala verktyg", "Avsluta ledarskapsprogram", "Leda eget projekt"] }
                 ],
                 resources: [
                     "Intern IT-grundkurs (kostnadsfri)",
@@ -757,73 +524,54 @@
 
         function displayResults(data) {
             const resultsContent = document.getElementById('resultsContent');
-            
-            let html = `
-                <div class="vision-highlight">
-                    ${data.summary}
-                </div>
-            `;
 
-            // Gap-analys
-            if (data.gaps && data.gaps.length > 0) {
-                html += `
-                    <div class="development-section gap-analysis">
-                        <h3>⚠️ Identifierade kompetensgap</h3>
-                        <ul class="development-list">
-                `;
-                data.gaps.forEach(gap => html += `<li>${gap}</li>`);
-                html += `</ul></div>`;
+            let html = `<div class="vision-highlight">${data.summary}</div>`;
+
+            if (data.gaps?.length) {
+                html += `<div class="development-section gap-analysis">
+                            <h3>⚠️ Identifierade kompetensgap</h3>
+                            <ul class="development-list">
+                                ${data.gaps.map(g => `<li>${g}</li>`).join('')}
+                            </ul>
+                         </div>`;
             }
 
-            // Utvecklingsmål
-            if (data.goals && data.goals.length > 0) {
-                html += `
-                    <div class="development-section">
-                        <h3>🎯 Utvecklingsmål (SMART)</h3>
-                        <ul class="development-list">
-                `;
-                data.goals.forEach(goal => html += `<li>${goal}</li>`);
-                html += `</ul></div>`;
+            if (data.goals?.length) {
+                html += `<div class="development-section">
+                            <h3>🎯 Utvecklingsmål (SMART)</h3>
+                            <ul class="development-list">
+                                ${data.goals.map(g => `<li>${g}</li>`).join('')}
+                            </ul>
+                         </div>`;
             }
 
-            // Tidslinje
-            if (data.actions && data.actions.length > 0) {
-                html += `
-                    <div class="development-section">
-                        <h3>📅 Utvecklingstidslinje</h3>
-                `;
-                data.actions.forEach(action => {
-                    html += `<div class="timeline-item">
-                        <h4>${action.title}</h4>
-                        <ul>`;
-                    action.items.forEach(item => html += `<li>${item}</li>`);
-                    html += `</ul></div>`;
-                });
-                html += `</div>`;
+            if (data.actions?.length) {
+                html += `<div class="development-section">
+                            <h3>📅 Utvecklingstidslinje</h3>
+                            ${data.actions.map(a => `
+                                <div class="timeline-item">
+                                    <h4>${a.title}</h4>
+                                    <ul>${a.items.map(i => `<li>${i}</li>`).join('')}</ul>
+                                </div>`).join('')}
+                         </div>`;
             }
 
-            // Resurser
-            if (data.resources && data.resources.length > 0) {
-                html += `
-                    <div class="development-section">
-                        <h3>📚 Föreslagna resurser</h3>
-                        <ul class="development-list">
-                `;
-                data.resources.forEach(resource => html += `<li>${resource}</li>`);
-                html += `</ul></div>`;
+            if (data.resources?.length) {
+                html += `<div class="development-section">
+                            <h3>📚 Föreslagna resurser</h3>
+                            <ul class="development-list">
+                                ${data.resources.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                         </div>`;
             }
 
-            // Tips
-            if (data.tips && data.tips.length > 0) {
-                html += `
-                    <div class="tips-section">
-                        <h4>💡 Tips för framgångsrik kompetensutveckling</h4>
-                        <ul>
-                `;
-                data.tips.forEach(tip => html += `<li>${tip}</li>`);
-                html += `</ul></div>`;
+            if (data.tips?.length) {
+                html += `<div class="tips-section">
+                            <h4>💡 Tips för framgångsrik kompetensutveckling</h4>
+                            <ul>${data.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+                         </div>`;
             }
-            
+
             resultsContent.innerHTML = html;
             resultsContent.classList.add('show');
         }
