@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatta med Lagtexten</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,11 +31,7 @@
             position: relative;
         }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
 
         .logo {
             height: 45px;
@@ -50,309 +42,155 @@
         }
 
         .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #362E7D;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 24px; font-weight: 700; color: #362E7D;
+            text-decoration: none; transition: color 0.3s ease;
         }
+        .logo-text:hover { color: #5863C7; }
 
-        .logo-text:hover {
-            color: #5863C7;
-        }
-
+        /* Din befintliga toppmeny (lämnas orörd, men göms på mobil som tidigare) */
         .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 5px;
-            margin: 0;
-            padding: 0;
+            display: flex; list-style: none; gap: 5px; margin: 0; padding: 0;
         }
-
         .nav-item a {
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            text-decoration: none; padding: 10px 16px; border-radius: 25px;
+            font-weight: 500; color: #666; transition: all 0.3s ease; font-size: 14px;
         }
-
-        .nav-item a:hover {
-            background: #EFF2FF;
-            color: #362E7D;
-        }
-
-        .nav-item.active a {
-            background: #5863C7;
-            color: white;
-        }
-
-        .nav-item a[style*="opacity: 0.5"] {
-            cursor: not-allowed;
-        }
-
-        .nav-item a[style*="opacity: 0.5"]:hover {
-            background: transparent;
-            color: #666;
-        }
+        .nav-item a:hover { background: #EFF2FF; color: #362E7D; }
+        .nav-item.active a { background: #5863C7; color: white; }
+        .nav-item a[style*="opacity: 0.5"] { cursor: not-allowed; }
+        .nav-item a[style*="opacity: 0.5"]:hover { background: transparent; color: #666; }
 
         .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #362E7D;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
+            display: none; background: none; border: none; font-size: 24px;
+            color: #362E7D; cursor: pointer; padding: 5px; border-radius: 5px;
             transition: background 0.3s ease;
         }
+        .mobile-menu-toggle:hover { background: #EFF2FF; }
 
-        .mobile-menu-toggle:hover {
-            background: #EFF2FF;
+        /* === HAMBURGERMENY (NY) === */
+        .menu-toggle { 
+            background: #5863C7; color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;
+            transition: all .3s ease; display: flex; align-items: center; gap: 8px;
         }
+        .menu-toggle:hover { background: #362E7D; transform: scale(1.05); }
+        
+        .sidebar {
+            position: fixed; top: 0; right: -350px; width: 350px; height: 100vh;
+            background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease; z-index: 10000; overflow-y: auto;
+        }
+        .sidebar.show { right: 0; }
+        
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 9999; display: none;
+        }
+        .sidebar-overlay.show { display: block; }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #362E7D, #5863C7);
+            color: white; padding: 25px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .sidebar-header h3 { font-size: 22px; margin: 0; }
+        
+        .close-btn {
+            background: rgba(255,255,255,0.2); border: none; color: white; font-size: 24px;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: all .3s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .close-btn:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+        
+        .sidebar nav { padding: 0; }
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav li { border-bottom: 1px solid #f0f0f0; }
+        .sidebar nav a {
+            display: flex; align-items: center; gap: 12px; padding: 18px 25px;
+            text-decoration: none; color: #333; font-size: 16px; font-weight: 500; transition: all .3s ease;
+        }
+        .sidebar nav a:hover { background: #EFF2FF; color: #5863C7; padding-left: 30px; }
+        .sidebar nav a span:first-child { font-size: 22px; width: 30px; text-align: center; }
+        /* === slut hamburgermeny === */
 
         @media (max-width: 768px) {
-            .global-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                height: 35px;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-            
+            .global-header { padding: 15px 20px; }
+            .logo { height: 35px; }
+            .logo-text { font-size: 20px; }
             .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 0 0 15px 15px;
-                padding: 10px 0;
-                gap: 0;
-                z-index: 1000;
+                display: none; position: absolute; top: 100%; left: 0; right: 0; background: white;
+                flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border-radius: 0 0 15px 15px; padding: 10px 0; gap: 0; z-index: 1000;
             }
-            
-            .nav-menu.show {
-                display: flex;
-            }
-            
-            .nav-item a {
-                padding: 15px 25px;
-                border-radius: 0;
-                display: block;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
+            .nav-menu.show { display: flex; }
+            .nav-item a { padding: 15px 25px; border-radius: 0; display: block; }
+            .mobile-menu-toggle { display: block; }
+            /* Sidebar över hela bredden på mobil */
+            .sidebar { width: 100%; right: -100%; }
         }
 
         .chat-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            width: 100%; max-width: 800px; height: 600px; display: flex; flex-direction: column; overflow: hidden;
         }
 
         .kommune-logo {
-            position: absolute;
-            top: -15px;
-            left: 30px;
-            height: 50px;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 10;
+            position: absolute; top: -15px; left: 30px; height: 50px; background: white;
+            padding: 8px 12px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #362E7D, #5863C7);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+        .chat-header { background: linear-gradient(135deg, #362E7D, #5863C7); color: white; padding: 20px; text-align: center; }
+        .chat-header h1 { font-size: 24px; margin-bottom: 5px; }
+        .chat-header p { opacity: 0.8; font-size: 14px; }
 
-        .chat-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background-color: #EFF2FF; }
 
-        .chat-header p {
-            opacity: 0.8;
-            font-size: 14px;
-        }
+        .message { margin-bottom: 15px; display: flex; align-items: flex-start; }
+        .message.user { justify-content: flex-end; }
 
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #EFF2FF;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .message.user {
-            justify-content: flex-end;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .message.user .message-content {
-            background: #5863C7;
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
+        .message-content { max-width: 70%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.4; }
+        .message.user .message-content { background: #5863C7; color: white; border-bottom-right-radius: 5px; }
         .message.ai .message-content {
-            background: white;
-            border: 1px solid #DBDEF4;
-            border-bottom-left-radius: 5px;
+            background: white; border: 1px solid #DBDEF4; border-bottom-left-radius: 5px;
             box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
         }
 
         .message-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            margin: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
+            width: 35px; height: 35px; border-radius: 50%; margin: 0 10px; display: flex;
+            align-items: center; justify-content: center; font-weight: bold; font-size: 12px;
         }
+        .message.user .message-avatar { background: #5863C7; color: white; order: 1; }
+        .message.ai .message-avatar { background: #00A78B; color: white; }
 
-        .message.user .message-avatar {
-            background: #5863C7;
-            color: white;
-            order: 1;
-        }
-
-        .message.ai .message-avatar {
-            background: #00A78B;
-            color: white;
-        }
-
-        .chat-input {
-            padding: 20px;
-            border-top: 1px solid #e1e5e9;
-            background: white;
-        }
-
-        .input-container {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
+        .chat-input { padding: 20px; border-top: 1px solid #e1e5e9; background: white; }
+        .input-container { display: flex; gap: 10px; align-items: flex-end; }
 
         .input-field {
-            flex: 1;
-            min-height: 44px;
-            max-height: 120px;
-            padding: 12px 16px;
-            border: 2px solid #DBDEF4;
-            border-radius: 22px;
-            font-size: 14px;
-            resize: none;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.3s ease;
+            flex: 1; min-height: 44px; max-height: 120px; padding: 12px 16px;
+            border: 2px solid #DBDEF4; border-radius: 22px; font-size: 14px; resize: none;
+            font-family: inherit; outline: none; transition: border-color 0.3s ease;
         }
-
-        .input-field:focus {
-            border-color: #5863C7;
-        }
+        .input-field:focus { border-color: #5863C7; }
 
         .send-button {
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: #5863C7;
-            color: white;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            width: 44px; height: 44px; border: none; background: #5863C7; color: white;
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; font-size: 16px;
         }
+        .send-button:hover:not(:disabled) { background: #362E7D; transform: scale(1.05); }
+        .send-button:disabled { background: #DBDEF4; cursor: not-allowed; transform: none; }
 
-        .send-button:hover:not(:disabled) {
-            background: #362E7D;
-            transform: scale(1.05);
-        }
-
-        .send-button:disabled {
-            background: #DBDEF4;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-
-        .loading.show {
-            display: block;
-        }
+        .loading { display: none; text-align: center; padding: 20px; color: #666; }
+        .loading.show { display: block; }
 
         .law-sources {
-            background: #D2EFE7;
-            border-left: 4px solid #00A78B;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            color: #0F6F60;
+            background: #D2EFE7; border-left: 4px solid #00A78B; padding: 10px; margin-top: 10px;
+            border-radius: 5px; font-size: 12px; color: #0F6F60;
         }
 
         @media (max-width: 600px) {
-            .chat-container {
-                height: 100vh;
-                border-radius: 0;
-            }
-            
-            .message-content {
-                max-width: 85%;
-            }
-            
-            .chat-header h1 {
-                font-size: 20px;
-            }
-            
-            .chat-header h1 {
-                font-size: 20px;
-            }
+            .chat-container { height: 100vh; border-radius: 0; }
+            .message-content { max-width: 85%; }
+            .chat-header h1 { font-size: 20px; }
         }
     </style>
 </head>
@@ -364,33 +202,53 @@
                  class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
-        
-    <ul class="nav-menu" id="navMenu">
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html">📝 Förberedelse</a></li>
-        <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html">🎯 Rekrytering</a></li>
-    </ul>
 
-        
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-            ☰
+        <!-- Din befintliga toppmeny (lämnas kvar) -->
+        <ul class="nav-menu" id="navMenu">
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/">🏠 Hem</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html">💬 AI Chatt</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html">📅 Årshjul</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html">👥 Medarbetarsamtal</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html">📝 Förberedelse</a></li>
+            <li class="nav-item"><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html">🎯 Rekrytering</a></li>
+        </ul>
+
+        <!-- HAMBURGER-KNAPP (ny) -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <span>☰</span><span>Meny</span>
         </button>
     </nav>
 
-   <div class="chat-container">
-    <div class="chat-header">
-        <h1>💬 Chatta med Lagtexten</h1>
-        <p>Ställ frågor om arbetsmiljölag, medbestämmandelag och anställningsskydd</p>
-    </div>
+    <!-- OVERLAY + SIDEBAR (nya) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Ledarportalen</h3>
+            <button class="close-btn" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/"><span>🏠</span><span>Hem</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/chat.html"><span>💬</span><span>AI Chatt</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html"><span>📅</span><span>Årshjul</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html"><span>👥</span><span>Medarbetarsamtal</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html"><span>📝</span><span>Förberedelse</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html"><span>🎯</span><span>Rekrytering</span></a></li>
+                <li><a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html"><span>📢</span><span>Kommunikation</span></a></li>
+            </ul>
+        </nav>
+    </aside>
 
-    <div class="chat-messages" id="chatMessages">
-        <div class="message ai">
-            <div class="message-avatar">AI</div>
-            <div class="message-content">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>💬 Chatta med Lagtexten</h1>
+            <p>Ställ frågor om arbetsmiljölag, medbestämmandelag och anställningsskydd</p>
+        </div>
 
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                <div class="message-avatar">AI</div>
+                <div class="message-content">
                     Hej! Jag är din AI-assistent för arbetsrättsliga frågor. Jag kan hjälpa dig med frågor om:
                     <br><br>
                     📋 <strong>Arbetsmiljölagen</strong> - Arbetsmiljö och säkerhet
@@ -416,69 +274,49 @@
                     placeholder="Skriv din fråga här..."
                     rows="1"
                 ></textarea>
-                <button class="send-button" id="sendButton" onclick="sendMessage()">
-                    ➤
-                </button>
+                <button class="send-button" id="sendButton" onclick="sendMessage()">➤</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Använder säker backend istället för att exponera API-nyckel
-        // Vercel API endpoint (relativ path)
+        // === Din befintliga chat-logik (oförändrad) ===
         const API_URL = 'https://ledarportalen.vercel.app/api/chat';
-
-        // Globala variabler
         let lawTexts = {};
         let isLoading = false;
 
-        // Ladda lagtexter när sidan laddas
         async function loadLawTexts() {
             try {
                 const laws = ['arbetsmiljolag', 'medbestammandelag', 'anstallningsskydd'];
-                
                 for (const law of laws) {
                     try {
                         const response = await fetch(`./data/${law}.md`);
-                        if (response.ok) {
-                            lawTexts[law] = await response.text();
-                        }
-                    } catch (error) {
-                        console.warn(`Kunde inte ladda ${law}:`, error);
-                    }
+                        if (response.ok) { lawTexts[law] = await response.text(); }
+                    } catch (error) { console.warn(`Kunde inte ladda ${law}:`, error); }
                 }
-                
                 console.log('Lagtexter laddade:', Object.keys(lawTexts));
             } catch (error) {
                 console.error('Fel vid laddning av lagtexter:', error);
             }
         }
 
-        // Auto-resize textarea
         document.getElementById('messageInput').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
 
-        // Skicka meddelande vid Enter (men inte Shift+Enter)
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
 
-        // Lägg till meddelande i chatten
         function addMessage(content, isUser = false, sources = null) {
             const messagesContainer = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-            
             let sourcesHtml = '';
             if (sources && sources.length > 0) {
                 sourcesHtml = `<div class="law-sources"><strong>Baserat på:</strong> ${sources.join(', ')}</div>`;
             }
-            
             messageDiv.innerHTML = `
                 <div class="message-avatar">${isUser ? 'Du' : 'AI'}</div>
                 <div class="message-content">
@@ -486,50 +324,35 @@
                     ${sourcesHtml}
                 </div>
             `;
-            
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Visa/dölj loading
         function setLoading(loading) {
             isLoading = loading;
             document.getElementById('loading').classList.toggle('show', loading);
             document.getElementById('sendButton').disabled = loading;
         }
 
-        // Skicka meddelande till OpenAI
         async function sendMessage() {
             if (isLoading) return;
-            
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
-            
             if (!message) return;
-            
-            // Kontrollera om backend är tillgänglig
-            if (!API_URL) {
-                addMessage('⚠️ Backend är inte konfigurerad.');
-                return;
-            }
-            
-            // Lägg till användarens meddelande
+
+            if (!API_URL) { addMessage('⚠️ Backend är inte konfigurerad.'); return; }
+
             addMessage(message, true);
             input.value = '';
             input.style.height = 'auto';
-            
             setLoading(true);
-            
+
             try {
-                // Skapa kontext från lagtexter
                 let context = "Du är en AI-assistent som hjälper personalledare med arbetsrättsliga frågor baserat på svensk lagstiftning.\n\n";
-                
-                // Lägg till relevanta lagtexter som kontext
                 const availableLaws = Object.keys(lawTexts);
                 if (availableLaws.length > 0) {
                     context += "Tillgängliga lagtexter:\n";
                     for (const [law, text] of Object.entries(lawTexts)) {
-                        // Begränsa text för att inte överstiga token-gränser
                         const truncatedText = text.substring(0, 3000);
                         context += `\n=== ${law.toUpperCase()} ===\n${truncatedText}\n`;
                     }
@@ -537,73 +360,73 @@
                 } else {
                     context += "OBS: Lagtexter kunde inte laddas. Svara baserat på din allmänna kunskap om svensk arbetsrätt.";
                 }
-                
-                // Anropa säker backend istället för OpenAI direkt
+
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        lawTexts: lawTexts
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message, lawTexts: lawTexts })
                 });
-                
-                if (!response.ok) {
-                    throw new Error(`Backend-fel: ${response.status}`);
-                }
-                
+
+                if (!response.ok) { throw new Error(`Backend-fel: ${response.status}`); }
+
                 const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                
+                if (data.error) { throw new Error(data.error); }
+
                 const aiResponse = data.response;
-                
-                // Bestäm vilka lagar som användes (förenklad logik)
-                const usedSources = availableLaws.filter(law => 
-                    message.toLowerCase().includes(law) || 
-                    aiResponse.toLowerCase().includes(law)
+                const usedSources = Object.keys(lawTexts).filter(law => 
+                    message.toLowerCase().includes(law) || aiResponse.toLowerCase().includes(law)
                 );
-                
                 addMessage(aiResponse, false, usedSources);
-                
             } catch (error) {
                 console.error('Fel:', error);
                 addMessage('😔 Något gick fel. Kontrollera din internetanslutning.');
             }
-            
             setLoading(false);
         }
 
-        // Ladda lagtexter när sidan laddas
         window.addEventListener('load', loadLawTexts);
 
-        // Mobile menu toggle
+        // === Din tidigare mobil-topmenu (lämnas kvar) ===
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('show');
         }
-
-        // Stäng mobilmeny vid klick utanför
         document.addEventListener('click', function(event) {
             const navMenu = document.getElementById('navMenu');
             const mobileToggle = document.getElementById('mobileMenuToggle');
-            
             if (navMenu && mobileToggle && !navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
                 navMenu.classList.remove('show');
             }
         });
-
-        // Stäng mobilmeny när en länk klickas (förutom inaktiva länkar)
         document.querySelectorAll('.nav-item a:not([style*="opacity: 0.5"])').forEach(link => {
             link.addEventListener('click', function() {
                 const navMenu = document.getElementById('navMenu');
-                if (navMenu) {
-                    navMenu.classList.remove('show');
-                }
+                if (navMenu) { navMenu.classList.remove('show'); }
+            });
+        });
+
+        // === HAMBURGERMENY JS (ny) ===
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+        }
+        // Stäng sidebar om man klickar utanför (desktop)
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('show') && !overlay.contains(event.target)) {
+                toggleSidebar();
+            }
+        });
+        // Stäng när en länk i sidomenyn klickas
+        document.querySelectorAll('.sidebar a').forEach(a => {
+            a.addEventListener('click', () => {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('show')) toggleSidebar();
             });
         });
     </script>
