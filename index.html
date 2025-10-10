@@ -51,6 +51,20 @@
         }
         .header h1 { font-size: 48px; margin-bottom: 20px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .header p { font-size: 22px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        
+        /* Ny styling för disclaimer-texten */
+        .disclaimer {
+            font-size: 14px;
+            opacity: 0.95;
+            max-width: 650px;
+            margin: 20px auto 0;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            line-height: 1.5;
+            backdrop-filter: blur(10px);
+        }
 
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .tool-card {
@@ -74,6 +88,7 @@
             .container { padding: 0 15px 20px 15px; }
             .header h1 { font-size: 36px; }
             .header p { font-size: 18px; }
+            .disclaimer { font-size: 13px; padding: 10px 16px; }
             .tools-grid { grid-template-columns: 1fr; gap: 20px; }
             .tool-card { padding: 30px 25px; }
         }
@@ -118,7 +133,7 @@
                  class="kommune-logo">
             <h1>🏢 Ledarportalen</h1>
             <p>Verktyg och AI-assistans för personalledare</p>
-            <p>All data behandlas och lagras på servrar i USA, inget av det du gör sparas på den här sidan. Detta ska ses som en POC - Proof Of Concept</p>
+            <p class="disclaimer">All data behandlas och lagras på servrar i USA, inget av det du gör sparas på den här sidan. Detta ska ses som en POC - Proof Of Concept</p>
         </div>
 
         <!-- Puffar i samma ordning som menyn -->
