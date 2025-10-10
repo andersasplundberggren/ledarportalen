@@ -63,7 +63,7 @@
             color: #5863C7;
         }
 
-        /* Hamburgermeny styling */
+        /* === HAMBURGERMENY (nytt) === */
         .menu-toggle { 
             background: #5863C7; 
             color: white; 
@@ -149,10 +149,7 @@
             transform: rotate(90deg);
         }
         
-        .sidebar nav {
-            padding: 0;
-        }
-        
+        .sidebar nav { padding: 0; }
         .sidebar nav ul {
             list-style: none;
             padding: 0;
@@ -186,6 +183,7 @@
             width: 30px;
             text-align: center;
         }
+        /* === slut hamburgermeny === */
 
         .container {
             max-width: 1200px;
@@ -240,6 +238,7 @@
                 font-size: 20px;
             }
 
+            /* Sidebar över hela bredden på mobil */
             .sidebar { 
                 width: 100%; 
                 right: -100%; 
@@ -412,14 +411,16 @@
                  class="logo">
             <a href="https://andersasplundberggren.github.io/ledarportalen/" class="logo-text">Ledarportalen</a>
         </div>
+
+        <!-- HAMBURGER-KNAPP (ny) -->
         <button class="menu-toggle" onclick="toggleSidebar()">
             <span>☰</span>
             <span>Meny</span>
         </button>
     </nav>
 
+    <!-- OVERLAY + SIDEBAR (nya) -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Ledarportalen</h3>
@@ -540,7 +541,7 @@
     </div>
 
 <script>
-// Hamburgermeny funktioner
+/* === Hamburgermeny JS (nytt) === */
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -549,16 +550,23 @@ function toggleSidebar() {
     document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
 }
 
-// Stäng sidebar vid klick utanför
+// Stäng sidebar vid klick utanför knappen/menyn (desktop-säkerhet)
 document.addEventListener('click', function(event) {
     const sidebar = document.getElementById('sidebar');
     const menuToggle = document.querySelector('.menu-toggle');
-    if (sidebar && menuToggle && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-        if (sidebar.classList.contains('show')) {
-            toggleSidebar();
-        }
+    const overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('show')) {
+        toggleSidebar();
     }
 });
+// Stäng när en länk i menyn klickas (bra UX)
+document.querySelectorAll('.sidebar a').forEach(a => {
+    a.addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.classList.contains('show')) toggleSidebar();
+    });
+});
+/* === slut hamburgermeny JS === */
 
 // Global variabler
 let categories = {
@@ -639,13 +647,13 @@ function renderCalendar() {
     svg.appendChild(outerCircle);
 
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    textPath.setAttribute('id', 'text-circle');
-    textPath.setAttribute('cx', centerX);
-    textPath.setAttribute('cy', centerY);
-    textPath.setAttribute('r', outerLabelRadius);
-    textPath.setAttribute('fill', 'none');
-    defs.appendChild(textPath);
+    const circlePathRef = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circlePathRef.setAttribute('id', 'text-circle');
+    circlePathRef.setAttribute('cx', centerX);
+    circlePathRef.setAttribute('cy', centerY);
+    circlePathRef.setAttribute('r', outerLabelRadius);
+    circlePathRef.setAttribute('fill', 'none');
+    defs.appendChild(circlePathRef);
     svg.appendChild(defs);
 
     for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
@@ -680,7 +688,7 @@ function renderCalendar() {
         monthSector.setAttribute('fill', selectedMonth === monthIndex ? '#E5E7EB' : '#F9FAFB');
         monthSector.setAttribute('stroke', '#D1D5DB');
         monthSector.setAttribute('stroke-width', '1');
-        monthSector.className = 'month-sector';
+        monthSector.setAttribute('class', 'month-sector');
         monthSector.onclick = () => selectMonth(monthIndex);
         svg.appendChild(monthSector);
 
@@ -698,7 +706,7 @@ function renderCalendar() {
             activityRing.setAttribute('fill', activityColor);
             activityRing.setAttribute('stroke', '#FFFFFF');
             activityRing.setAttribute('stroke-width', '1');
-            activityRing.className = 'activity-ring';
+            activityRing.setAttribute('class', 'activity-ring');
             activityRing.onclick = () => selectMonth(monthIndex);
             
             const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
@@ -734,21 +742,20 @@ function renderCalendar() {
         defs.appendChild(arcPath);
         
         const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        textElement.className = 'month-label';
+        textElement.setAttribute('class', 'month-label');
         textElement.setAttribute('text-anchor', 'middle');
         textElement.setAttribute('font-size', '13');
         textElement.setAttribute('font-weight', '600');
         textElement.setAttribute('fill', '#374151');
         textElement.style.cursor = 'pointer';
-        textElement.onclick = () => select
-      Month(monthIndex);
+        textElement.onclick = () => selectMonth(monthIndex);
         
-        const textPath = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
-        textPath.setAttribute('href', `#${pathId}`);
-        textPath.setAttribute('startOffset', '50%');
-        textPath.textContent = months[monthIndex];
+        const textPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'textPath');
+        textPathEl.setAttribute('href', `#${pathId}`);
+        textPathEl.setAttribute('startOffset', '50%');
+        textPathEl.textContent = months[monthIndex];
         
-        textElement.appendChild(textPath);
+        textElement.appendChild(textPathEl);
         svg.appendChild(textElement);
     }
 
