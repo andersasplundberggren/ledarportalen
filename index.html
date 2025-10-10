@@ -5,327 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ledarportalen - Verktyg för Personalledare</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #5863C7 0%, #362E7D 100%);
-            min-height: 100vh;
-            color: #333;
-            padding: 20px;
+            min-height: 100vh; color: #333; padding: 20px;
         }
-
         .global-header {
-            background: white;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
+            background: white; width: 100%; max-width: 1200px; margin: 0 auto 20px; border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 15px 25px; display: flex; align-items: center;
+            justify-content: space-between; position: relative;
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            height: 45px;
-            background: white;
-            padding: 6px 10px;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #362E7D;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .logo-text:hover {
-            color: #5863C7;
-        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 45px; background: white; padding: 6px 10px; border-radius: 6px; box-shadow: 0 2px 8px rgba(88, 99, 199, 0.1); }
+        .logo-text { font-size: 24px; font-weight: 700; color: #362E7D; text-decoration: none; transition: color 0.3s ease; }
+        .logo-text:hover { color: #5863C7; }
 
         /* Hamburgermeny styling */
         .menu-toggle { 
-            background: #5863C7; 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: 600;
-            transition: all .3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #5863C7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            font-size: 16px; font-weight: 600; transition: all .3s ease; display: flex; align-items: center; gap: 8px;
         }
-        .menu-toggle:hover { 
-            background: #362E7D; 
-            transform: scale(1.05);
-        }
-        
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: -350px;
-            width: 350px;
-            height: 100vh;
-            background: white;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
-            transition: right 0.3s ease;
-            z-index: 10000;
-            overflow-y: auto;
-        }
-        
-        .sidebar.show {
-            right: 0;
-        }
-        
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-            display: none;
-        }
-        
-        .sidebar-overlay.show {
-            display: block;
-        }
-        
-        .sidebar-header {
-            background: linear-gradient(135deg, #362E7D, #5863C7);
-            color: white;
-            padding: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .sidebar-header h3 {
-            font-size: 22px;
-            margin: 0;
-        }
-        
-        .close-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all .3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .close-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: rotate(90deg);
-        }
-        
-        .sidebar nav {
-            padding: 0;
-        }
-        
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar nav li {
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .sidebar nav a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 25px;
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all .3s ease;
-        }
-        
-        .sidebar nav a:hover {
-            background: #EFF2FF;
-            color: #5863C7;
-            padding-left: 30px;
-        }
-        
-        .sidebar nav a span:first-child {
-            font-size: 22px;
-            width: 30px;
-            text-align: center;
-        }
+        .menu-toggle:hover { background: #362E7D; transform: scale(1.05); }
+        .sidebar { position: fixed; top: 0; right: -350px; width: 350px; height: 100vh; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            transition: right 0.3s ease; z-index: 10000; overflow-y: auto; }
+        .sidebar.show { right: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: none; }
+        .sidebar-overlay.show { display: block; }
+        .sidebar-header { background: linear-gradient(135deg, #362E7D, #5863C7); color: white; padding: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-header h3 { font-size: 22px; margin: 0; }
+        .close-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 24px; width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; transition: all .3s ease; display: flex; align-items: center; justify-content: center; }
+        .close-btn:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+        .sidebar nav { padding: 0; }
+        .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar nav li { border-bottom: 1px solid #f0f0f0; }
+        .sidebar nav a { display: flex; align-items: center; gap: 12px; padding: 18px 25px; text-decoration: none; color: #333; font-size: 16px; font-weight: 500; transition: all .3s ease; }
+        .sidebar nav a:hover { background: #EFF2FF; color: #5863C7; padding-left: 30px; }
+        .sidebar nav a span:first-child { font-size: 22px; width: 30px; text-align: center; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px 40px 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            color: white;
-            position: relative;
-        }
-
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px 20px; }
+        .header { text-align: center; margin-bottom: 60px; color: white; position: relative; }
         .kommune-logo {
-            height: 60px;
-            margin-bottom: 20px;
-            background: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 60px; margin-bottom: 20px; background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .header h1 { font-size: 48px; margin-bottom: 20px; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .header p { font-size: 22px; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
-        .header h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 22px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
         .tool-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            border: 3px solid transparent;
-            cursor: pointer;
+            background: white; border-radius: 20px; padding: 40px 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            transition: all 0.3s ease; text-decoration: none; color: inherit; border: 3px solid transparent; cursor: pointer;
         }
+        .tool-card:hover { transform: translateY(-10px); box-shadow: 0 30px 80px rgba(0,0,0,0.15); border-color: #5863C7; }
+        .tool-icon { font-size: 48px; margin-bottom: 20px; display: block; }
+        .tool-title { font-size: 24px; font-weight: 600; margin-bottom: 15px; color: #362E7D; }
+        .tool-description { font-size: 16px; line-height: 1.6; color: #666; margin-bottom: 20px; }
+        .tool-status { display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; background: #D2EFE7; color: #0F6F60; }
 
-        .tool-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
-            border-color: #5863C7;
-        }
-
-        .tool-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .tool-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #362E7D;
-        }
-
-        .tool-description {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .tool-status {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: #D2EFE7;
-            color: #0F6F60;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            margin-top: 60px;
-        }
-
-        .footer p {
-            font-size: 14px;
-        }
+        .footer { text-align: center; color: white; opacity: 0.8; margin-top: 60px; }
+        .footer p { font-size: 14px; }
 
         @media (max-width: 768px) {
-            .global-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                height: 35px;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-
-            .sidebar { 
-                width: 100%; 
-                right: -100%; 
-            }
-
-            .container {
-                padding: 0 15px 20px 15px;
-            }
-
-            .header h1 {
-                font-size: 36px;
-            }
-
-            .header p {
-                font-size: 18px;
-            }
-
-            .tools-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .tool-card {
-                padding: 30px 25px;
-            }
+            .global-header { padding: 15px 20px; }
+            .logo { height: 35px; } .logo-text { font-size: 20px; }
+            .sidebar { width: 100%; right: -100%; }
+            .container { padding: 0 15px 20px 15px; }
+            .header h1 { font-size: 36px; }
+            .header p { font-size: 18px; }
+            .tools-grid { grid-template-columns: 1fr; gap: 20px; }
+            .tool-card { padding: 30px 25px; }
         }
     </style>
 </head>
@@ -342,7 +92,6 @@
     </nav>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Ledarportalen</h3>
@@ -371,17 +120,9 @@
             <p>Verktyg och AI-assistans för personalledare</p>
         </div>
 
+        <!-- Puffar i samma ordning som menyn -->
         <div class="tools-grid">
-            <a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html" class="tool-card">
-                <span class="tool-icon">📅</span>
-                <h2 class="tool-title">Årshjul för chefer</h2>
-                <p class="tool-description">
-                    Översikt över årets viktigaste HR-aktiviteter, deadlines och återkommande processer. 
-                    Planera och följ upp personalarbetet systematiskt genom hela året.
-                </p>
-                <span class="tool-status">Tillgänglig Nu</span>
-            </a>
-
+            <!-- 1. AI Chatt -->
             <a href="https://andersasplundberggren.github.io/ledarportalen/chat.html" class="tool-card">
                 <span class="tool-icon">💬</span>
                 <h2 class="tool-title">Chatta med lagtexten</h2>
@@ -392,6 +133,18 @@
                 <span class="tool-status">Tillgänglig Nu</span>
             </a>
 
+            <!-- 2. Årshjul -->
+            <a href="https://andersasplundberggren.github.io/ledarportalen/arshjul.html" class="tool-card">
+                <span class="tool-icon">📅</span>
+                <h2 class="tool-title">Årshjul för chefer</h2>
+                <p class="tool-description">
+                    Översikt över årets viktigaste HR-aktiviteter, deadlines och återkommande processer. 
+                    Planera och följ upp personalarbetet systematiskt genom hela året.
+                </p>
+                <span class="tool-status">Tillgänglig Nu</span>
+            </a>
+
+            <!-- 3. Medarbetarsamtal (chefens underlag) -->
             <a href="https://andersasplundberggren.github.io/ledarportalen/samtal.html" class="tool-card">
                 <span class="tool-icon">👥</span>
                 <h2 class="tool-title">Generera underlag för medarbetarsamtal</h2>
@@ -402,6 +155,7 @@
                 <span class="tool-status">Tillgänglig Nu</span>
             </a>
 
+            <!-- 4. Förbered samtal (medarbetarens egen) -->
             <a href="https://andersasplundberggren.github.io/ledarportalen/forbered.html" class="tool-card">
                 <span class="tool-icon">📝</span>
                 <h2 class="tool-title">Förbered ditt eget medarbetarsamtal</h2>
@@ -412,16 +166,7 @@
                 <span class="tool-status">Tillgänglig Nu</span>
             </a>
 
-            <a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html" class="tool-card">
-                <span class="tool-icon">🎯</span>
-                <h2 class="tool-title">Rekryteringsstöd</h2>
-                <p class="tool-description">
-                    Klistra in annons, CV och personligt brev för att få AI-genererat intervjuunderlag. 
-                    Matchningsanalys, föreslagna frågor och tips för anställningsintervjun.
-                </p>
-                <span class="tool-status">Tillgänglig Nu</span>
-            </a>
-
+            <!-- 5. Kompetens -->
             <a href="https://andersasplundberggren.github.io/ledarportalen/kompetens.html" class="tool-card">
                 <span class="tool-icon">🎓</span>
                 <h2 class="tool-title">Kompetensutveckling</h2>
@@ -432,6 +177,18 @@
                 <span class="tool-status">Tillgänglig Nu</span>
             </a>
 
+            <!-- 6. Rekrytering -->
+            <a href="https://andersasplundberggren.github.io/ledarportalen/recruitment.html" class="tool-card">
+                <span class="tool-icon">🎯</span>
+                <h2 class="tool-title">Rekryteringsstöd</h2>
+                <p class="tool-description">
+                    Klistra in annons, CV och personligt brev för att få AI-genererat intervjuunderlag. 
+                    Matchningsanalys, föreslagna frågor och tips för anställningsintervjun.
+                </p>
+                <span class="tool-status">Tillgänglig Nu</span>
+            </a>
+
+            <!-- 7. Kommunikation -->
             <a href="https://andersasplundberggren.github.io/ledarportalen/kommunikation.html" class="tool-card">
                 <span class="tool-icon">📢</span>
                 <h2 class="tool-title">Kommunikationsstöd</h2>
@@ -462,10 +219,15 @@
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.querySelector('.menu-toggle');
-            if (sidebar && menuToggle && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-                if (sidebar.classList.contains('show')) {
-                    toggleSidebar();
-                }
+            const overlay = document.getElementById('sidebarOverlay');
+            if (
+                sidebar && menuToggle &&
+                !sidebar.contains(event.target) &&
+                !menuToggle.contains(event.target) &&
+                !overlay.contains(event.target) &&
+                sidebar.classList.contains('show')
+            ) {
+                toggleSidebar();
             }
         });
     </script>
